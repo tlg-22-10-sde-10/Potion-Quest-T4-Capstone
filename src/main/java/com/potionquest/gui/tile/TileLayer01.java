@@ -14,25 +14,25 @@ public class TileLayer01 {
 
   GamePanel gp;
   public Tile[] tile;
-  int tileSheetCol = 39;
-  int tileSheetRow = 35;
+  int tileSheetCol = 47;
+  int tileSheetRow = 70;
   public int[][] mapTileNum;
 
   public TileLayer01(GamePanel gp) {
 
     this.gp = gp;
-    tile = new Tile[1440];
+    tile = new Tile[3456];
     mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
-    getTileImage();
-    loadMap("/maps/map01_layer01.csv");
+    getTileImage("/tiles/CombinedTilesheet.png");
+    loadMap("/maps/world01V2_TileLayer1.csv");
   }
 
-  public void getTileImage() {
-    try {
+  public void getTileImage(String filePath) {
+    try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
 
-      BufferedImage tileSheet = ImageIO.read(
-          Objects.requireNonNull(getClass().getResourceAsStream("/tiles/overworld.png")));
+      //noinspection ConstantConditions
+      BufferedImage tileSheet = ImageIO.read(inputStream);
 
       int colCount = 0;
       int rowCount = 0;
@@ -43,6 +43,9 @@ public class TileLayer01 {
           tile[i] = new Tile();
           tile[i].image = tileSheet.getSubimage(colCount*gp.tileSize, rowCount*gp.tileSize, gp.tileSize, gp.tileSize);
           tile[i].collision = false;
+          if (i == 2067) {
+            tile[i].collision = true;
+          }
           i++;
           colCount++;
         }
@@ -56,10 +59,10 @@ public class TileLayer01 {
   }
 
   public void loadMap(String filePath) {
-    try {
+    try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
 
-      InputStream is = getClass().getResourceAsStream(filePath);
-      BufferedReader bReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
+      //noinspection ConstantConditions
+      BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream));
 
       int col = 0;
       int row = 0;
@@ -105,7 +108,7 @@ public class TileLayer01 {
           && worldY + gp.tileSize*2 > gp.player.worldY - gp.player.screenY
           && worldY - gp.tileSize*2 < gp.player.worldY + gp.player.screenY) {
 
-        g2D.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2D.drawImage(tile[tileNum].image, screenX, screenY, null);
       }
       worldCol++;
 

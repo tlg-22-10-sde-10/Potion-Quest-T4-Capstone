@@ -10,7 +10,8 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
-public class TileLayer02 {
+
+public class TileLayer03 {
 
   GamePanel gp;
   public Tile[] tile;
@@ -18,14 +19,14 @@ public class TileLayer02 {
   int tileSheetRow = 70;
   public int[][] mapTileNum;
 
-  public TileLayer02(GamePanel gp) {
+  public TileLayer03(GamePanel gp) {
 
     this.gp = gp;
     tile = new Tile[3456];
     mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
     getTileImage("/tiles/CombinedTilesheet.png");
-    loadMap("/maps/world01V2_TileLayer2.csv");
+    loadMap("/maps/world01V2_TileLayer3.csv");
   }
 
   public void getTileImage(String filePath) {
@@ -45,7 +46,7 @@ public class TileLayer02 {
           tile[i].collision = true;
 
           //noinspection RedundantIfStatement
-          if (i == 24 || i == 2072 || i == 2073 || i == 2074 || i == 2112 || i == 3361) {
+          if (i == 24 || i == 2072 || i == 2073 || i == 2074) {
             tile[i].collision = false;
           }
           i++;

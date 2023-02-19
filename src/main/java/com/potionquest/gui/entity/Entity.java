@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 
 public class Entity {
 
-  public int sizeX, sizeY;
-  public int scaleFactor;
+//  public int sizeX, sizeY;
+//  public int scaleFactor;
   public int worldX, worldY;
   public int speed;
 

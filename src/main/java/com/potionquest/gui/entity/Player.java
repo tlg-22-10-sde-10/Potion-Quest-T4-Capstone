@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
@@ -41,18 +42,19 @@ public class Player extends Entity {
 
   public void setDefaultValues() {
 
-    worldX = gp.tileSize * 7;
-    worldY = gp.tileSize * 6;
+    worldX = gp.tileSize * 4;
+    worldY = gp.tileSize * 38;
     speed = 4;
     direction = "down";
   }
 
   public void getPlayerImage() {
 
-    try {
+    try (InputStream inputStream = getClass().getResourceAsStream("/player/character.png")) {
 
-      BufferedImage playerImage = ImageIO.read(
-          Objects.requireNonNull(getClass().getResourceAsStream("/player/character.png")));
+      //noinspection ConstantConditions
+      BufferedImage playerImage = ImageIO.read(inputStream);
+
       int imageIndexX = 0;
       for (int i = 0; i < 4; i++) {
         BufferedImage up = playerImage.getSubimage(imageIndexX, 40, 16, 20);
@@ -95,9 +97,10 @@ public class Player extends Entity {
         direction = "down";
       } else if (keyH.leftPressed) {
         direction = "left";
-      } else if (keyH.rightPressed) {
-        direction = "right";
-      }
+      } else //noinspection ConstantConditions
+        if (keyH.rightPressed) {
+          direction = "right";
+        }
 
       //CHECK TILE COLLISION
       collisionOn = false;
@@ -134,7 +137,13 @@ public class Player extends Entity {
         spriteCounter = 0;
       }
     }
+  }
 
+  public void pickUpObject(int i) {
+
+    if (i != 999) {
+
+    }
   }
 
   public void draw(Graphics2D g2D) {
