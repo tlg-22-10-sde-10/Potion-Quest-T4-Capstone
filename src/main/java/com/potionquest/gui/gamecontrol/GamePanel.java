@@ -38,8 +38,8 @@ public class GamePanel extends JPanel implements Runnable {
   private static Thread gameThread;
 
   // ENTITIES AND OBJECTS
-  public static Player player = new Player();
   public static Entity[] npc = new Entity[10];
+  public static Player player = new Player();
 
   // GAME STATE
   public static int gameState;
