@@ -1,17 +1,17 @@
 package com.potionquest.gui.entity;
 
+import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
+
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
 
-  GamePanel gp;
-  KeyHandler keyH;
   private final int sizeX = 16;
   private final int sizeY = 20;
   private final int scaleFactor = 3;
@@ -23,15 +23,15 @@ public class Player extends Entity {
   public final int screenY;
 
 
-  public Player(GamePanel gp, KeyHandler keyH) {
-    this.gp = gp;
-    this.keyH = keyH;
-    screenX = gp.screenWidth/2 - (playerSizeX/2);
-    screenY = gp.screenHeight/2 - (playerSizeY/2);
+  public Player() {
+    screenX = GamePanel.screenWidth/2 - (playerSizeX/2);
+    screenY = GamePanel.screenHeight/2 - (playerSizeY/2);
 
     solidArea = new Rectangle();
     solidArea.x = 8;
     solidArea.y = 20;
+//    solidAreaDefaultX = solidArea.x;
+//    solidAreaDefaultY = solidArea.y;
     solidArea.width = 32;
     solidArea.height = 40;
 
@@ -41,18 +41,19 @@ public class Player extends Entity {
 
   public void setDefaultValues() {
 
-    worldX = gp.tileSize * 7;
-    worldY = gp.tileSize * 6;
+    worldX = GamePanel.tileSize * 4;
+    worldY = GamePanel.tileSize * 38;
     speed = 4;
     direction = "down";
   }
 
   public void getPlayerImage() {
 
-    try {
+    try (InputStream inputStream = getClass().getResourceAsStream("/player/character.png")) {
 
-      BufferedImage playerImage = ImageIO.read(
-          Objects.requireNonNull(getClass().getResourceAsStream("/player/character.png")));
+      //noinspection ConstantConditions
+      BufferedImage playerImage = ImageIO.read(inputStream);
+
       int imageIndexX = 0;
       for (int i = 0; i < 4; i++) {
         BufferedImage up = playerImage.getSubimage(imageIndexX, 40, 16, 20);
@@ -95,13 +96,19 @@ public class Player extends Entity {
         direction = "down";
       } else if (keyH.leftPressed) {
         direction = "left";
-      } else if (keyH.rightPressed) {
-        direction = "right";
-      }
+      } else //noinspection ConstantConditions
+        if (keyH.rightPressed) {
+          direction = "right";
+        }
 
       //CHECK TILE COLLISION
       collisionOn = false;
-      gp.collider.checkTile(this);
+      GamePanel.collider.checkTile(this);
+
+      // CHECK NPC COLLISION
+      int npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
+      collideNPC(npcIndex);
+
       // IF COLLISION IS FALSE, PLAYER CAN MOVE
       if (!collisionOn) {
         switch (direction) {
@@ -134,7 +141,20 @@ public class Player extends Entity {
         spriteCounter = 0;
       }
     }
+  }
 
+  public void pickUpObject(int i) {
+
+    if (i != 999) {
+
+    }
+  }
+
+  public void collideNPC(int i) {
+
+    if (i != 999) {
+      System.out.println("You are hitting an npc!");
+    }
   }
 
   public void draw(Graphics2D g2D) {
