@@ -1,6 +1,5 @@
 package com.potionquest.gui.entity;
 
-import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
@@ -14,7 +13,7 @@ public class Player extends Entity {
 
   private final int sizeX = 16;
   private final int sizeY = 20;
-  private final int scaleFactor = 3;
+  private final int scaleFactor = 2;
 
   private final int playerSizeX = sizeX * scaleFactor;
   private final int playerSizeY = sizeY * scaleFactor;
@@ -28,12 +27,11 @@ public class Player extends Entity {
     screenY = GamePanel.screenHeight/2 - (playerSizeY/2);
 
     solidArea = new Rectangle();
-    solidArea.x = 8;
+    solidArea.x = 10;
     solidArea.y = 20;
-//    solidAreaDefaultX = solidArea.x;
-//    solidAreaDefaultY = solidArea.y;
-    solidArea.width = 32;
-    solidArea.height = 40;
+
+    solidArea.width = 12;
+    solidArea.height = 20;
 
     setDefaultValues();
     getPlayerImage();
@@ -55,49 +53,35 @@ public class Player extends Entity {
       BufferedImage playerImage = ImageIO.read(inputStream);
 
       int imageIndexX = 0;
+
       for (int i = 0; i < 4; i++) {
         BufferedImage up = playerImage.getSubimage(imageIndexX, 40, 16, 20);
-        goUp[i] = up;
-        imageIndexX += 16;
-      }
-
-      imageIndexX = 0;
-      for (int i = 0; i < 4; i++) {
         BufferedImage down = playerImage.getSubimage(imageIndexX, 0, 16, 20);
-        goDown[i] = down;
-        imageIndexX += 16;
-      }
-
-      imageIndexX = 0;
-      for (int i = 0; i < 4; i++) {
         BufferedImage left = playerImage.getSubimage(imageIndexX, 60, 16, 20);
-        goLeft[i] = left;
-        imageIndexX += 16;
-      }
-
-      imageIndexX = 0;
-      for (int i = 0; i < 4; i++) {
         BufferedImage right = playerImage.getSubimage(imageIndexX, 20, 16, 20);
+
+        goUp[i] = up;
+        goDown[i] = down;
+        goLeft[i] = left;
         goRight[i] = right;
         imageIndexX += 16;
       }
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public void update() {
+  public void update(GamePanel gp) {
 
-    if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-      if (keyH.upPressed) {
+    if (gp.keyH.upPressed || gp.keyH.downPressed || gp.keyH.leftPressed || gp.keyH.rightPressed) {
+      if (gp.keyH.upPressed) {
         direction = "up";
-      } else if (keyH.downPressed) {
+      } else if (gp.keyH.downPressed) {
         direction = "down";
-      } else if (keyH.leftPressed) {
+      } else if (gp.keyH.leftPressed) {
         direction = "left";
       } else //noinspection ConstantConditions
-        if (keyH.rightPressed) {
+        if (gp.keyH.rightPressed) {
           direction = "right";
         }
 
@@ -113,29 +97,32 @@ public class Player extends Entity {
       if (!collisionOn) {
         switch (direction) {
           case "up":
-            worldY -= speed;
+            if(worldY - speed >= 0) {
+              worldY -= speed;
+            }
             break;
           case "down":
-            worldY += speed;
+            if(worldY + speed + playerSizeY <= GamePanel.maxWorldRow * GamePanel.tileSize) {
+              worldY += speed;
+            }
             break;
           case "left":
-            worldX -= speed;
+            if(worldX - speed >= 0) {
+              worldX -= speed;
+            }
             break;
           case "right":
-            worldX += speed;
+            if(worldX + speed + playerSizeX <= GamePanel.maxWorldCol * GamePanel.tileSize) {
+              worldX += speed;
+            }
             break;
         }
       }
 
       spriteCounter++;
-      if (spriteCounter > 12) {
-        if (spriteNum == 1) {
-          spriteNum = 2;
-        } else if (spriteNum == 2) {
-          spriteNum = 3;
-        } else if (spriteNum == 3) {
-          spriteNum = 4;
-        } else if (spriteNum == 4) {
+      if (spriteCounter >= 12) {
+        spriteNum++;
+        if (spriteNum >= 3) {
           spriteNum = 1;
         }
         spriteCounter = 0;
@@ -163,50 +150,19 @@ public class Player extends Entity {
 
     switch (direction) {
       case "up":
-        if (spriteNum == 1) {
-          image = goUp[0];
-        } else if (spriteNum == 2) {
-          image = goUp[1];
-        } else if (spriteNum == 3) {
-          image = goUp[2];
-        } else if (spriteNum == 4) {
-          image = goUp[3];
-        }
+        image = goUp[spriteNum - 1];
         break;
       case "down":
-        if (spriteNum == 1) {
-          image = goDown[0];
-        } else if (spriteNum == 2) {
-          image = goDown[1];
-        } else if (spriteNum == 3) {
-          image = goDown[2];
-        } else if (spriteNum == 4) {
-          image = goDown[3];
-        }
+        image = goDown[spriteNum - 1];
         break;
       case "left":
-        if (spriteNum == 1) {
-          image = goLeft[0];
-        } else if (spriteNum == 2) {
-          image = goLeft[1];
-        } else if (spriteNum == 3) {
-          image = goLeft[2];
-        } else if (spriteNum == 4) {
-          image = goLeft[3];
-        }
+        image = goLeft[spriteNum - 1];
         break;
       case "right":
-        if (spriteNum == 1) {
-          image = goRight[0];
-        } else if (spriteNum == 2) {
-          image = goRight[1];
-        } else if (spriteNum == 3) {
-          image = goRight[2];
-        } else if (spriteNum == 4) {
-          image = goRight[3];
-        }
+        image = goRight[spriteNum - 1];
         break;
     }
+
     g2D.drawImage(image, screenX, screenY, playerSizeX, playerSizeY, null);
   }
 }

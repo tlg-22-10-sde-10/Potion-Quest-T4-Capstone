@@ -1,5 +1,6 @@
 package com.potionquest.gui.entity;
 
+import com.potionquest.game.Game;
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -17,6 +18,9 @@ public class Entity {
   public BufferedImage[] goDown = new BufferedImage[4];
   public BufferedImage[] goLeft = new BufferedImage[4];
   public BufferedImage[] goRight = new BufferedImage[4];
+
+  public BufferedImage[] combat = new BufferedImage[4];
+
   public String direction;
   public int speed;
   public boolean collisionOn = false;
@@ -41,7 +45,8 @@ public class Entity {
     return image;
   }
 
-  public void setBehavior() {}
+  public void setBehavior() {
+  }
 
   public void update() {
     setBehavior();
@@ -55,27 +60,32 @@ public class Entity {
     if (!collisionOn) {
       switch (direction) {
         case "up":
-          worldY -= speed;
+          if(worldY - speed >= 0) {
+            worldY -= speed;
+          }
           break;
         case "down":
-          worldY += speed;
+          if(worldY + speed <= GamePanel.maxWorldRow * GamePanel.tileSize) {
+            worldY += speed;
+          }
           break;
         case "left":
-          worldX -= speed;
+          if(worldX - speed >= 0) {
+            worldX -= speed;
+          }
           break;
         case "right":
-          worldX += speed;
+          if(worldX + speed <= GamePanel.maxWorldCol * GamePanel.tileSize) {
+            worldX += speed;
+          }
           break;
       }
     }
 
     spriteCounter++;
-    if (spriteCounter > 12) {
-      if (spriteNum == 1) {
-        spriteNum = 2;
-      } else if (spriteNum == 2) {
-        spriteNum = 3;
-      } else if (spriteNum == 3) {
+    if (spriteCounter >= 12) {
+      spriteNum++;
+      if (spriteNum >= 3) {
         spriteNum = 1;
       }
       spriteCounter = 0;
@@ -96,44 +106,21 @@ public class Entity {
 
       switch (direction) {
         case "up":
-          if (spriteNum == 1) {
-            image = goUp[0];
-          } else if (spriteNum == 2) {
-            image = goUp[1];
-          } else if (spriteNum == 3) {
-            image = goUp[2];
-          }
+          image = goUp[spriteNum - 1];
           break;
         case "down":
-          if (spriteNum == 1) {
-            image = goDown[0];
-          } else if (spriteNum == 2) {
-            image = goDown[1];
-          } else if (spriteNum == 3) {
-            image = goDown[2];
-          }
+          image = goDown[spriteNum - 1];
           break;
         case "left":
-          if (spriteNum == 1) {
-            image = goLeft[0];
-          } else if (spriteNum == 2) {
-            image = goLeft[1];
-          } else if (spriteNum == 3) {
-            image = goLeft[2];
-          }
+          image = goLeft[spriteNum - 1];
           break;
         case "right":
-          if (spriteNum == 1) {
-            image = goRight[0];
-          } else if (spriteNum == 2) {
-            image = goRight[1];
-          } else if (spriteNum == 3) {
-            image = goRight[2];
-            break;
-          }
+          image = goRight[spriteNum - 1];
+          break;
       }
-
-      g2D.drawImage(image, screenX, screenY, null);
     }
+
+    g2D.drawImage(image, screenX, screenY, null);
   }
 }
+

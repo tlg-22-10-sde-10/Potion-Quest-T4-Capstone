@@ -27,12 +27,11 @@ public class Player {
         if (itemsInPlayerInventory.equals(null)) {
             allItems.addAll(itemsInThisLocation);
         }
-        if (itemsInThisLocation.equals(null)) {
-            allItems.addAll(itemsInPlayerInventory);
-        } else {
+        if (itemsInThisLocation!=null) {
             allItems.addAll(itemsInThisLocation);
-            allItems.addAll(itemsInPlayerInventory);
         }
+        allItems.addAll(itemsInPlayerInventory);
+
         for (Item item : allItems) {
             if (item.getName().toLowerCase().equals(noun)) {
                 System.out.println(item.getName());
@@ -41,6 +40,7 @@ public class Player {
         }
         return null;
     }
+
 
     public static void lookAtItem(Item itemYouAreLookingAt) {
         try {
@@ -57,14 +57,9 @@ public class Player {
             System.out.println(characterTalking.getDialogue());
             Scanner scanner = new Scanner(System.in);
             String userChoice = scanner.nextLine();
-            if(userChoice.equals("1")) {
-                System.out.println(characterTalking.getResponses().get("1"));
-            }
-            else if(userChoice.equals("2")){
-                System.out.println(characterTalking.getResponses().get("2"));
-            }
-            else if(userChoice.equals("3")){
-                System.out.println(characterTalking.getResponses().get("3"));
+
+            if(characterTalking.getResponses().containsKey(userChoice)) {
+                System.out.println(characterTalking.getResponses().get(userChoice));
             }
         }
         else{

@@ -61,18 +61,19 @@ public class Location {
     }
 
     public Location getAdjacentLocation(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return exits.get("NORTH");
-            case SOUTH:
-                return exits.get("SOUTH");
-            case EAST:
-                return exits.get("EAST");
-            case WEST:
-                return exits.get("WEST");
-            default:
-                return null;
-        }
+//        switch (direction) {
+//            case NORTH:
+//                return exits.get("NORTH");
+//            case SOUTH:
+//                return exits.get("SOUTH");
+//            case EAST:
+//                return exits.get("EAST");
+//            case WEST:
+//                return exits.get("WEST");
+//            default:
+//                return null;
+//        }
+        return exits.get(direction.name());
     }
 
     public List<String> displayAdjacentLocations() {
@@ -88,10 +89,13 @@ public class Location {
     }
 
     public List<String> displayExits() {
-        List<String> exits = new ArrayList<>();
-        for (String direction : this.getExits().keySet()) {
-            exits.add(direction);
-        }
+//        List<String> exits = new ArrayList<>();
+
+        List<String> exits = this.getExits().keySet().stream().collect(Collectors.toList());
+
+//        for (String direction : this.getExits().keySet()) {
+//            exits.add(direction);
+//        }
         return exits;
     }
 
