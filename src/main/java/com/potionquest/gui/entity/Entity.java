@@ -32,9 +32,11 @@ public class Entity {
   public boolean firstChat = true;
 //  public boolean keyCharacter = false;
 
-  public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
-  public int solidAreaDefaultX = 0;
-  public int solidAreaDefaultY = -48;
+  public Rectangle solidArea = new Rectangle();
+//  public int solidAreaDefaultX = -20;
+  public int solidAreaDefaultX;
+//  public int solidAreaDefaultY = -80;
+  public int solidAreaDefaultY;
 
   public BufferedImage imageFetch(String filePath) {
 
@@ -79,6 +81,7 @@ public class Entity {
   }
 
   public void update() {
+
     setBehavior();
 
     collisionOn = false;
@@ -86,36 +89,31 @@ public class Entity {
     // add object collision detect here later
     GamePanel.collider.checkTargetsCollision(this);
 
-    // IF COLLISION IS FALSE, PLAYER CAN MOVE
+    // IF COLLISION IS FALSE, ENTITY CAN MOVE
     if (!collisionOn) {
       switch (direction) {
         case "up":
-          if(worldY - speed >= 0) {
-            worldY -= speed;
-          }
+          worldY -= speed;
           break;
         case "down":
-          if(worldY + speed <= GamePanel.maxWorldRow * GamePanel.tileSize) {
-            worldY += speed;
-          }
+          worldY += speed;
           break;
         case "left":
-          if(worldX - speed >= 0) {
-            worldX -= speed;
-          }
+          worldX -= speed;
           break;
         case "right":
-          if(worldX + speed <= GamePanel.maxWorldCol * GamePanel.tileSize) {
-            worldX += speed;
-          }
+          worldX += speed;
           break;
       }
     }
 
     spriteCounter++;
-    if (spriteCounter >= 12) {
-      spriteNum++;
-      if (spriteNum >= 3) {
+    if (spriteCounter > 12) {
+      if (spriteNum == 1) {
+        spriteNum = 2;
+      } else if (spriteNum == 2) {
+        spriteNum = 3;
+      } else if (spriteNum == 3) {
         spriteNum = 1;
       }
       spriteCounter = 0;
