@@ -7,6 +7,7 @@ public class KeyHandler implements KeyListener {
 
   public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed;
 
+
   @Override
   public void keyTyped(KeyEvent e) {
   }
@@ -147,6 +148,7 @@ public class KeyHandler implements KeyListener {
   public void dialogueState(int code) {
     if (GamePanel.ui.dialogueScreenState == 0) {
       if (code == KeyEvent.VK_Z) {
+
         GamePanel.gameState = GamePanel.playState;
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
@@ -178,6 +180,9 @@ public class KeyHandler implements KeyListener {
     }
   }
 
+
+
+
   @Override
   public void keyReleased(KeyEvent e) {
 
@@ -193,7 +198,11 @@ public class KeyHandler implements KeyListener {
       leftPressed = false;
     }
     if (code == KeyEvent.VK_RIGHT) {
+
       rightPressed = false;
+    }
+    if(code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
+      interactOff = true;
     }
   }
 }

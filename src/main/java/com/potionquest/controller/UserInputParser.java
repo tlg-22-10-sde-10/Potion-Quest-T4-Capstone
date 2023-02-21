@@ -122,27 +122,8 @@ public class UserInputParser {
     }
 
     public static void updatePlayerLocation(String secondArgumentOfUserInput, Player player) {
-        Direction direction;
-        switch (secondArgumentOfUserInput.toUpperCase()) {
-            case "NORTH":
-                direction = Direction.NORTH;
-                player.move(direction);
-                break;
-            case "SOUTH":
-                direction = Direction.SOUTH;
-                player.move(direction);
-                break;
-            case "EAST":
-                direction = Direction.EAST;
-                player.move(direction);
-                break;
-            case "WEST":
-                direction = Direction.WEST;
-                player.move(direction);
-                break;
-            default:
-                System.out.println("Not a valid direction.");
-        }
+        var direction = Direction.valueOf(secondArgumentOfUserInput.toUpperCase());
+        player.move(direction);
     }
 
     private static String handleCombatEncounter() {
@@ -155,44 +136,42 @@ public class UserInputParser {
 
         //need to fix, this makes it so only combat is occurring in Forest
         //need to fix null pointer exception for fight monster and removing from monster list
-        if(Game.getGameInstance().getPlayer().getCurrentLocation().getName() ==
-                Game.getGameInstance().getLocations().get("Forest").getName()) {
+        if(Game.getGameInstance().getPlayer().getCurrentLocation().getName().equals(
+                Game.getGameInstance().getLocations().get("Forest").getName())) {
 
-                int playerHealth = player.getHealth();
-                Monster monster = Game.getGameInstance().getMonsters().get("Wolf");
-                int monsterHealth = monster.getHealth();
-                int totalMonsterDamageTaken = 0;
-                int totalPlayerDamageTaken = 0;
+            int playerHealth = player.getHealth();
+            Monster monster = Game.getGameInstance().getMonsters().get("Wolf");
+            int monsterHealth = monster.getHealth();
+            int totalMonsterDamageTaken = 0;
+            int totalPlayerDamageTaken = 0;
+            String monsterName = monster.getName();
 
-                while (monsterHealth > 0 && playerHealth > 0) {
-                    int playerAttack = Combat.playerAttack(player);
-                    int playerDefend = Combat.playerDefend(player);
-                    int monsterAttack = Combat.monsterAttack(monster);
-                    int monsterDefend = Combat.monsterDefend(monster);
-                    int monsterDamageTaken = Combat.monsterTakeDamage(playerAttack, monsterDefend);
-                    totalMonsterDamageTaken += monsterDamageTaken;
-                    int playerDamageTaken = Combat.playerTakeDamage(playerDefend, monsterAttack);
-                    totalPlayerDamageTaken += playerDamageTaken;
-                    monsterHealth -= monsterDamageTaken;
+            while (monsterHealth > 0 && playerHealth > 0) {
+                int monsterDamageTaken = Combat.monsterTakeDamage(player, monster);
+                totalMonsterDamageTaken += monsterDamageTaken;
+                int playerDamageTaken = Combat.playerTakeDamage(player, monster);
+                totalPlayerDamageTaken += playerDamageTaken;
+                monsterHealth -= monsterDamageTaken;
 
-                    playerHealth -= playerDamageTaken;
-                    player.setHealth(playerHealth);
-                    String monsterName = monster.getName();
-                    combatReport = "After a hard fought battle, you did " + totalMonsterDamageTaken + " total damage to the " +
-                            monsterName +
-                            "\nYou took " + totalPlayerDamageTaken + " damage." +
-                            "\nYour current hp is " + playerHealth + ".";
-                    if (monsterHealth <= 0) {
-                        combatReport += "\nThe " + monsterName + " is no longer a concern. You should continue your journey.";
-                        combatReport += "\nThe monster dropped a " + rope.getName() + ".";
-                        currentLocation.setItems(itemsToAddForest);
-                        player.getCurrentLocation().getMonsters().remove(monster);
-                    }
+                playerHealth -= playerDamageTaken;
+                player.setHealth(playerHealth);
 
-                    if (playerHealth == 0) {
-                        combatReport += "\ncom.postionquest.game.Game Over. You died.";
-                    }
-                }
+                combatReport = "After a hard fought battle, you did " + totalMonsterDamageTaken + " total damage to the " +
+                    monsterName +
+                    "\nYou took " + totalPlayerDamageTaken + " damage." +
+                    "\nYour current hp is " + playerHealth + ".";
+            }
+
+            if (monsterHealth <= 0) {
+                combatReport += "\nThe " + monsterName + " is no longer a concern. You should continue your journey.";
+                combatReport += "\nThe monster dropped a " + rope.getName() + ".";
+                currentLocation.setItems(itemsToAddForest);
+                player.getCurrentLocation().getMonsters().remove(monster);
+            }
+
+            if (playerHealth <= 0) {
+                combatReport += "\ncom.postionquest.game.Game Over. You died.";
+            }
         }
         return combatReport;
     }

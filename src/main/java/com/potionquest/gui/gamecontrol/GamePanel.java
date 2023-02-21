@@ -1,11 +1,15 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.game.Sound;
+import com.potionquest.game.Timer;
 import com.potionquest.gui.entity.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import java.awt.event.KeyEvent;
+
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
 
@@ -32,11 +36,16 @@ public class GamePanel extends JPanel implements Runnable {
   public static TileLayer01 tileMLayer1 = new TileLayer01();
   public static TileLayer02 tileMLayer2 = new TileLayer02();
   public static TileLayer03 tileMLayer3 = new TileLayer03();
-  public static KeyHandler keyH = new KeyHandler();
+
+  public KeyHandler keyH = new KeyHandler(this);
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
+
+  //public UI ui = new UI(this);
+
   public static UI ui = new UI();
   public static EventHandler eHandler = new EventHandler();
+
   private static Thread gameThread;
 
   // ENTITIES AND OBJECTS
@@ -51,11 +60,22 @@ public class GamePanel extends JPanel implements Runnable {
   public static final int dialogueState = 2;
   public static final int optionsState = 5;
 
+  public final int optionState = 5;
+
+
+  //self defined
+  private Sound sound = new Sound();
+  private static long gameTime = 0;
+
+
+
+
   public GamePanel() {
 
     this.setPreferredSize(new Dimension(screenWidth, screenHeight));
     this.setBackground(Color.BLACK);
     this.setDoubleBuffered(true);
+
     this.addKeyListener(keyH);
     this.setFocusable(true);
   }
@@ -71,8 +91,11 @@ public class GamePanel extends JPanel implements Runnable {
   public void startGameThread() {
 
     gameThread = new Thread(this);
+
     gameThread.start();
   }
+
+
 
   @Override
   public void run() {
@@ -83,6 +106,8 @@ public class GamePanel extends JPanel implements Runnable {
     long currentTime;
     long timer = 0;
     int drawCount = 0;
+
+    sound.playSound();
 
     while (gameThread != null) {
 
@@ -101,6 +126,15 @@ public class GamePanel extends JPanel implements Runnable {
 
       if (timer >= 1000000000) {
         System.out.println("FPS: " + drawCount);
+
+        if(gameState == playState) gameTime++;
+
+        System.out.println(gameTime);
+
+        if(gameTime > 15) {
+          System.out.println("game over");
+        }
+
         drawCount = 0;
         timer = 0;
       }
@@ -110,8 +144,13 @@ public class GamePanel extends JPanel implements Runnable {
   public void update() {
 
     if (gameState == playState) {
+
+      //resume the music
+      if(sound.getClip() != null && !sound.getClip().isRunning()) {
+        sound.getClip().start();
+      }
       // PLAYER
-      player.update();
+      player.update(this);
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
@@ -121,6 +160,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     } else if (gameState == pauseState) {
       // nothing for now
+      if (sound.getClip() != null && sound.getClip().isRunning()) {
+        sound.getClip().stop();
+      }
     }
   }
 
@@ -156,4 +198,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     g2D.dispose();
   }
+
+  public static long getGameTime() {
+    return gameTime;
+  }
+
 }
