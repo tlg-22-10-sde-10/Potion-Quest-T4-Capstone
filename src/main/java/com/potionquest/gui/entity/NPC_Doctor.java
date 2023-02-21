@@ -1,17 +1,24 @@
 package com.potionquest.gui.entity;
 
+import com.potionquest.game.Characters;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 
 public class NPC_Doctor extends Entity {
 
-  public NPC_Doctor() {
+  public boolean keyCharacter = true;
+  Characters doctor = getCharacter();
+
+  public NPC_Doctor() throws IOException {
     direction = "left";
     speed = 0;
 
     getNPCImage();
+    setDialogue();
   }
 
   public void getNPCImage() {
@@ -47,6 +54,19 @@ public class NPC_Doctor extends Entity {
     }
   }
 
+  public Characters getCharacter() throws IOException {
+    Map<String, Characters> charactersMap = Characters.characterJsonParser();
+    return charactersMap.get("Doctor");
+  }
+
+  public void setDialogue() throws IOException {
+
+    for (int i = 0; i < doctor.getResponses().size(); i++) {
+      dialogues[i] = doctor.getResponses().get(Integer.toString(i+1));
+    }
+
+  }
+
   public void setBehavior() {
 
     actionTimeOut++;
@@ -65,6 +85,39 @@ public class NPC_Doctor extends Entity {
         direction = "left";
       }
       actionTimeOut = 0;
+    }
+  }
+
+  public void talk() {
+
+    if (firstChat) {
+      try {
+        Characters doctor = getCharacter();
+        GamePanel.ui.currentDialogue = doctor.getDialogue();
+
+        switch (GamePanel.player.direction) {
+          case "up":
+            this.direction = "down";
+            break;
+          case "down":
+            this.direction = "up";
+            break;
+          case "left":
+            this.direction = "right";
+            break;
+          case "right":
+            this.direction = "left";
+            break;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      firstChat = false;
+
+    } else {
+      GamePanel.ui.dialogueScreenState = 1;
+      super.talk();
+
     }
   }
 

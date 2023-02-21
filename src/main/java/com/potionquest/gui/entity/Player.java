@@ -2,7 +2,6 @@ package com.potionquest.gui.entity;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
-import com.potionquest.game.Game;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -41,8 +40,15 @@ public class Player extends Entity {
 
   public void setDefaultValues() {
 
-    worldX = GamePanel.tileSize * 4;
-    worldY = GamePanel.tileSize * 38;
+    // start game spawn point
+//    worldX = GamePanel.tileSize * 4;
+//    worldY = GamePanel.tileSize * 38;
+    // near teleporter at river
+//    worldX = GamePanel.tileSize * 48;
+//    worldY = GamePanel.tileSize * 70;
+    // near hermit
+    worldX = GamePanel.tileSize * 21;
+    worldY = GamePanel.tileSize * 82;
     speed = 4;
     direction = "down";
   }
@@ -109,6 +115,9 @@ public class Player extends Entity {
       int npcIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.npc);
       collideNPC(npcIndex);
 
+      //CHECK EVENT
+      GamePanel.eHandler.checkEvent();
+
       // IF COLLISION IS FALSE, PLAYER CAN MOVE
       if (!collisionOn) {
         switch (direction) {
@@ -153,15 +162,12 @@ public class Player extends Entity {
   public void collideNPC(int i) {
 
     if (i != 999) {
-      System.out.println("You are hitting an npc!");
-      // Debug output for collision box debugging
-//      System.out.println("Player Solid Area Default X: " + GamePanel.player.solidAreaDefaultX + "\n" +
-//          "Player Solid Area Default Y: " + GamePanel.player.solidAreaDefaultY + "\n" +
-//          "solidArea.x: " + solidArea.x + "\n" +
-//          "solidArea.y: " + solidArea.y + "\n" +
-//          "entity solidArea.x: " + GamePanel.npc[i].solidArea.x + "\n" +
-//          "entity solidArea.y: " + GamePanel.npc[i].solidArea.y);
+      if (keyH.zPressed) {
+        GamePanel.gameState = GamePanel.dialogueState;
+        GamePanel.npc[i].talk();
+      }
     }
+    keyH.zPressed = false;
   }
 
   public void draw(Graphics2D g2D) {
