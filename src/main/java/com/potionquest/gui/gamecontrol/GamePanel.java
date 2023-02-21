@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
   public static TileLayer02 tileMLayer2 = new TileLayer02();
   public static TileLayer03 tileMLayer3 = new TileLayer03();
 
-  public KeyHandler keyH = new KeyHandler(this);
+  public static KeyHandler keyH = new KeyHandler();
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
 
@@ -66,8 +66,6 @@ public class GamePanel extends JPanel implements Runnable {
   //self defined
   private Sound sound = new Sound();
   private static long gameTime = 0;
-
-
 
 
   public GamePanel() {
@@ -107,7 +105,7 @@ public class GamePanel extends JPanel implements Runnable {
     long timer = 0;
     int drawCount = 0;
 
-    sound.playSound();
+//    sound.playSound();
 
     while (gameThread != null) {
 
@@ -151,6 +149,7 @@ public class GamePanel extends JPanel implements Runnable {
       }
       // PLAYER
       player.update(this);
+
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
@@ -182,13 +181,26 @@ public class GamePanel extends JPanel implements Runnable {
       tileMLayer2.draw(g2D);
       tileMLayer3.draw(g2D);
 
+
+//      int playerY = player.worldY;
+//      for (int i = 0; i < npc.length; i++) {
+//        if (npc[i] != null) {
+//          int npcY = npc[i].worldY;
+//          if (playerY < npcY) {
+//            player.draw(g2D);
+//            npc[i].draw(g2D);
+//          } else if (playerY > npcY) {
+//            npc[i].draw(g2D);
+//            player.draw(g2D);
+//          }
+//        }
+//      }
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
           npc[i].draw(g2D);
         }
       }
-
       //PLAYER
       player.draw(g2D);
 
