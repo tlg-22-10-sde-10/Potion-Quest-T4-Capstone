@@ -1,13 +1,13 @@
 package com.potionquest.gui.entity;
 
-import com.potionquest.gui.gamecontrol.*;
+import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class NPC_Sister extends Entity {
+public class NPC_Alchemist_Brother extends Entity {
 
-  public NPC_Sister() {
-    direction = "down";
+  public NPC_Alchemist_Brother() {
+    direction = "right";
     speed = 0;
 
     getNPCImage();
@@ -15,7 +15,7 @@ public class NPC_Sister extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/sister.png");
+    BufferedImage npcImage = imageFetch("/npc/alchemist.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -46,13 +46,6 @@ public class NPC_Sister extends Entity {
     }
   }
 
-  public void setDialogue() {
-
-    // for loop to iterate over character's dialogues from JSON file
-    dialogues[0] = "blank";
-
-  }
-
   @Override
   public void draw(Graphics2D g2D) {
 
@@ -66,7 +59,7 @@ public class NPC_Sister extends Entity {
         && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
         && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
 
-      image = goDown[0];
+      image = goLeft[0];
       g2D.drawImage(image, screenX, screenY, null);
     }
   }

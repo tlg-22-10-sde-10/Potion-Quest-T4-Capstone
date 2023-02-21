@@ -21,7 +21,6 @@ public class Player extends Entity {
   public final int screenX;
   public final int screenY;
 
-
   public Player() {
     screenX = GamePanel.screenWidth/2 - (playerSizeX/2);
     screenY = GamePanel.screenHeight/2 - (playerSizeY/2);
@@ -30,8 +29,11 @@ public class Player extends Entity {
     solidArea.x = 10;
     solidArea.y = 20;
 
-    solidArea.width = 12;
-    solidArea.height = 20;
+    solidAreaDefaultX = solidArea.x;
+    solidAreaDefaultY = solidArea.y;
+    solidArea.width = 32;
+    solidArea.height = 40;
+
 
     setDefaultValues();
     getPlayerImage();
@@ -39,8 +41,15 @@ public class Player extends Entity {
 
   public void setDefaultValues() {
 
-    worldX = GamePanel.tileSize * 4;
-    worldY = GamePanel.tileSize * 38;
+    // start game spawn point
+//    worldX = GamePanel.tileSize * 4;
+//    worldY = GamePanel.tileSize * 38;
+    // near teleporter at river
+//    worldX = GamePanel.tileSize * 48;
+//    worldY = GamePanel.tileSize * 70;
+    // near hermit
+    worldX = GamePanel.tileSize * 21;
+    worldY = GamePanel.tileSize * 82;
     speed = 4;
     direction = "down";
   }
@@ -90,8 +99,11 @@ public class Player extends Entity {
       GamePanel.collider.checkTile(this);
 
       // CHECK NPC COLLISION
-      int npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
+      int npcIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.npc);
       collideNPC(npcIndex);
+
+      //CHECK EVENT
+      GamePanel.eHandler.checkEvent();
 
       // IF COLLISION IS FALSE, PLAYER CAN MOVE
       if (!collisionOn) {
@@ -140,8 +152,12 @@ public class Player extends Entity {
   public void collideNPC(int i) {
 
     if (i != 999) {
-      System.out.println("You are hitting an npc!");
+      if (keyH.zPressed) {
+        GamePanel.gameState = GamePanel.dialogueState;
+        GamePanel.npc[i].talk();
+      }
     }
+    keyH.zPressed = false;
   }
 
   public void draw(Graphics2D g2D) {
