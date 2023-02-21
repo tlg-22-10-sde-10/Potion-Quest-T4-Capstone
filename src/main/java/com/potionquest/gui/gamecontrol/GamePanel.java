@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
 
@@ -35,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
   public static UI ui = new UI();
+  public static EventHandler eHandler = new EventHandler();
   private static Thread gameThread;
 
   // ENTITIES AND OBJECTS
@@ -43,8 +45,11 @@ public class GamePanel extends JPanel implements Runnable {
 
   // GAME STATE
   public static int gameState;
+  public static final int titleState = -1;
   public static final int pauseState = 0;
   public static final int playState = 1;
+  public static final int dialogueState = 2;
+  public static final int optionsState = 5;
 
   public GamePanel() {
 
@@ -59,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
   public void setUpWorld() {
 
     aPlacer.setNPC();
-    gameState = playState;
+    gameState = titleState;
 //    aPlacer.setStuff
   }
 
@@ -124,23 +129,30 @@ public class GamePanel extends JPanel implements Runnable {
     super.paintComponent(g);
     Graphics2D g2D = (Graphics2D) g;
 
-    // TILES
-    tileMLayer1.draw(g2D);
-    tileMLayer2.draw(g2D);
-    tileMLayer3.draw(g2D);
-
-    // NPC
-    for (int i = 0; i < npc.length; i++) {
-      if (npc[i] != null) {
-        npc[i].draw(g2D);
-      }
+    //TITLE SCREEN
+    if (gameState == titleState) {
+      ui.draw(g2D);
     }
+    //OTHERS
+    else {
+      // TILES
+      tileMLayer1.draw(g2D);
+      tileMLayer2.draw(g2D);
+      tileMLayer3.draw(g2D);
 
-    //PLAYER
-    player.draw(g2D);
+      // NPC
+      for (int i = 0; i < npc.length; i++) {
+        if (npc[i] != null) {
+          npc[i].draw(g2D);
+        }
+      }
 
-    //UI
-    ui.draw(g2D);
+      //PLAYER
+      player.draw(g2D);
+
+      //UI
+      ui.draw(g2D);
+    }
 
     g2D.dispose();
   }

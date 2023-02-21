@@ -19,5 +19,12 @@
     "responses" : {"1": "Here you go, enjoy!",
       "2": "Here is some bread for your journey.",
       "3": "See you later. Safe travels."}
+  },
+  {
+    "name": "Doctor",
+    "dialogue": "You must hurry to Langtoft Village to save \nyour sister!",
+    "responses": {
+      "1": "Have you retrieved the potion for your \nsister?"
+    }
   }
 ]

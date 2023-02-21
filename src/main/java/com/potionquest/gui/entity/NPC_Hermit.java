@@ -50,7 +50,7 @@ public class NPC_Hermit extends Entity {
 
     actionTimeOut++;
 
-    if (actionTimeOut == 120) {
+    if (actionTimeOut == 60) {
       Random random = new Random();
       int i = random.nextInt(100) + 1; //pick random number from 1 to 4
 

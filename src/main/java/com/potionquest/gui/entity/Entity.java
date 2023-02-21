@@ -23,6 +23,10 @@ public class Entity {
   public int spriteCounter = 0;
   public int spriteNum = 1;
   public int actionTimeOut = 0;
+  public String[] dialogues = new String[20];
+  public int dialogueIndex = 0;
+  public boolean firstChat = true;
+//  public boolean keyCharacter = false;
 
   public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
   public int solidAreaDefaultX = 0;
@@ -43,6 +47,31 @@ public class Entity {
   }
 
   public void setBehavior() {}
+
+  public void talk() {
+
+    if (dialogues[dialogueIndex] == null) {
+      dialogueIndex = 0;
+    }
+    GamePanel.ui.currentDialogue = dialogues[dialogueIndex];
+    dialogueIndex++;
+
+    switch (GamePanel.player.direction) {
+      case "up":
+        this.direction = "down";
+        break;
+      case "down":
+        this.direction = "up";
+        break;
+      case "left":
+        this.direction = "right";
+        break;
+      case "right":
+        this.direction = "left";
+        break;
+    }
+
+  }
 
   public void update() {
     setBehavior();
