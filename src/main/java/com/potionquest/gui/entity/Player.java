@@ -1,7 +1,11 @@
 package com.potionquest.gui.entity;
 
 
+import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
+
 import com.potionquest.gui.gamecontrol.*;
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -13,7 +17,7 @@ public class Player extends Entity {
 
   private final int sizeX = 16;
   private final int sizeY = 20;
-  private final int scaleFactor = 2;
+  private final int scaleFactor = 3;
 
   private final int playerSizeX = sizeX * scaleFactor;
   private final int playerSizeY = sizeY * scaleFactor;
@@ -22,6 +26,9 @@ public class Player extends Entity {
   public final int screenY;
 
   public Player() {
+    MAX_HP = 20;
+    HP = MAX_HP;
+
     screenX = GamePanel.screenWidth/2 - (playerSizeX/2);
     screenY = GamePanel.screenHeight/2 - (playerSizeY/2);
 
@@ -42,14 +49,14 @@ public class Player extends Entity {
   public void setDefaultValues() {
 
     // start game spawn point
-//    worldX = GamePanel.tileSize * 4;
-//    worldY = GamePanel.tileSize * 38;
+    worldX = GamePanel.tileSize * 4;
+    worldY = GamePanel.tileSize * 38;
     // near teleporter at river
 //    worldX = GamePanel.tileSize * 48;
 //    worldY = GamePanel.tileSize * 70;
     // near hermit
-    worldX = GamePanel.tileSize * 21;
-    worldY = GamePanel.tileSize * 82;
+//    worldX = GamePanel.tileSize * 21;
+//    worldY = GamePanel.tileSize * 82;
     speed = 4;
     direction = "down";
   }
@@ -61,36 +68,60 @@ public class Player extends Entity {
       //noinspection ConstantConditions
       BufferedImage playerImage = ImageIO.read(inputStream);
 
-      int imageIndexX = 0;
-
       for (int i = 0; i < 4; i++) {
-        BufferedImage up = playerImage.getSubimage(imageIndexX, 40, 16, 20);
-        BufferedImage down = playerImage.getSubimage(imageIndexX, 0, 16, 20);
-        BufferedImage left = playerImage.getSubimage(imageIndexX, 60, 16, 20);
-        BufferedImage right = playerImage.getSubimage(imageIndexX, 20, 16, 20);
+        BufferedImage up = playerImage.getSubimage(i * sizeX, 40, 16, 20);
+        BufferedImage down = playerImage.getSubimage(i * sizeX, 0, 16, 20);
+        BufferedImage left = playerImage.getSubimage(i * sizeX, 60, 16, 20);
+        BufferedImage right = playerImage.getSubimage(i * sizeX, 20, 16, 20);
 
         goUp[i] = up;
         goDown[i] = down;
         goLeft[i] = left;
         goRight[i] = right;
-        imageIndexX += 16;
+
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public void update(GamePanel gp) {
+  public void getPlayerImage2() {
 
-    if (gp.keyH.upPressed || gp.keyH.downPressed || gp.keyH.leftPressed || gp.keyH.rightPressed) {
-      if (gp.keyH.upPressed) {
+    try (InputStream inputStream = getClass().getResourceAsStream("/lidia.png")) {
+
+      //noinspection ConstantConditions
+      BufferedImage playerImage = ImageIO.read(inputStream);
+
+      int imageIndexX = 0;
+
+      for (int i = 0; i < 9; i++) {
+        BufferedImage up = playerImage.getSubimage(imageIndexX, 0, 64, 64);
+        BufferedImage left = playerImage.getSubimage(imageIndexX, 64, 64, 64);
+        BufferedImage down = playerImage.getSubimage(imageIndexX, 128, 64, 64);
+        BufferedImage right = playerImage.getSubimage(imageIndexX, 192, 64, 64);
+
+        goUp[i] = up;
+        goDown[i] = down;
+        goLeft[i] = left;
+        goRight[i] = right;
+        imageIndexX += 64;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void update() {
+
+    if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+      if (keyH.upPressed) {
         direction = "up";
-      } else if (gp.keyH.downPressed) {
+      } else if (keyH.downPressed) {
         direction = "down";
-      } else if (gp.keyH.leftPressed) {
+      } else if (keyH.leftPressed) {
         direction = "left";
       } else //noinspection ConstantConditions
-        if (gp.keyH.rightPressed) {
+        if (keyH.rightPressed) {
           direction = "right";
         }
 
@@ -101,6 +132,10 @@ public class Player extends Entity {
       // CHECK NPC COLLISION
       int npcIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.npc);
       collideNPC(npcIndex);
+
+      //CHECK MONSTER COLLISION
+      int monsterIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.monsters);
+      contactMonster(monsterIndex);
 
       //CHECK EVENT
       GamePanel.eHandler.checkEvent();
@@ -133,11 +168,28 @@ public class Player extends Entity {
 
       spriteCounter++;
       if (spriteCounter >= 12) {
-        spriteNum++;
-        if (spriteNum >= 3) {
+        if (spriteNum >= goUp.length) {
           spriteNum = 1;
         }
+        spriteNum++;
         spriteCounter = 0;
+      }
+    }
+
+    if(invincible) {
+      invincibleCounter++;
+      if(invincibleCounter >= FPS/3) {
+        invincible = false;
+        invincibleCounter = 0;
+      }
+    }
+  }
+
+  private void contactMonster(int monsterIndex) {
+    if (monsterIndex != 999) {
+      if(!invincible) {
+        HP -= 1;
+        invincible = true;
       }
     }
   }
@@ -161,7 +213,6 @@ public class Player extends Entity {
   }
 
   public void draw(Graphics2D g2D) {
-
     BufferedImage image = null;
 
     switch (direction) {
@@ -179,7 +230,20 @@ public class Player extends Entity {
         break;
     }
 
+    if(invincible) {
+      g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+    }
+
     g2D.drawImage(image, screenX, screenY, playerSizeX, playerSizeY, null);
+    g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+  }
+
+  public int getHP() {
+    return HP;
+  }
+
+  public void setHP(int HP) {
+    this.HP = HP;
   }
 }
 

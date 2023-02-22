@@ -3,11 +3,14 @@ package com.potionquest.gui.gamecontrol;
 import com.potionquest.game.Sound;
 import com.potionquest.game.Timer;
 import com.potionquest.gui.entity.*;
+import com.potionquest.gui.entity.monsters.MonsterPrototype;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+
+//66 18
 import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
@@ -37,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
   public static TileLayer02 tileMLayer2 = new TileLayer02();
   public static TileLayer03 tileMLayer3 = new TileLayer03();
 
-  public KeyHandler keyH = new KeyHandler(this);
+  public static KeyHandler keyH = new KeyHandler();
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
 
@@ -51,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
   // ENTITIES AND OBJECTS
   public static Entity[] npc = new Entity[10];
   public static Player player = new Player();
+  public static Entity[] monsters = new MonsterPrototype[10];
 
   // GAME STATE
   public static int gameState;
@@ -62,13 +66,9 @@ public class GamePanel extends JPanel implements Runnable {
 
   public final int optionState = 5;
 
-
   //self defined
   private Sound sound = new Sound();
   private static long gameTime = 0;
-
-
-
 
   public GamePanel() {
 
@@ -84,6 +84,8 @@ public class GamePanel extends JPanel implements Runnable {
   public void setUpWorld() {
 
     aPlacer.setNPC();
+    aPlacer.setMonster();
+
     gameState = titleState;
 //    aPlacer.setStuff
   }
@@ -129,11 +131,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         if(gameState == playState) gameTime++;
 
-        System.out.println(gameTime);
-
-        if(gameTime > 15) {
-          System.out.println("game over");
-        }
+//        System.out.println(gameTime);
+//
+//        if(gameTime > 15) {
+//          System.out.println("game over");
+//        }
 
         drawCount = 0;
         timer = 0;
@@ -150,11 +152,17 @@ public class GamePanel extends JPanel implements Runnable {
         sound.getClip().start();
       }
       // PLAYER
-      player.update(this);
+      player.update();
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
           npc[i].update();
+        }
+      }
+      for (int i = 0; i< monsters.length; i++) {
+        if(monsters[i] != null) {
+
+          monsters[i].update();
         }
       }
 
@@ -186,6 +194,12 @@ public class GamePanel extends JPanel implements Runnable {
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
           npc[i].draw(g2D);
+        }
+      }
+
+      for (int i = 0; i < monsters.length; i++) {
+        if (monsters[i] != null) {
+          monsters[i].draw(g2D);
         }
       }
 

@@ -190,8 +190,10 @@ public class CollisionChecker {
             break;
         }
         if (entity.solidArea.intersects(target[i].solidArea)) {
-          entity.collisionOn = true;
-          index = i;
+          if(target[i] != entity) {
+            entity.collisionOn = true;
+            index = i;
+          }
         }
 
         entity.solidArea.x = entity.solidAreaDefaultX;
@@ -203,7 +205,8 @@ public class CollisionChecker {
     return index;
   }
 
-  public void checkTargetsCollision(Entity entity) {
+  public boolean checkTargetsCollision(Entity entity) {
+    boolean contactPlayer = false;
     // get entity's solid area position
     entity.solidArea.x = entity.worldX - entity.solidArea.x;
     entity.solidArea.y = entity.worldY - entity.solidArea.y;
@@ -227,11 +230,14 @@ public class CollisionChecker {
     }
     if (entity.solidArea.intersects(GamePanel.player.solidArea)) {
       entity.collisionOn = true;
+      contactPlayer = true;
     }
 
     entity.solidArea.x = entity.solidAreaDefaultX;
     entity.solidArea.y = entity.solidAreaDefaultY;
     GamePanel.player.solidArea.x = GamePanel.player.solidAreaDefaultX;
     GamePanel.player.solidArea.y = GamePanel.player.solidAreaDefaultY;
+
+    return contactPlayer;
   }
 }
