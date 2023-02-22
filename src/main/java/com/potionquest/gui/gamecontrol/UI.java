@@ -21,12 +21,14 @@ public class UI {
 //    arial_80B = new Font("Arial", Font.BOLD, 80);
 //  }
 
+
 //  public UI(GamePanel gp) {
 //    this.gp = gp;
 //    arial_24 = new Font("Arial", Font.PLAIN, 24);
 //    arial_40 = new Font("Arial", Font.PLAIN, 40);
 //    arial_80B = new Font("Arial", Font.BOLD, 80);
 //  }
+
 
   public String currentDialogue = "";
   public int commandNum = 0;
@@ -35,6 +37,7 @@ public class UI {
   public int dialogueScreenState = 0; // 0 is main dialogue, 1 is subdialogues
 
   public UI() {
+    arial_24 = new Font("Arial", Font.PLAIN, 24);
     arial_40 = new Font("Comic Sans MS", Font.PLAIN, 40);
     arial_80B = new Font("Comic Sans MS", Font.BOLD, 80);
   }
@@ -51,26 +54,25 @@ public class UI {
     //after displaying time, set the font back to default
     g2D.setFont(arial_40);
 
-    drawInventory();
 
     // TITLE STATE
     if (GamePanel.gameState == GamePanel.titleState) {
       drawTitleScreen();
-    }
-
-    // PLAY STATE
-    else if (GamePanel.gameState == GamePanel.playState) {
-      // Play state stuff
-    }
-
-    // PAUSE STATE
-    else if (GamePanel.gameState == GamePanel.pauseState) {
-      drawPauseScreen();
-    }
-
-    // DIALOGUE STATE
-    else if (GamePanel.gameState == GamePanel.dialogueState) {
-      drawDialogueScreen();
+    } else {
+      drawInventory();
+      drawPlayerHP();
+      // PLAY STATE
+      if (GamePanel.gameState == GamePanel.playState) {
+        // Play state stuff
+      }
+      // PAUSE STATE
+      else if (GamePanel.gameState == GamePanel.pauseState) {
+        drawPauseScreen();
+      }
+      // DIALOGUE STATE
+      else if (GamePanel.gameState == GamePanel.dialogueState) {
+        drawDialogueScreen();
+      }
     }
   }
 
@@ -96,6 +98,7 @@ public class UI {
     arcHeight = 28;
     g2D.fillRoundRect(x,y,width,height, arcWidth, arcHeight);
   }
+
 
   public void drawTitleScreen() {
 
@@ -163,7 +166,6 @@ public class UI {
   }
 
   public void drawPauseScreen() {
-
     if (pauseScreenState == 0) {
 
       // SUB WINDOW
@@ -291,12 +293,9 @@ public class UI {
         g2D.drawString(">", x - GamePanel.tileSize / 2, y);
       }
     }
-
-
   }
 
   public void drawDialogueScreen() {
-
     if (dialogueScreenState == 0) {
       // WINDOW
       int x = GamePanel.tileSize * 2;
@@ -363,6 +362,17 @@ public class UI {
     g2D.setColor(c);
     g2D.setStroke(new BasicStroke(5));
     g2D.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
+  }
+
+  private void drawSubWindow(int x, int y, int width, int height, Color c) {
+    g2D.setColor(c);
+    arcWidth = 28;
+    arcHeight = 28;
+    g2D.fillRoundRect(x,y,width,height, arcWidth, arcHeight);
+  }
+
+  private void drawPlayerHP() {
+
   }
 
   public int findCenterOfTextString(String text) {

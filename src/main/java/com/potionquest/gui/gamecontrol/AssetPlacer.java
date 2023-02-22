@@ -5,9 +5,14 @@ import com.potionquest.gui.entity.NPC_Alchemist_Brother;
 import com.potionquest.gui.entity.NPC_Doctor;
 import com.potionquest.gui.entity.NPC_Hermit;
 import com.potionquest.gui.entity.NPC_Sister;
+import com.potionquest.gui.entity.monsters.MonsterPrototype;
 import java.io.IOException;
 
 public class AssetPlacer {
+
+  public AssetPlacer() {
+
+  }
 
   public void setNPC() {
 
@@ -36,4 +41,9 @@ public class AssetPlacer {
     GamePanel.npc[4].worldY = GamePanel.tileSize * 47;
   }
 
+  public void setMonster() {
+    GamePanel.monsters[0] = new MonsterPrototype();
+    GamePanel.monsters[0].worldX = GamePanel.tileSize * 12;
+    GamePanel.monsters[0].worldY = GamePanel.tileSize * 40;
+  }
 }
