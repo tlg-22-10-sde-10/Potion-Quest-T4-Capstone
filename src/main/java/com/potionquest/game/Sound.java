@@ -1,16 +1,17 @@
 package com.potionquest.game;
 
+import java.io.BufferedInputStream;
 import javax.sound.sampled.*;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Sound {
     private String soundFile;
     private Clip clip;
     public void playSound() {
-        setSoundFile("src/main/resources/Medieval_game.wav");
+        setSoundFile("/Medieval_game.wav");
         try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream((Objects.requireNonNull(this.getClass().getResourceAsStream(getSoundFile()))));
+            //noinspection ConstantConditions
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(this.getClass().getResourceAsStream(getSoundFile())));
             setClip(AudioSystem.getClip());
             getClip().open(ais);
             getClip().start();

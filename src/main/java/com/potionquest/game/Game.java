@@ -94,7 +94,6 @@ public class Game {
 
             Player cindy = new Player("Cindy", playerHealth, new ArrayList<>(5), playerStats, startingVillage);
 
-
             startingVillage.addAdjacentLocation("NORTH", forest);
             startingVillage.addAdjacentLocation("SOUTH", mountainPass);
 
@@ -120,7 +119,7 @@ public class Game {
     }
 
     public static void checkWin(List<Item> inventory, Location location, GameClient gameClient) throws IOException {
-        Map<String, Item> mapOfAllItems = Item.itemJsonParser();
+        //Map<String, Item> mapOfAllItems = Item.itemJsonParser();
         if (inventory.contains(Game.gameInstance.getItems().get("Potion"))) {
             if (location.getName().equalsIgnoreCase("Whitby Village")) {
                 //TODO: Add win confirmation statement

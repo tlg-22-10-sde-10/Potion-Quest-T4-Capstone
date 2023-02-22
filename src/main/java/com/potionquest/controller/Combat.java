@@ -1,53 +1,33 @@
 package com.potionquest.controller;
 
-import com.potionquest.game.Game;
 import com.potionquest.game.Monster;
 import com.potionquest.game.Player;
 
 import java.util.Random;
 
 public class Combat {
-    private Player player = Game.getGameInstance().getPlayer();
-    private Monster wolf = Game.getGameInstance().getMonsters().get("Wolf");
+    private static final Random rng = new Random();
 
-    public static int playerAttack(Player player) {
-        Random rng = new Random();
-        int playerStrength = player.getStats().get("Strength");
-        return rng.nextInt(playerStrength + 1);
+    public static int playerTakeDamage(Player player,
+        Monster monster) {
+
+        int monsterBaseAttack = monster.getStats().get("strength") + 1;
+        int monsterAttack = rng.nextInt(monsterBaseAttack);
+
+        int playerBaseDefend = player.getStats().get("Defense") + 1;
+        int playerDefend = rng.nextInt(playerBaseDefend);
+
+        return Math.max(0, monsterAttack - playerDefend);
     }
 
-    public static int playerDefend(Player player) {
-        Random rng = new Random();
-        int playerDefense = player.getStats().get("Defense");
-        return rng.nextInt(playerDefense + 1);
-    }
+    public static int monsterTakeDamage(Player player,
+        Monster monster) {
+        int playerBaseAttack = monster.getStats().get("strength") + 1;
+        int playerAttack = rng.nextInt(playerBaseAttack);
 
-    public static int monsterAttack(Monster wolf) {
-        Random rng = new Random();
-        int wolfStrength = wolf.getStats().get("strength");
-        return rng.nextInt(wolfStrength + 1);
-    }
+        int monsterBaseDefend = player.getStats().get("Defense") + 1;
+        int monsterDefend = rng.nextInt(monsterBaseDefend);
 
-    public static int monsterDefend(Monster wolf) {
-        Random rng = new Random();
-        int wolfDefend = wolf.getStats().get("defense");
-        return rng.nextInt(wolfDefend + 1);
-    }
-
-    public static int playerTakeDamage(int playerDefend,
-                                       int monsterAttack) {
-        int damage = 0;
-        if(monsterAttack > playerDefend) {
-            damage = monsterAttack;
-        }
-        return damage;
-    }
-
-    public static int monsterTakeDamage(int playerAttack, int monsterDefend) {
-        int damage = 0;
-        if(playerAttack > monsterDefend) {
-            damage = playerAttack;
-        }
-        return damage;
+        return Math.max(0, playerAttack -  monsterDefend);
     }
 }
