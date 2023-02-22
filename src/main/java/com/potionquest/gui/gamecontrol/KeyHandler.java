@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-  public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed;
+  public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed, spacePressed;
 
   @Override
   public void keyTyped(KeyEvent e) {
@@ -59,6 +59,7 @@ public class KeyHandler implements KeyListener {
         case 2:
           System.exit(0);
       }
+      GamePanel.ui.commandNum = 0;
     }
   }
 
@@ -82,6 +83,10 @@ public class KeyHandler implements KeyListener {
 //      if (code == KeyEvent.VK_ENTER) {
 //        GamePanel.gameState = GamePanel.optionsState;
 //      }
+    if(code == KeyEvent.VK_SPACE) {
+      spacePressed = true;
+    }
+
     if (code == KeyEvent.VK_Z) {
       zPressed = true;
     }
@@ -122,6 +127,7 @@ public class KeyHandler implements KeyListener {
             GamePanel.gameState = GamePanel.titleState;
             break;
         }
+        GamePanel.ui.commandNum = 0;
       }
     }
     if (GamePanel.ui.pauseScreenState == 1) {
@@ -258,7 +264,6 @@ public class KeyHandler implements KeyListener {
 
   @Override
   public void keyReleased(KeyEvent e) {
-
     int code = e.getKeyCode();
 
     if (code == KeyEvent.VK_UP) {
@@ -271,13 +276,10 @@ public class KeyHandler implements KeyListener {
       leftPressed = false;
     }
     if (code == KeyEvent.VK_RIGHT) {
-
       rightPressed = false;
     }
-
-//    if(code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
-//      interactOff = true;
-//    }
-
+    if(code == KeyEvent.VK_SPACE) {
+      spacePressed = false;
+    }
   }
 }

@@ -27,6 +27,8 @@ public class Player extends Entity {
   public final int screenX;
   public final int screenY;
 
+  private boolean isAttacking = false;
+
   public Player() {
     MAX_HP = 20;
     HP = MAX_HP;
@@ -45,7 +47,10 @@ public class Player extends Entity {
 
     setDefaultValues();
     getPlayerImage();
+    getPlayerAttackImage();
   }
+
+
 
   public void setDefaultValues() {
 
@@ -73,7 +78,7 @@ public class Player extends Entity {
      for (int i = 0; i < 4; i++) {
         BufferedImage up = playerImage.getSubimage(imageIndexX, 192, 48, 96);
         BufferedImage down = playerImage.getSubimage(imageIndexX, 0, 48, 96);
-        BufferedImage left = playerImage.getSubimage(imageIndexX, 288, 48, 96);
+        BufferedImage left= playerImage.getSubimage(imageIndexX, 288, 48, 96);
         BufferedImage right = playerImage.getSubimage(imageIndexX, 96, 48, 96);
 
         goUp[i] = up;
@@ -87,21 +92,43 @@ public class Player extends Entity {
       e.printStackTrace();
     }
   }
-  
+
+  private void getPlayerAttackImage() {
+    try (InputStream inputStream = getClass().getResourceAsStream("/player/fight.png")) {
+      //noinspection ConstantConditions
+      BufferedImage playerImage = ImageIO.read(inputStream);
+      UtilityTool uTool = new UtilityTool();
+
+      for (int i = 0; i < 4; i++) {
+        BufferedImage up = playerImage.getSubimage(96*i, 96, 96, 96);
+        BufferedImage down = playerImage.getSubimage(96*i, 0, 96, 96);
+        BufferedImage  right= playerImage.getSubimage(96*i, 192, 96, 96);
+        BufferedImage left = playerImage.getSubimage(96*i, 288, 96, 96);
+
+        fightUp[i] = uTool.scaleImage(up, GamePanel.tileSize, GamePanel.tileSize);
+        fightDown[i] = uTool.scaleImage(down, GamePanel.tileSize, GamePanel.tileSize);
+        fightLeft[i] = uTool.scaleImage(left, GamePanel.tileSize, GamePanel.tileSize);
+        fightRight[i] =uTool.scaleImage(right, GamePanel.tileSize, GamePanel.tileSize);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
   public void update() {
+    if(isAttacking) {
+      attacking();
+    }
 
-    if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-      if (keyH.upPressed) {
-        direction = "up";
-      } else if (keyH.downPressed) {
-        direction = "down";
-      } else if (keyH.leftPressed) {
-        direction = "left";
-      } else //noinspection ConstantConditions
-        if (keyH.rightPressed) {
-          direction = "right";
-        }
-
+    if(keyH.spacePressed) {
+      isAttacking = true;
+    } else if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed ) {
+      if (keyH.upPressed) { direction = "up";}
+      if (keyH.downPressed) { direction = "down";}
+      if (keyH.leftPressed) { direction = "left";}
+      if (keyH.rightPressed) {direction = "right";}
+      
       //CHECK TILE COLLISION
       collisionOn = false;
       GamePanel.collider.checkTile(this);
@@ -117,12 +144,12 @@ public class Player extends Entity {
       //CHECK EVENT
       GamePanel.eHandler.checkEvent();
 
-      // IF COLLISION IS FALSE, PLAYER CAN MOVE
-      if (!collisionOn) {
+      // IF COLLISION IS FALSE and player not making attack move, PLAYER CAN MOVE
+      if (!collisionOn && !isAttacking) {
         switch (direction) {
           case "up":
-            if(worldY - speed >= 0) {
-              worldY -= speed;
+              if(worldY - speed >= 0) {
+                worldY -= speed;
             }
             break;
           case "down":
@@ -148,8 +175,9 @@ public class Player extends Entity {
       if (spriteCounter >= 12) {
         if (spriteNum >= goUp.length) {
           spriteNum = 1;
+        } else {
+          spriteNum++;
         }
-        spriteNum++;
         spriteCounter = 0;
       }
     }
@@ -163,10 +191,30 @@ public class Player extends Entity {
     }
   }
 
+  private void attacking() {
+    spriteCounterAttack++;
+    System.out.println(spriteCounterAttack);
+    if(spriteCounterAttack <= 8) {
+      spriteNumAttack = 1;
+    } else if(spriteCounterAttack <=16) {
+      spriteNumAttack = 2;
+    } else if(spriteCounterAttack <= 20){
+      spriteNumAttack = 3;
+    } else if(spriteCounterAttack <= 24) {
+      spriteNumAttack =4;
+    } else {
+      spriteNumAttack = 1;
+      spriteCounterAttack = 0;
+      isAttacking = false;
+    }
+  }
+
   private void contactMonster(int monsterIndex) {
     if (monsterIndex != 999) {
       if(!invincible) {
-        HP -= 1;
+        if(HP > 0) {
+          HP -= 1;
+        }
         invincible = true;
       }
     }
@@ -197,16 +245,32 @@ public class Player extends Entity {
 
     switch (direction) {
       case "up":
-        image = goUp[spriteNum-1];
+        if(isAttacking) {
+          image = fightUp[spriteNumAttack-1];
+        } else {
+          image = goUp[spriteNum-1];
+        }
         break;
       case "down":
-        image = goDown[spriteNum-1];
+        if(isAttacking) {
+          image = fightDown[spriteNumAttack-1];
+        } else {
+          image = goDown[spriteNum-1];
+        }
         break;
       case "left":
-        image = goLeft[spriteNum-1];
+        if(isAttacking) {
+          image = fightLeft[spriteNumAttack-1];
+        } else {
+          image = goLeft[spriteNum-1];
+        }
         break;
       case "right":
-        image = goRight[spriteNum-1];
+        if(isAttacking) {
+          image = fightRight[spriteNumAttack-1];
+        } else {
+          image = goRight[spriteNum-1];
+        }
         break;
     }
 
@@ -214,7 +278,12 @@ public class Player extends Entity {
       g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
     }
 
-    g2D.drawImage(image, screenX, screenY, playerSizeX, playerSizeY, null);
+    if(isAttacking) {
+      g2D.drawImage(image, screenX, screenY, playerSizeX*2, playerSizeY, null);
+    } else {
+      g2D.drawImage(image, screenX, screenY, playerSizeX, playerSizeY, null);
+    }
+
     g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
   }
 

@@ -10,53 +10,77 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class MonsterPrototype extends Entity {
+  private final String name;
 
-  private String name;
-  private int maxLife;
-  private int life;
-  private int monsterSizeX;
-  private int monsterSizeY;
+  private final int monsterSizeX;
+  private final int monsterSizeY;
 
   public MonsterPrototype() {
-    name = "vampire";
-
-    super.speed = 1;
-    super.entityType = 2;
-
-    maxLife = 10;
-    life = maxLife;
+    this.name = "vampire";
+    super.MAX_HP = 10;
+    super.HP = super.MAX_HP;
 
     monsterSizeX = 24;
-    monsterSizeY =32;
+    monsterSizeY = 32;
 
-    solidArea.x = 8;
-    solidArea.y = 12;
-    solidArea.width = 32;
-    solidArea.height = 36;
+    super.speed = 1;
 
-    solidAreaDefaultX = solidArea.x;
-    solidAreaDefaultY = solidArea.y;
-
-    direction = "down";
+    setDefaultStatus();
 
     getImage();
   }
 
+  public MonsterPrototype(String name, int maxLife, int monsterSizeX, int monsterSizeY,  int speed) {
+    this.name = name;
+    super.MAX_HP = maxLife;
+    super.HP = maxLife;
+
+    this.monsterSizeX = monsterSizeX;
+    this.monsterSizeY = monsterSizeY;
+    super.speed = speed;
+
+    setDefaultStatus();
+
+    getImage();
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  private void setDefaultStatus() {
+    super.entityType = 2;
+
+    super.solidArea.x = 8;
+    super.solidArea.y = 12;
+    super.solidArea.width = 32;
+    super.solidArea.height = 36;
+
+    super.solidAreaDefaultX = solidArea.x;
+    super.solidAreaDefaultY = solidArea.y;
+
+    super.direction = "down";
+  }
+
   public void getImage() {
     try(InputStream inputStream = getClass().getResourceAsStream("/24x32/vampire-f-001.png")) {
-      BufferedImage image = ImageIO.read(inputStream);
+      if(inputStream!=null) {
+        BufferedImage image = ImageIO.read(inputStream);
 
-      int i;
+        for(int i = 0; i< goUp.length; i++) {
+          int periodic = (i%2) * (int) Math.pow(-1, (i+1)/2.0) + 1;
 
-      for(i = 0; i< goUp.length; i++) {
-        int periodic = (i%2) * (int) Math.pow(-1, (i+1)/2) + 1;
+          var up =  image.getSubimage(periodic * 24,0, monsterSizeX, monsterSizeY);
+          var right = image.getSubimage(periodic * 24,32, monsterSizeX, monsterSizeY);
+          var down = image.getSubimage(periodic * 24,64, monsterSizeX, monsterSizeY);
+          var left = image.getSubimage(periodic * 24,96, monsterSizeX, monsterSizeY);
 
-        goUp[i] = image.getSubimage(periodic * 24,0, monsterSizeX,monsterSizeY);
-        goRight[i] = image.getSubimage(periodic * 24,32, monsterSizeX,monsterSizeY);
-        goDown[i] = image.getSubimage(periodic * 24,64, monsterSizeX,monsterSizeY);
-        goLeft[i] = image.getSubimage(periodic * 24,96, monsterSizeX,monsterSizeY);
+          goUp[i] = up;
+          goRight[i] = right;
+          goDown[i] = down;
+          goLeft[i] = left;
+        }
       }
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -155,6 +179,8 @@ public class MonsterPrototype extends Entity {
       }
     }
 
-    g2D.drawImage(image, screenX, screenY, monsterSizeX * 2, monsterSizeY *2, null);
+    g2D.drawImage(image, screenX, screenY, monsterSizeX*2, monsterSizeY*2,null);
   }
+
+
 }

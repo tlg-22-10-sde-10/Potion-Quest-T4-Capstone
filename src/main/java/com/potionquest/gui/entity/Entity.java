@@ -18,14 +18,20 @@ public class Entity {
   public BufferedImage[] goLeft = new BufferedImage[4];
   public BufferedImage[] goRight = new BufferedImage[4];
 
-  public BufferedImage[] combat = new BufferedImage[4];
+  public BufferedImage[] fightUp = new BufferedImage[4];
+  public BufferedImage[] fightDown = new BufferedImage[4];
+  public BufferedImage[] fightLeft = new BufferedImage[4];
+  public BufferedImage[] fightRight = new BufferedImage[4];
 
   public String direction;
   public int speed;
   public boolean collisionOn = false;
+  public int actionTimeOut = 0;
   public int spriteCounter = 0;
   public int spriteNum = 1;
-  public int actionTimeOut = 0;
+
+  public int spriteCounterAttack = 0;
+  public int spriteNumAttack = 1;
 
   public boolean invincible = false;
   public int invincibleCounter = 0;
@@ -160,9 +166,8 @@ public class Entity {
           image = goRight[spriteNum - 1];
           break;
       }
+      g2D.drawImage(image, screenX, screenY, null);
     }
-
-    g2D.drawImage(image, screenX, screenY, null);
   }
 }
 
