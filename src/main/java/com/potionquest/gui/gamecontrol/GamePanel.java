@@ -58,9 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
   public static final int pauseState = 0;
   public static final int playState = 1;
   public static final int dialogueState = 2;
-  public static final int optionsState = 5;
-
-  public final int optionState = 5;
+  public static final int inventoryState = 3;
 
 
   //self defined
@@ -181,20 +179,6 @@ public class GamePanel extends JPanel implements Runnable {
       tileMLayer2.draw(g2D);
       tileMLayer3.draw(g2D);
 
-
-//      int playerY = player.worldY;
-//      for (int i = 0; i < npc.length; i++) {
-//        if (npc[i] != null) {
-//          int npcY = npc[i].worldY;
-//          if (playerY < npcY) {
-//            player.draw(g2D);
-//            npc[i].draw(g2D);
-//          } else if (playerY > npcY) {
-//            npc[i].draw(g2D);
-//            player.draw(g2D);
-//          }
-//        }
-//      }
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
