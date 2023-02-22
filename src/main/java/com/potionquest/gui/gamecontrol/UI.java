@@ -50,7 +50,7 @@ public class UI {
     } else {
       //if not title state
       drawInventory();
-      drawPlayerHP();
+      //drawPlayerHP();
       // PLAY STATE
       if (GamePanel.gameState == GamePanel.playState) {
         // Play state stuff
