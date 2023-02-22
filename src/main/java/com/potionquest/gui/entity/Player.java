@@ -1,7 +1,5 @@
 package com.potionquest.gui.entity;
 
-
-
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
