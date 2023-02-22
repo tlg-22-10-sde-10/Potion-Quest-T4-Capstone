@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-  public boolean upPressed, downPressed, leftPressed, rightPressed;
+  public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed, spacePressed;
 
   @Override
   public void keyTyped(KeyEvent e) {
@@ -15,36 +15,271 @@ public class KeyHandler implements KeyListener {
   public void keyPressed(KeyEvent e) {
     int code = e.getKeyCode();
 
-    if (code == KeyEvent.VK_W) {
-      upPressed = true;
+    // TITLE STATE
+    if (GamePanel.gameState == GamePanel.titleState) {
+      titleState(code);
+      // PLAY STATE
+    } else if (GamePanel.gameState == GamePanel.playState) {
+      playState(code);
     }
-    if (code == KeyEvent.VK_S) {
-      downPressed = true;
+    // PAUSE STATE
+    else if (GamePanel.gameState == GamePanel.pauseState) {
+      pauseState(code);
     }
-    if (code == KeyEvent.VK_A) {
-      leftPressed = true;
+    // DIALOGUE STATE
+    else if (GamePanel.gameState == GamePanel.dialogueState) {
+      dialogueState(code);
     }
-    if (code == KeyEvent.VK_D) {
-      rightPressed = true;
+    // INVENTORY STATE
+    else if (GamePanel.gameState == GamePanel.inventoryState) {
+      inventoryState(code);
     }
   }
 
+  public void titleState(int code) {
+    if (code == KeyEvent.VK_UP) {
+      GamePanel.ui.commandNum--;
+      if (GamePanel.ui.commandNum < 0) {
+        GamePanel.ui.commandNum = 2;
+      }
+    }
+    if (code == KeyEvent.VK_DOWN) {
+      GamePanel.ui.commandNum++;
+      if (GamePanel.ui.commandNum > 2) {
+        GamePanel.ui.commandNum = 0;
+      }
+    }
+    if (code == KeyEvent.VK_ENTER) {
+      switch (GamePanel.ui.commandNum) {
+        case 0:
+          GamePanel.gameState = GamePanel.playState;
+          break;
+        case 1:
+          break;
+        case 2:
+          System.exit(0);
+      }
+      GamePanel.ui.commandNum = 0;
+    }
+  }
+
+  public void playState(int code) {
+    // PLAY STATE
+    if (code == KeyEvent.VK_UP) {
+      upPressed = true;
+    }
+    if (code == KeyEvent.VK_DOWN) {
+      downPressed = true;
+    }
+    if (code == KeyEvent.VK_LEFT) {
+      leftPressed = true;
+    }
+    if (code == KeyEvent.VK_RIGHT) {
+      rightPressed = true;
+    }
+    if (code == KeyEvent.VK_ENTER) {
+      GamePanel.gameState = GamePanel.pauseState;
+    }
+//      if (code == KeyEvent.VK_ENTER) {
+//        GamePanel.gameState = GamePanel.optionsState;
+//      }
+    if(code == KeyEvent.VK_SPACE) {
+      spacePressed = true;
+    }
+
+    if (code == KeyEvent.VK_Z) {
+      zPressed = true;
+    }
+    if (code == KeyEvent.VK_B) {
+      GamePanel.ui.commandNum = 1;
+      GamePanel.gameState = GamePanel.inventoryState;
+    }
+  }
+
+  public void pauseState(int code) {
+    if (GamePanel.ui.pauseScreenState == 0) {
+      if (code == KeyEvent.VK_UP) {
+        GamePanel.ui.commandNum--;
+        if (GamePanel.ui.commandNum < 0) {
+          GamePanel.ui.commandNum = 3;
+        }
+      }
+      if (code == KeyEvent.VK_DOWN) {
+        GamePanel.ui.commandNum++;
+        if (GamePanel.ui.commandNum > 3) {
+          GamePanel.ui.commandNum = 0;
+        }
+      }
+      if (code == KeyEvent.VK_Z) {
+        switch (GamePanel.ui.commandNum) {
+          case 0:
+            GamePanel.gameState = GamePanel.playState;
+            break;
+          case 1:
+            GamePanel.ui.commandNum = 0;
+            GamePanel.ui.pauseScreenState = 1;
+            break;
+          case 2:
+            GamePanel.ui.commandNum = 0;
+            GamePanel.ui.pauseScreenState = 2;
+            break;
+          case 3:
+            GamePanel.gameState = GamePanel.titleState;
+            break;
+        }
+        GamePanel.ui.commandNum = 0;
+      }
+    }
+    if (GamePanel.ui.pauseScreenState == 1) {
+      if (code == KeyEvent.VK_UP) {
+        GamePanel.ui.commandNum--;
+        if (GamePanel.ui.commandNum < 0) {
+          GamePanel.ui.commandNum = 1;
+        }
+      }
+      if (code == KeyEvent.VK_DOWN) {
+        GamePanel.ui.commandNum++;
+        if (GamePanel.ui.commandNum > 1) {
+          GamePanel.ui.commandNum = 0;
+        }
+      }
+      if (code == KeyEvent.VK_Z) {
+        switch (GamePanel.ui.commandNum) {
+          case 0:
+            GamePanel.ui.commandNum = 1;
+            break;
+          case 1:
+            GamePanel.ui.pauseScreenState = 0;
+            break;
+        }
+      }
+    }
+    if (GamePanel.ui.pauseScreenState == 2) {
+      if (code == KeyEvent.VK_UP) {
+        GamePanel.ui.commandNum--;
+        if (GamePanel.ui.commandNum < 0) {
+          GamePanel.ui.commandNum = 3;
+        }
+      }
+      if (code == KeyEvent.VK_DOWN) {
+        GamePanel.ui.commandNum++;
+        if (GamePanel.ui.commandNum > 3) {
+          GamePanel.ui.commandNum = 0;
+        }
+      }
+      if (code == KeyEvent.VK_Z) {
+        switch (GamePanel.ui.commandNum) {
+          case 0:
+
+            break;
+          case 1:
+
+            break;
+          case 2:
+
+            break;
+          case 3:
+            GamePanel.ui.commandNum = 0;
+            GamePanel.ui.pauseScreenState = 0;
+            break;
+        }
+      }
+    }
+  }
+
+  public void dialogueState(int code) {
+    if (GamePanel.ui.dialogueScreenState == 0) {
+      if (code == KeyEvent.VK_Z) {
+
+        GamePanel.gameState = GamePanel.playState;
+      }
+    } else if (GamePanel.ui.dialogueScreenState == 1) {
+      System.out.println("you are here");
+      if (code == KeyEvent.VK_UP) {
+        GamePanel.ui.commandNum--;
+        if (GamePanel.ui.commandNum < 0) {
+          GamePanel.ui.commandNum = 1;
+        }
+      }
+      if (code == KeyEvent.VK_DOWN) {
+        GamePanel.ui.commandNum++;
+        if (GamePanel.ui.commandNum > 1) {
+          GamePanel.ui.commandNum = 0;
+        }
+      }
+      if (code == KeyEvent.VK_Z) {
+        switch (GamePanel.ui.commandNum) {
+          case 0:
+            System.out.println("hello from case 0");
+            //Add check in inventory for key item here
+            break;
+          case 1:
+            System.out.println("hello from case 1");
+            GamePanel.gameState = GamePanel.playState;
+            break;
+        }
+      }
+    }
+  }
+
+  public void inventoryState(int code) {
+    if (code == KeyEvent.VK_LEFT) {
+      GamePanel.ui.commandNum--;
+      if (GamePanel.ui.commandNum < 1) {
+        GamePanel.ui.commandNum = 5;
+      }
+    }
+    if (code == KeyEvent.VK_RIGHT) {
+      GamePanel.ui.commandNum++;
+      if (GamePanel.ui.commandNum > 5) {
+        GamePanel.ui.commandNum = 1;
+      }
+    }
+    if (code == KeyEvent.VK_Z) {
+      switch (GamePanel.ui.commandNum) {
+        case 1:
+          System.out.println("hello from case 1");
+          GamePanel.gameState = GamePanel.playState;
+          break;
+        case 2:
+          System.out.println("hello from case 2");
+          GamePanel.gameState = GamePanel.playState;
+          break;
+        case 3:
+          System.out.println("hello from case 3");
+          GamePanel.gameState = GamePanel.playState;
+          break;
+        case 4:
+          System.out.println("hello from case 4");
+          GamePanel.gameState = GamePanel.playState;
+          break;
+        case 5:
+          System.out.println("hello from case 5");
+          GamePanel.gameState = GamePanel.playState;
+          break;
+      }
+    }
+  }
+
+
   @Override
   public void keyReleased(KeyEvent e) {
-
     int code = e.getKeyCode();
 
-    if (code == KeyEvent.VK_W) {
+    if (code == KeyEvent.VK_UP) {
       upPressed = false;
     }
-    if (code == KeyEvent.VK_S) {
+    if (code == KeyEvent.VK_DOWN) {
       downPressed = false;
     }
-    if (code == KeyEvent.VK_A) {
+    if (code == KeyEvent.VK_LEFT) {
       leftPressed = false;
     }
-    if (code == KeyEvent.VK_D) {
+    if (code == KeyEvent.VK_RIGHT) {
       rightPressed = false;
+    }
+    if(code == KeyEvent.VK_SPACE) {
+      spacePressed = false;
     }
   }
 }
