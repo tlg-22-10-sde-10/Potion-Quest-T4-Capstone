@@ -97,7 +97,6 @@ public class GamePanel extends JPanel implements Runnable {
   }
 
 
-
   @Override
   public void run() {
 
@@ -126,12 +125,10 @@ public class GamePanel extends JPanel implements Runnable {
       }
 
       if (timer >= 1000000000) {
-        System.out.println("FPS: " + drawCount);
-
+        //System.out.println("FPS: " + drawCount);
         if(gameState == playState) gameTime++;
 
 //        System.out.println(gameTime);
-//
 //        if(gameTime > 15) {
 //          System.out.println("game over");
 //        }
@@ -151,11 +148,7 @@ public class GamePanel extends JPanel implements Runnable {
         sound.getClip().start();
       }
       // PLAYER
-
-      
-      //player.update();
-      player.update(this);
-
+      player.update();
 
       // NPC
       for (int i = 0; i < npc.length; i++) {
@@ -163,6 +156,7 @@ public class GamePanel extends JPanel implements Runnable {
           npc[i].update();
         }
       }
+
       for (int i = 0; i< monsters.length; i++) {
         if(monsters[i] != null) {
 
@@ -184,11 +178,7 @@ public class GamePanel extends JPanel implements Runnable {
     Graphics2D g2D = (Graphics2D) g;
 
     //TITLE SCREEN
-    if (gameState == titleState) {
-      ui.draw(g2D);
-    }
-    //OTHERS
-    else {
+    if (gameState != titleState) {
       // TILES
       tileMLayer1.draw(g2D);
       tileMLayer2.draw(g2D);
@@ -201,20 +191,17 @@ public class GamePanel extends JPanel implements Runnable {
         }
       }
 
-
       for (int i = 0; i < monsters.length; i++) {
         if (monsters[i] != null) {
           monsters[i].draw(g2D);
         }
       }
 
-
       //PLAYER
       player.draw(g2D);
-
       //UI
-      ui.draw(g2D);
     }
+    ui.draw(g2D);
 
     g2D.dispose();
   }
