@@ -107,7 +107,7 @@ public class GamePanel extends JPanel implements Runnable {
     long timer = 0;
     int drawCount = 0;
 
-//    sound.playSound();
+    sound.playSound();
 
     while (gameThread != null) {
 
