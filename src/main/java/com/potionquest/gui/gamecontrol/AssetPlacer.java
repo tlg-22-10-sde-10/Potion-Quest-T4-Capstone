@@ -2,7 +2,6 @@ package com.potionquest.gui.gamecontrol;
 
 import com.potionquest.gui.entity.NPC_Alchemist;
 import com.potionquest.gui.entity.NPC_Alchemist_Brother;
-import com.potionquest.gui.entity.NPC_Boatman;
 import com.potionquest.gui.entity.NPC_Doctor;
 import com.potionquest.gui.entity.NPC_Hermit;
 import com.potionquest.gui.entity.NPC_Sister;
@@ -30,7 +29,7 @@ public class AssetPlacer {
     GamePanel.npc[1].worldY = GamePanel.tileSize * 40;
 
     GamePanel.npc[2] = new NPC_Hermit();
-    GamePanel.npc[2].worldX = GamePanel.tileSize * 22;
+    GamePanel.npc[2].worldX = GamePanel.tileSize * 23;
     GamePanel.npc[2].worldY = GamePanel.tileSize * 78;
 
     GamePanel.npc[3] = new NPC_Alchemist_Brother();

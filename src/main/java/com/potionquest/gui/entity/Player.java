@@ -1,7 +1,9 @@
 package com.potionquest.gui.entity;
 
 
+
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
 import com.potionquest.gui.gamecontrol.*;
@@ -15,12 +17,12 @@ import javax.imageio.ImageIO;
 
 public class Player extends Entity {
 
-  private final int sizeX = 16;
-  private final int sizeY = 20;
-  private final int scaleFactor = 3;
+  private final int sizeX = 48;
+  private final int sizeY = 96;
+//  private final int scaleFactor = 3;
 
-  private final int playerSizeX = sizeX * scaleFactor;
-  private final int playerSizeY = sizeY * scaleFactor;
+  private final int playerSizeX = sizeX;
+  private final int playerSizeY = sizeY;
 
   public final int screenX;
   public final int screenY;
@@ -33,14 +35,13 @@ public class Player extends Entity {
     screenY = GamePanel.screenHeight/2 - (playerSizeY/2);
 
     solidArea = new Rectangle();
-    solidArea.x = 10;
-    solidArea.y = 20;
+    solidArea.x = 8;
+    solidArea.y = 48;
 
     solidAreaDefaultX = solidArea.x;
     solidAreaDefaultY = solidArea.y;
     solidArea.width = 32;
-    solidArea.height = 40;
-
+    solidArea.height = 32;
 
     setDefaultValues();
     getPlayerImage();
@@ -63,54 +64,30 @@ public class Player extends Entity {
 
   public void getPlayerImage() {
 
-    try (InputStream inputStream = getClass().getResourceAsStream("/player/character.png")) {
-
+    try (InputStream inputStream = getClass().getResourceAsStream("/player/characterResized.png")) {
       //noinspection ConstantConditions
       BufferedImage playerImage = ImageIO.read(inputStream);
-
-      for (int i = 0; i < 4; i++) {
-        BufferedImage up = playerImage.getSubimage(i * sizeX, 40, 16, 20);
-        BufferedImage down = playerImage.getSubimage(i * sizeX, 0, 16, 20);
-        BufferedImage left = playerImage.getSubimage(i * sizeX, 60, 16, 20);
-        BufferedImage right = playerImage.getSubimage(i * sizeX, 20, 16, 20);
-
-        goUp[i] = up;
-        goDown[i] = down;
-        goLeft[i] = left;
-        goRight[i] = right;
-
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void getPlayerImage2() {
-
-    try (InputStream inputStream = getClass().getResourceAsStream("/lidia.png")) {
-
-      //noinspection ConstantConditions
-      BufferedImage playerImage = ImageIO.read(inputStream);
-
+      
       int imageIndexX = 0;
-
-      for (int i = 0; i < 9; i++) {
-        BufferedImage up = playerImage.getSubimage(imageIndexX, 0, 64, 64);
-        BufferedImage left = playerImage.getSubimage(imageIndexX, 64, 64, 64);
-        BufferedImage down = playerImage.getSubimage(imageIndexX, 128, 64, 64);
-        BufferedImage right = playerImage.getSubimage(imageIndexX, 192, 64, 64);
+      
+     for (int i = 0; i < 4; i++) {
+        BufferedImage up = playerImage.getSubimage(imageIndexX, 192, 48, 96);
+        BufferedImage down = playerImage.getSubimage(imageIndexX, 0, 48, 96);
+        BufferedImage left = playerImage.getSubimage(imageIndexX, 288, 48, 96);
+        BufferedImage right = playerImage.getSubimage(imageIndexX, 96, 48, 96);
 
         goUp[i] = up;
         goDown[i] = down;
         goLeft[i] = left;
         goRight[i] = right;
-        imageIndexX += 64;
+        
+        imageIndexX += 48;
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-
+  
   public void update() {
 
     if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
@@ -130,8 +107,8 @@ public class Player extends Entity {
       GamePanel.collider.checkTile(this);
 
       // CHECK NPC COLLISION
-      int npcIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.npc);
-      collideNPC(npcIndex);
+      int npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
+      talkNPC(npcIndex);
 
       //CHECK MONSTER COLLISION
       int monsterIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.monsters);
@@ -167,6 +144,7 @@ public class Player extends Entity {
       }
 
       spriteCounter++;
+
       if (spriteCounter >= 12) {
         if (spriteNum >= goUp.length) {
           spriteNum = 1;
@@ -201,9 +179,11 @@ public class Player extends Entity {
     }
   }
 
-  public void collideNPC(int i) {
+  public void talkNPC(int i) {
 
     if (i != 999) {
+      System.out.println(i);
+      System.out.println("You are running into NPC!");
       if (keyH.zPressed) {
         GamePanel.gameState = GamePanel.dialogueState;
         GamePanel.npc[i].talk();
@@ -217,16 +197,16 @@ public class Player extends Entity {
 
     switch (direction) {
       case "up":
-        image = goUp[spriteNum - 1];
+        image = goUp[spriteNum-1];
         break;
       case "down":
-        image = goDown[spriteNum - 1];
+        image = goDown[spriteNum-1];
         break;
       case "left":
-        image = goLeft[spriteNum - 1];
+        image = goLeft[spriteNum-1];
         break;
       case "right":
-        image = goRight[spriteNum - 1];
+        image = goRight[spriteNum-1];
         break;
     }
 

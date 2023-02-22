@@ -70,6 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
   private Sound sound = new Sound();
   private static long gameTime = 0;
 
+
   public GamePanel() {
 
     this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -109,7 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
     long timer = 0;
     int drawCount = 0;
 
-    sound.playSound();
+//    sound.playSound();
 
     while (gameThread != null) {
 
@@ -152,7 +153,12 @@ public class GamePanel extends JPanel implements Runnable {
         sound.getClip().start();
       }
       // PLAYER
-      player.update();
+
+      
+      //player.update();
+      player.update(this);
+
+
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
@@ -190,6 +196,20 @@ public class GamePanel extends JPanel implements Runnable {
       tileMLayer2.draw(g2D);
       tileMLayer3.draw(g2D);
 
+
+//      int playerY = player.worldY;
+//      for (int i = 0; i < npc.length; i++) {
+//        if (npc[i] != null) {
+//          int npcY = npc[i].worldY;
+//          if (playerY < npcY) {
+//            player.draw(g2D);
+//            npc[i].draw(g2D);
+//          } else if (playerY > npcY) {
+//            npc[i].draw(g2D);
+//            player.draw(g2D);
+//          }
+//        }
+//      }
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
@@ -197,11 +217,13 @@ public class GamePanel extends JPanel implements Runnable {
         }
       }
 
+
       for (int i = 0; i < monsters.length; i++) {
         if (monsters[i] != null) {
           monsters[i].draw(g2D);
         }
       }
+
 
       //PLAYER
       player.draw(g2D);

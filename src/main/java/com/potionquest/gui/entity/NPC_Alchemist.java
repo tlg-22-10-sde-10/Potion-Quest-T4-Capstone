@@ -2,6 +2,7 @@ package com.potionquest.gui.entity;
 
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class NPC_Alchemist extends Entity {
@@ -10,37 +11,43 @@ public class NPC_Alchemist extends Entity {
     direction = "right";
     speed = 0;
 
+    solidArea = new Rectangle();
+    solidArea.x = 0;
+    solidArea.y = 0;
+    solidArea.width = 48;
+    solidArea.height = 60;
+
     getNPCImage();
   }
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/alchemist.png");
+    BufferedImage npcImage = imageFetch("/npc/alchemist60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
-      BufferedImage up = npcImage.getSubimage(imageIndexX, 48, 48, 48);
+      BufferedImage up = npcImage.getSubimage(imageIndexX, 60, 48, 60);
       goUp[i] = up;
       imageIndexX += 48;
     }
 
     imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
-      BufferedImage down = npcImage.getSubimage(imageIndexX, 0, 48, 48);
+      BufferedImage down = npcImage.getSubimage(imageIndexX, 0, 48, 60);
       goDown[i] = down;
       imageIndexX += 48;
     }
 
     imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
-      BufferedImage left = npcImage.getSubimage(imageIndexX, 144, 48, 48);
+      BufferedImage left = npcImage.getSubimage(imageIndexX, 180, 48, 60);
       goLeft[i] = left;
       imageIndexX += 48;
     }
 
     imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
-      BufferedImage right = npcImage.getSubimage(imageIndexX, 96, 48, 48);
+      BufferedImage right = npcImage.getSubimage(imageIndexX, 120, 48, 60);
       goRight[i] = right;
       imageIndexX += 48;
     }

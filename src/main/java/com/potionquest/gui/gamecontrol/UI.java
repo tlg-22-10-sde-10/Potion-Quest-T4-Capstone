@@ -21,16 +21,18 @@ public class UI {
 //    arial_80B = new Font("Arial", Font.BOLD, 80);
 //  }
 
-  public UI(GamePanel gp) {
-    this.gp = gp;
-    arial_24 = new Font("Arial", Font.PLAIN, 24);
-    arial_40 = new Font("Arial", Font.PLAIN, 40);
-    arial_80B = new Font("Arial", Font.BOLD, 80);
-  }
+
+//  public UI(GamePanel gp) {
+//    this.gp = gp;
+//    arial_24 = new Font("Arial", Font.PLAIN, 24);
+//    arial_40 = new Font("Arial", Font.PLAIN, 40);
+//    arial_80B = new Font("Arial", Font.BOLD, 80);
+//  }
+
 
   public String currentDialogue = "";
   public int commandNum = 0;
-  
+
   public int pauseScreenState = 0; // 0 is main pause screen, 1 is settings
   public int dialogueScreenState = 0; // 0 is main dialogue, 1 is subdialogues
 
@@ -38,8 +40,6 @@ public class UI {
     arial_24 = new Font("Arial", Font.PLAIN, 24);
     arial_40 = new Font("Comic Sans MS", Font.PLAIN, 40);
     arial_80B = new Font("Comic Sans MS", Font.BOLD, 80);
-
-
   }
 
   public void draw(Graphics2D g2D) {
@@ -90,6 +90,15 @@ public class UI {
       g2D.drawString(String.valueOf(i+1), frameX + 14, 38);
     }
   }
+
+
+  private void drawSubWindow(int x, int y, int width, int height, Color c) {
+    g2D.setColor(c);
+    arcWidth = 28;
+    arcHeight = 28;
+    g2D.fillRoundRect(x,y,width,height, arcWidth, arcHeight);
+  }
+
 
   public void drawTitleScreen() {
 

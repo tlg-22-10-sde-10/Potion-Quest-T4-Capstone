@@ -7,7 +7,6 @@ public class KeyHandler implements KeyListener {
 
   public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed;
 
-
   @Override
   public void keyTyped(KeyEvent e) {
   }
@@ -201,6 +200,10 @@ public class KeyHandler implements KeyListener {
 
       rightPressed = false;
     }
+
+//    if(code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
+//      interactOff = true;
+//    }
 
   }
 }
