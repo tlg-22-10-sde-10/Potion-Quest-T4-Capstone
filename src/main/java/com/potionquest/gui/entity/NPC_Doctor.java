@@ -95,6 +95,7 @@ public class NPC_Doctor extends Entity {
     }
   }
 
+
   public void talk() {
 
     if (firstChat) {

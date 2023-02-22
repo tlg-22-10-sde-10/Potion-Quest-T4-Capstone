@@ -1,6 +1,5 @@
 package com.potionquest.gui.entity;
 
-import com.potionquest.game.Game;
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -27,6 +26,11 @@ public class Entity {
   public int spriteCounter = 0;
   public int spriteNum = 1;
   public int actionTimeOut = 0;
+
+  public boolean invincible = false;
+  public int invincibleCounter = 0;
+  public int entityType;
+
   public String[] dialogues = new String[20];
   public int dialogueIndex = 0;
   public boolean firstChat = true;
@@ -37,6 +41,9 @@ public class Entity {
   public int solidAreaDefaultX;
 //  public int solidAreaDefaultY = -80;
   public int solidAreaDefaultY;
+
+  public int HP;
+  public int MAX_HP;
 
   public BufferedImage imageFetch(String filePath) {
 
@@ -77,7 +84,6 @@ public class Entity {
         this.direction = "left";
         break;
     }
-
   }
 
   public void update() {
@@ -88,6 +94,16 @@ public class Entity {
     GamePanel.collider.checkTile(this);
     // add object collision detect here later
     GamePanel.collider.checkTargetsCollision(this);
+    GamePanel.collider.checkEntity(this, GamePanel.npc);
+    GamePanel.collider.checkEntity(this, GamePanel.monsters);
+    boolean contactPlayer = GamePanel.collider.checkTargetsCollision(this);
+
+    if(this.entityType == 2 && contactPlayer) {
+      if(!GamePanel.player.invincible) {
+        GamePanel.player.setHP(GamePanel.player.getHP() - 1);
+        GamePanel.player.invincible = true;
+      }
+    }
 
     // IF COLLISION IS FALSE, ENTITY CAN MOVE
     if (!collisionOn) {
@@ -108,14 +124,12 @@ public class Entity {
     }
 
     spriteCounter++;
-    if (spriteCounter > 12) {
-      if (spriteNum == 1) {
-        spriteNum = 2;
-      } else if (spriteNum == 2) {
-        spriteNum = 3;
-      } else if (spriteNum == 3) {
+
+    if (spriteCounter >= 12) {
+      if (spriteNum >= goUp.length) {
         spriteNum = 1;
       }
+      spriteNum++;
       spriteCounter = 0;
     }
   }
