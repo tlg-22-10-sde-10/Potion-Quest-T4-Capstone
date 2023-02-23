@@ -1,7 +1,10 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.game.Game;
+
 import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -35,6 +38,10 @@ public class KeyHandler implements KeyListener {
     // INVENTORY STATE
     else if (GamePanel.gameState == GamePanel.inventoryState) {
       inventoryState(code);
+    }
+    //Game over
+    else if(GamePanel.gameState == GamePanel.gameOverState) {
+      gameOverState(code);
     }
   }
 
@@ -286,6 +293,25 @@ public class KeyHandler implements KeyListener {
           System.out.println("hello from case 5");
           GamePanel.gameState = GamePanel.playState;
           break;
+      }
+    }
+  }
+
+  public void gameOverState(int code) {
+    if(code == KeyEvent.VK_UP) {
+      GamePanel.ui.commandNum--;
+    }
+    if(code == KeyEvent.VK_DOWN) {
+      GamePanel.ui.commandNum++;
+    }
+    if(GamePanel.ui.commandNum < 0) GamePanel.ui.commandNum+=2;
+    if(GamePanel.ui.commandNum > 1) GamePanel.ui.commandNum-=2;
+    if(code == KeyEvent.VK_Z) {
+      if(GamePanel.ui.commandNum == 0) {
+        GamePanel.gameState = GamePanel.titleState;
+      }
+      if(GamePanel.ui.commandNum ==  1) {
+        System.exit(0);
       }
     }
   }

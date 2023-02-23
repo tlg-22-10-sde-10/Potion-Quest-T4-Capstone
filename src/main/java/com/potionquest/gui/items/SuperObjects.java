@@ -9,6 +9,9 @@ public class SuperObjects {
   public int objectHeight;
   public int attackValue;
 
+  public int worldX;
+  public int worldY;
+
   public String name;
   public List<BufferedImage> images = new ArrayList<>();
 }

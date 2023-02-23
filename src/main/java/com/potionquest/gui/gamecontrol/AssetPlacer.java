@@ -1,12 +1,20 @@
 package com.potionquest.gui.gamecontrol;
 
+
+import com.potionquest.gui.entity.Entity;
+
 import com.potionquest.gui.entity.NPC_Potion_Seller;
 import com.potionquest.gui.entity.NPC_Alchemist_Brother;
 import com.potionquest.gui.entity.NPC_Doctor;
 import com.potionquest.gui.entity.NPC_Hermit;
 import com.potionquest.gui.entity.NPC_Sister;
+
+import com.potionquest.gui.entity.monsters.MonsterOrc;
+
 import com.potionquest.gui.entity.inventoryobjects.OrnateTrinket;
+
 import com.potionquest.gui.entity.monsters.MonsterPrototype;
+import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
 import java.io.IOException;
 
 public class AssetPlacer {
@@ -58,8 +66,33 @@ public class AssetPlacer {
   }
 
   public void setMonster() {
-    GamePanel.monsters[0] = new MonsterPrototype();
-    GamePanel.monsters[0].worldX = GamePanel.tileSize * 12;
-    GamePanel.monsters[0].worldY = GamePanel.tileSize * 40;
+    MonsterPrototype orc1 = new MonsterOrc();
+    orc1.worldX = GamePanel.tileSize * 12;
+    orc1.worldY = GamePanel.tileSize * 40;
+
+    MonsterPrototype orc2 = new MonsterOrc();
+    orc2.worldX = GamePanel.tileSize * 16;
+    orc2.worldY = GamePanel.tileSize * 40;
+
+    setMonster(orc1);
+    setMonster(orc2);
+  }
+
+  public void setMonster(MonsterPrototype monster) {
+    for(int i = 0; i<GamePanel.monsters.length; i++) {
+      if(GamePanel.monsters[i] == null) {
+        GamePanel.monsters[i] = monster;
+        monster.entityID = i;
+        break;
+      }
+    }
+  }
+
+  public void setItem() {
+    Entity coin = new GoldCoin();
+    coin.worldX = GamePanel.tileSize * 6;
+    coin.worldY = GamePanel.tileSize * 40;
+
+    GamePanel.items.add(coin);
   }
 }
