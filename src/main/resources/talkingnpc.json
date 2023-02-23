@@ -1,30 +1,40 @@
 [
   {
     "name": "Hermit",
-    "dialogue": "What are you doing here?\nOPTIONS: [1] How can I cross the river? [2] I need food. [3] Walk away.",
-    "responses": {"1": "You must find a rope to cross the river.",
-      "2": "Scram, I'm not sharing my food with you.",
+    "dialogue": {"1": "Found me you have! Hehehe... I was once a young \nadventurer like you. Many wares I have gathered \nfrom my travels over the years!",
+      "2": "Say, I have just the offer for you... \n\nBring me 5 gold coins and that rusty thing you call \na sword, and I shall give you a much better weapon that \nhas never failed to keep me safe."},
+    "responses": {"1": "Have you brought what I asked?",
+      "2": "You've done it! Here you go!",
       "3": "Bye! I didn't want to help you anyway"}
   },
   {
-    "name": "Trader",
-    "dialogue": "Welcome to Village 2, I am the most well-traveled trader. What can I do for you?\nOptions [1] I need a potion to cure my sister [2] I'm low on supplies, do you have any food? [3] EXIT.",
-    "responses": {"1": "You are in luck. I have the potion you are searching for.\nType take potion to add it to your inventory.",
-      "2": "I have only a small slice of bread.\nType take bread to add it to you inventory.",
-      "3": "Come back and visit if you need anything else."}
-  },
-  {
-    "name": "Bartender",
-    "dialogue": "Welcome to the Tavern. It looks like you are setting out on a long journey. How can I help?\nOPTIONS: [1] I'd like come ale. [2] Do you have anything to eat? [3] Walk out.",
-    "responses" : {"1": "Here you go, enjoy!",
-      "2": "Here is some bread for your journey.",
-      "3": "See you later. Safe travels."}
-  },
-  {
     "name": "Doctor",
-    "dialogue": "You must hurry to Langtoft Village to save \nyour sister!",
+    "dialogue": {"1": "You must hurry to Langtoft Village to save \nyour sister!",
+      "2": "The forest route lies to the North, the mountainous \nroute to the South. Please hurry!"},
     "responses": {
-      "1": "Have you retrieved the potion for your \nsister?"
+      "1": "Have you retrieved the potion for your \nsister?",
+      "2": "Woohoo! You win Potion Quest",
+      "3": "Her death is on your hands."
+    }
+  },
+  {
+    "name": "Sister",
+    "dialogue": {
+      "1": "Your sister is too weak to talk right now."},
+    "responses": {
+      "1": "Your sister is too weak to talk right now."
+    }
+  },
+  {
+    "name": "Potion Seller",
+    "dialogue": {
+      "1": "Welcome, I am the Potion Seller, and I know what it is you seek... For my creations are the strongest potions",
+      "2": "But I warn you - nothing in life is free, and my goods and services must carry a cost.",
+      "3": "Bring me a shrub- er, ahem. \n\nIf you possess the trinket I seek, or will part with 10 gold coins, you shall have the potion you seek"},
+    "responses": {
+      "1": "Do you want one of my potions? \n\nThe trinket.. or 10 gold coins, your choice.",
+      "2": "Splendid! Take care, child. My potions will surely kill all but those with utmost need.",
+      "3": "Come again if you change your mind."
     }
   }
 ]

@@ -14,7 +14,7 @@ public class Heart extends SuperObjects {
 
       BufferedImage image;
 
-      try (InputStream is = getClass().getResourceAsStream("/Heart.png")) {
+      try (InputStream is = getClass().getResourceAsStream("/heart.png")) {
         if(is != null) {
           image = ImageIO.read(is);
 

@@ -110,7 +110,7 @@
     <maven-surefire-report-plugin.version>3.0.0-M8</maven-surefire-report-plugin.version>
     <maven.compiler.source>11</maven.compiler.source>
     <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
-    <main-class.name>com.potionquest.client.GameClient</main-class.name>
+    <main-class.name>com.potionquest.gui.gamecontrol.Main</main-class.name>
     <maven.compiler.target>11</maven.compiler.target>
     <junit-jupiter.version>5.9.2</junit-jupiter.version>
     <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>

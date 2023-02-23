@@ -1,5 +1,7 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
+import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -190,8 +192,11 @@ public class KeyHandler implements KeyListener {
   public void dialogueState(int code) {
     if (GamePanel.ui.dialogueScreenState == 0) {
       if (code == KeyEvent.VK_Z) {
-
-        GamePanel.gameState = GamePanel.playState;
+        GamePanel.ui.arrayIndex++;
+        if (GamePanel.ui.dialogueArray[GamePanel.ui.arrayIndex] == null || GamePanel.player.haveTalkedToOnceAlready) {
+          GamePanel.gameState = GamePanel.playState;
+          GamePanel.ui.arrayIndex = 0;
+        }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
       System.out.println("you are here");
@@ -210,12 +215,36 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
+            System.out.println(GamePanel.player.npcIndex);
+            if (GamePanel.player.npcIndex == 0) {
+              if (GamePanel.player.inventorySize == 5) {
+                GamePanel.ui.keyDialogueComplete = true;
+                GamePanel.ui.dialogueScreenState = 0;
+              }
+            }
+            if (GamePanel.player.npcIndex == 2) {
+              if (GamePanel.player.currentWeapon.name.equals("Father's Sword")) {
+                GamePanel.ui.keyDialogueComplete = true;
+                GamePanel.player.inventory.remove(GamePanel.player.currentWeapon);
+                GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
+                GamePanel.player.inventory.add(GamePanel.player.currentWeapon);
+                GamePanel.ui.dialogueScreenState = 0;
+              }
+            }
+            if (GamePanel.player.npcIndex == 4) {
+              if (GamePanel.player.inventory.contains(GamePanel.player.currentWeapon)) {
+                GamePanel.ui.keyDialogueComplete = true;
+                GamePanel.player.inventory.add(new ElixirOfLife());
+                GamePanel.ui.dialogueScreenState = 0;
+              }
+            }
+
             System.out.println("hello from case 0");
             //Add check in inventory for key item here
             break;
           case 1:
             System.out.println("hello from case 1");
-            GamePanel.gameState = GamePanel.playState;
+            GamePanel.ui.dialogueScreenState = 0;
             break;
         }
       }

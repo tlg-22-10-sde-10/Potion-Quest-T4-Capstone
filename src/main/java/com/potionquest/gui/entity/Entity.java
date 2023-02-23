@@ -1,6 +1,8 @@
 package com.potionquest.gui.entity;
 
+import com.potionquest.gui.entity.inventoryobjects.inventoryItem;
 import com.potionquest.gui.gamecontrol.GamePanel;
+import com.potionquest.gui.items.SuperObjects;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -9,10 +11,9 @@ import javax.imageio.ImageIO;
 
 public class Entity {
 
-  //  public int sizeX, sizeY;
-  //  public int scaleFactor;
   public int worldX, worldY;
 
+  //SPRITE FRAME ARRAYS
   public BufferedImage[] goUp = new BufferedImage[4];
   public BufferedImage[] goDown = new BufferedImage[4];
   public BufferedImage[] goLeft = new BufferedImage[4];
@@ -23,6 +24,8 @@ public class Entity {
   public BufferedImage[] fightLeft = new BufferedImage[4];
   public BufferedImage[] fightRight = new BufferedImage[4];
 
+  //SPRITE MOVEMENT FIELDS
+  public String name;
   public String direction;
   public int speed;
   public boolean collisionOn = false;
@@ -30,22 +33,23 @@ public class Entity {
   public int spriteCounter = 0;
   public int spriteNum = 1;
 
+  //SPRITE ATTACK FIELDS
   public int spriteCounterAttack = 0;
   public int spriteNumAttack = 1;
-
   public boolean invincible = false;
   public int invincibleCounter = 0;
   public int entityType;
+  public inventoryItem currentWeapon;
+  public int attack;
 
+  //SPRITE DIALOGUE FIELDS
+  public String[] responses = new String[10];
   public String[] dialogues = new String[20];
-  public int dialogueIndex = 0;
   public boolean firstChat = true;
-//  public boolean keyCharacter = false;
+  public boolean npcKeyDialogueComplete = false;
 
   public Rectangle solidArea = new Rectangle();
-//  public int solidAreaDefaultX = -20;
   public int solidAreaDefaultX;
-//  public int solidAreaDefaultY = -80;
   public int solidAreaDefaultY;
 
   public int HP;
@@ -69,12 +73,6 @@ public class Entity {
   }
 
   public void talk() {
-
-    if (dialogues[dialogueIndex] == null) {
-      dialogueIndex = 0;
-    }
-    GamePanel.ui.currentDialogue = dialogues[dialogueIndex];
-    dialogueIndex++;
 
     switch (GamePanel.player.direction) {
       case "up":
@@ -132,10 +130,11 @@ public class Entity {
     spriteCounter++;
 
     if (spriteCounter >= 12) {
-      if (spriteNum >= goUp.length) {
+      if (spriteNum >= goUp.length-1) {
         spriteNum = 1;
+      } else {
+        spriteNum++;
       }
-      spriteNum++;
       spriteCounter = 0;
     }
   }

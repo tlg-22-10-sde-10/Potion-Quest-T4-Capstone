@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class Characters {
     private String name;
-    private String dialogue;
+    private Map<String, String> dialogue;
     private Map<String, String> responses;
 
     public Characters() {
@@ -42,13 +42,13 @@ public class Characters {
         this.name = name;
     }
 
-    public String getDialogue() {
+    public Map<String, String> getDialogue() {
         return dialogue;
     }
 
-    public void setDialogue(String dialogue) {
-        this.dialogue = dialogue;
-    }
+//    public void setDialogue(String dialogue) {
+//        this.dialogue = dialogue;
+//    }
 
     public Map<String, String> getResponses() {
         return responses;

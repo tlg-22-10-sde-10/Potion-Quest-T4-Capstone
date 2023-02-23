@@ -21,10 +21,10 @@ public class EventHandler {
   public void checkEvent() {
 
     if (hit(51, 69, "right")) {
-      teleport1(GamePanel.dialogueState);
+      teleport1(GamePanel.playState);
     }
     if (hit(59, 69, "left")) {
-      teleport2((GamePanel.dialogueState));
+      teleport2((GamePanel.playState));
     }
   }
 

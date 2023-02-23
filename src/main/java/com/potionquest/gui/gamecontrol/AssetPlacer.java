@@ -1,10 +1,11 @@
 package com.potionquest.gui.gamecontrol;
 
-import com.potionquest.gui.entity.NPC_Alchemist;
+import com.potionquest.gui.entity.NPC_Potion_Seller;
 import com.potionquest.gui.entity.NPC_Alchemist_Brother;
 import com.potionquest.gui.entity.NPC_Doctor;
 import com.potionquest.gui.entity.NPC_Hermit;
 import com.potionquest.gui.entity.NPC_Sister;
+import com.potionquest.gui.entity.inventoryobjects.OrnateTrinket;
 import com.potionquest.gui.entity.monsters.MonsterPrototype;
 import java.io.IOException;
 
@@ -12,6 +13,13 @@ public class AssetPlacer {
 
   public AssetPlacer() {
 
+  }
+
+  public void setObjects() {
+
+    GamePanel.items[0] = new OrnateTrinket();
+    GamePanel.items[0].worldX = GamePanel.tileSize * 21;
+    GamePanel.items[0].worldY = GamePanel.tileSize * 39;
   }
 
   public void setNPC() {
@@ -28,7 +36,11 @@ public class AssetPlacer {
     GamePanel.npc[1].worldX = GamePanel.tileSize * 8;
     GamePanel.npc[1].worldY = GamePanel.tileSize * 40;
 
-    GamePanel.npc[2] = new NPC_Hermit();
+    try {
+      GamePanel.npc[2] = new NPC_Hermit();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     GamePanel.npc[2].worldX = GamePanel.tileSize * 23;
     GamePanel.npc[2].worldY = GamePanel.tileSize * 78;
 
@@ -36,7 +48,11 @@ public class AssetPlacer {
     GamePanel.npc[3].worldX = GamePanel.tileSize * 49;
     GamePanel.npc[3].worldY = GamePanel.tileSize * 72;
 
-    GamePanel.npc[4] = new NPC_Alchemist();
+    try {
+      GamePanel.npc[4] = new NPC_Potion_Seller();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     GamePanel.npc[4].worldX = GamePanel.tileSize * 66;
     GamePanel.npc[4].worldY = GamePanel.tileSize * 47;
   }
