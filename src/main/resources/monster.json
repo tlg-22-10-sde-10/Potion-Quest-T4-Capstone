@@ -25,11 +25,12 @@
     "id": 3
   },
   {
-    "name": "Troll",
+    "name": "orc",
     "stats": {
       "strength": 10,
       "defense": 5
     },
+    "health": 10,
     "id": 4
   }
 ]

@@ -40,7 +40,7 @@
     DONE: Replace "replace.me.project.Main" with the fully qualified class name of the project's main class,
      without any quotes, as the content of the <main-class.name> element.
     -->
-    <main-class.name>com.potionquest.client.GameClient</main-class.name>
+    <main-class.name>com.potionquest.gui.gamecontrol.Main</main-class.name>
 
   </properties>
 

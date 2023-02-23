@@ -1,18 +1,22 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.game.Monster;
 import com.potionquest.game.Sound;
 import com.potionquest.game.Timer;
 import com.potionquest.gui.entity.*;
 import com.potionquest.gui.entity.monsters.MonsterPrototype;
+import com.potionquest.gui.items.SuperObjects;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-
-//66 18
 import java.awt.event.KeyEvent;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
 
@@ -56,6 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
   public static Player player = new Player();
   public static Entity[] monsters = new MonsterPrototype[10];
 
+  public static List<Entity> items = new ArrayList<>();
+
   // GAME STATE
   public static int gameState;
   public static final int titleState = -1;
@@ -63,11 +69,15 @@ public class GamePanel extends JPanel implements Runnable {
   public static final int playState = 1;
   public static final int dialogueState = 2;
   public static final int inventoryState = 3;
+  
+  public static final int gameOverState = 6;
+  public static final int winState = 7;
 
   //self defined
   private Sound sound = new Sound();
   private static long gameTime = 0;
 
+  public static Map<String, Monster> monsterLibrary;
 
   public GamePanel() {
 
@@ -77,6 +87,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     this.addKeyListener(keyH);
     this.setFocusable(true);
+
+    try {
+      monsterLibrary = Monster.monsterJsonParser();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   //place setUpGame method here where NPC/objects/monsters are placed
@@ -84,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     aPlacer.setNPC();
     aPlacer.setMonster();
+    aPlacer.setItem();
 
     gameState = titleState;
 //    aPlacer.setStuff
@@ -159,9 +176,12 @@ public class GamePanel extends JPanel implements Runnable {
 
       for (int i = 0; i< monsters.length; i++) {
         if(monsters[i] != null) {
-
-          monsters[i].update();
+            monsters[i].update();
         }
+      }
+
+      for(var item : items) {
+        item.update();
       }
 
     } else if (gameState == pauseState) {
@@ -197,17 +217,20 @@ public class GamePanel extends JPanel implements Runnable {
         }
       }
 
+      for(var item: items) {
+        item.draw(g2D);
+      }
+
       //PLAYER
       player.draw(g2D);
       //UI
     }
-    ui.draw(g2D);
 
+    ui.draw(g2D);
     g2D.dispose();
   }
 
   public static long getGameTime() {
     return gameTime;
   }
-
 }

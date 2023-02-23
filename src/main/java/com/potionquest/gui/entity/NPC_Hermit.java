@@ -11,6 +11,8 @@ public class NPC_Hermit extends Entity {
     direction = "down";
     speed = 1;
 
+    super.entityType = 1;
+
     solidArea = new Rectangle();
     solidAreaDefaultX = solidArea.x;
     solidAreaDefaultY = solidArea.y;

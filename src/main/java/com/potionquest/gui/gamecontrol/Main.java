@@ -1,5 +1,8 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.game.Monster;
+import java.io.IOException;
+import java.util.Map;
 import javax.swing.JFrame;
 
 public class Main {
@@ -11,6 +14,7 @@ public class Main {
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setResizable(false);
     window.setTitle("2D Adventure Game");
+
 
 
     window.add(gamePanel);

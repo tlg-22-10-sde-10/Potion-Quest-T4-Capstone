@@ -66,6 +66,40 @@ public class UI {
       // INVENTORY STATE
       else if (GamePanel.gameState == GamePanel.inventoryState) {
         drawInventoryScreen();
+        // game over
+      } else if (GamePanel.gameState == GamePanel.gameOverState) {
+        drawGameOverScreen();
+      }
+    }
+  }
+
+  private void drawGameOverScreen() {
+    String[] texts = new String[] {"Retry", "Quit"};
+    int[] yy = new int[] { GamePanel.tileSize * 4, 55};
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 110F));
+
+    String gameOver = "You Die";
+
+    int x = findCenterOfTextString("You Die");
+    int y = GamePanel.tileSize * 5;
+
+    g2D.setColor(new Color(0,0,0,150));
+    g2D.fillRect(0,0, GamePanel.screenWidth, GamePanel.screenHeight);
+
+    g2D.setColor(Color.BLACK);
+    g2D.drawString(gameOver, x, y);
+
+    g2D.setColor(Color.white);
+    g2D.drawString(gameOver, x-4, y-4);
+
+    g2D.setFont(g2D.getFont().deriveFont(50f));
+    for (int i=0; i< texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      y+=yy[i];
+
+      g2D.drawString(texts[i], x, y);
+      if(commandNum == i) {
+        g2D.drawString(">", x - GamePanel.tileSize, y);
       }
     }
   }
@@ -410,7 +444,7 @@ public class UI {
     }
 
     if(GamePanel.player.HP > 0) {
-      int index = GamePanel.player.HP%(heart.images.size() -1);
+      int index = GamePanel.player.HP % (heart.images.size() -1);
       g2D.drawImage(heart.images.get(index), x, y, null);
       x += GamePanel.tileSize;
     }

@@ -8,6 +8,9 @@ public class SuperObjects {
   public int objectWidth;
   public int objectHeight;
 
+  public int worldX;
+  public int worldY;
+
   public String name;
   public List<BufferedImage> images = new ArrayList<>();
 }
