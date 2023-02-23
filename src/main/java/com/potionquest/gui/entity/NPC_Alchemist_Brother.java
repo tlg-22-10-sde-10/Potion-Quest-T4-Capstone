@@ -22,7 +22,7 @@ public class NPC_Alchemist_Brother extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/alchemist60.png");
+    BufferedImage npcImage = imageFetch("/npc/potionseller60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {

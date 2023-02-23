@@ -51,8 +51,8 @@ public class Player {
     }
 
     public static void talkToCharacters(Characters characterTalking){
-        if(Game.getGameInstance().getPlayer().getCurrentLocation().getName() ==
-                Game.getGameInstance().getLocations().get("Mountain Pass").getName()) {
+        if(Game.getGameInstance().getPlayer().getCurrentLocation().getName()
+            .equals(Game.getGameInstance().getLocations().get("Mountain Pass").getName())) {
             System.out.println("You are talking to the " + characterTalking.getName());
             System.out.println(characterTalking.getDialogue());
             Scanner scanner = new Scanner(System.in);

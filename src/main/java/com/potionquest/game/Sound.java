@@ -19,6 +19,7 @@ public class Sound {
             final FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             volumeControl.setValue(-15.0f);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e){
+            e.printStackTrace();
         }
     }
     public void setSoundFile(String soundFile) {

@@ -1,15 +1,21 @@
 package com.potionquest.gui.entity;
 
+import com.potionquest.game.Characters;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Map;
 
-public class NPC_Alchemist extends Entity {
+public class NPC_Potion_Seller extends Entity {
 
-  public NPC_Alchemist() {
+  Characters potionSeller = getCharacter();
+
+  public NPC_Potion_Seller() throws IOException {
     direction = "right";
     speed = 0;
+    name = "Potion Seller";
 
     solidArea = new Rectangle();
     solidArea.x = 0;
@@ -18,11 +24,12 @@ public class NPC_Alchemist extends Entity {
     solidArea.height = 60;
 
     getNPCImage();
+    setDialogue();
   }
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/alchemist60.png");
+    BufferedImage npcImage = imageFetch("/npc/potionseller60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -50,6 +57,52 @@ public class NPC_Alchemist extends Entity {
       BufferedImage right = npcImage.getSubimage(imageIndexX, 120, 48, 60);
       goRight[i] = right;
       imageIndexX += 48;
+    }
+  }
+
+  public Characters getCharacter() throws IOException {
+    Map<String, Characters> charactersMap = Characters.characterJsonParser();
+    return charactersMap.get("Potion Seller");
+  }
+
+  public void setDialogue() throws IOException {
+
+    for (int i = 0; i < potionSeller.getDialogue().size(); i++) {
+      this.dialogues[i] = potionSeller.getDialogue().get(Integer.toString(i + 1));
+    }
+
+    for (int i = 0; i < potionSeller.getResponses().size(); i++) {
+      this.responses[i] = potionSeller.getResponses().get(Integer.toString(i + 1));
+    }
+  }
+
+  public void talk() {
+
+    GamePanel.ui.dialogueArray = this.dialogues.clone();
+    GamePanel.ui.responsesArray = this.responses.clone();
+    GamePanel.ui.currentDialogue = null;
+    if (firstChat) {
+
+      switch (GamePanel.player.direction) {
+        case "up":
+          this.direction = "down";
+          break;
+        case "down":
+          this.direction = "up";
+          break;
+        case "left":
+          this.direction = "right";
+          break;
+        case "right":
+          this.direction = "left";
+          break;
+      }
+
+      firstChat = false;
+
+    } else if (!npcKeyDialogueComplete) {
+      GamePanel.ui.dialogueScreenState = 1;
+      super.talk();
     }
   }
 
