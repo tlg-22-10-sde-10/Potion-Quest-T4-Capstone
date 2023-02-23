@@ -15,6 +15,7 @@ public class Heart extends SuperObjects {
       BufferedImage image;
 
       try (InputStream is = getClass().getResourceAsStream("/heart.png")) {
+
           image = ImageIO.read(is);
 
           var heart4 = image.getSubimage( 4 * objectWidth, 0, objectWidth, objectHeight);

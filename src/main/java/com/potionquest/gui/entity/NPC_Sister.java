@@ -10,6 +10,7 @@ public class NPC_Sister extends Entity {
   public NPC_Sister() {
     direction = "down";
     speed = 0;
+    name = "Sister";
 
     solidArea = new Rectangle();
     solidArea.x = 0;
@@ -56,8 +57,41 @@ public class NPC_Sister extends Entity {
   public void setDialogue() {
 
     // for loop to iterate over character's dialogues from JSON file
-    dialogues[0] = "blank";
+    dialogues[0] = null;
+    responses[0] = null;
+  }
 
+  public void talk() {
+
+    GamePanel.ui.currentDialogue = "Your sister is too weak to talk right now.";
+    GamePanel.ui.dialogueArray = this.dialogues.clone();
+    GamePanel.ui.responsesArray = this.responses.clone();
+
+    if (firstChat) {
+
+      switch (GamePanel.player.direction) {
+        case "up":
+          this.direction = "down";
+          break;
+        case "down":
+          this.direction = "up";
+          break;
+        case "left":
+          this.direction = "right";
+          break;
+        case "right":
+          this.direction = "left";
+          break;
+      }
+
+      firstChat = false;
+
+    } else if (!npcKeyDialogueComplete) {
+      this.dialogues = null;
+      this.responses = null;
+      GamePanel.ui.dialogueScreenState = 1;
+      super.talk();
+    }
   }
 
   @Override

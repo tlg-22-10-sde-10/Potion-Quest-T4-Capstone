@@ -22,6 +22,10 @@ public class UI {
   private final SuperObjects heart = new Heart();
 
   public String currentDialogue = "";
+  public boolean keyDialogueComplete = false;
+  public String[] responsesArray;
+  public String[] dialogueArray;
+  public int arrayIndex = 0;
   public int commandNum = 0;
 
   public int pauseScreenState = 0; // 0 is main pause screen, 1 is controls, 2 is settings
@@ -50,7 +54,7 @@ public class UI {
     } else {
       //if not title state
       drawInventory();
-      drawPlayerHP();
+      //drawPlayerHP();
       // PLAY STATE
       if (GamePanel.gameState == GamePanel.playState) {
         // Play state stuff
@@ -62,6 +66,15 @@ public class UI {
       // DIALOGUE STATE
       else if (GamePanel.gameState == GamePanel.dialogueState) {
         drawDialogueScreen();
+//        g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 18F));
+//        int x = GamePanel.tileSize*3;
+//        int y = (GamePanel.tileSize/2) + GamePanel.tileSize;
+//
+//        for (String line : currentDialogue.split("\n")) {
+//          g2D.drawString(line, x, y);
+//          y += 18;
+//        }
+
       }
       // INVENTORY STATE
       else if (GamePanel.gameState == GamePanel.inventoryState) {
@@ -107,7 +120,7 @@ public class UI {
   private void drawInventory() {
     for (int i = 0; i < 5; i++) {
       int frameX = GamePanel.tileSize * (11 + i);
-      int frameY =  0;
+      int frameY = 0;
       int frameWidth = GamePanel.tileSize;
       int frameHeight = GamePanel.tileSize;
 
@@ -115,10 +128,14 @@ public class UI {
 
       drawSubWindow(frameX, frameY, frameWidth, frameHeight, c);
 
-      drawString(String.valueOf(i + 1),frameX + 14, 38, new Color(255, 255, 255, 180));
+      if (i < GamePanel.player.inventory.size()) {
+        var item = GamePanel.player.inventory.get(i);
+        g2D.drawImage(item.images.get(0), frameX, 0, null);
+      } else {
+        drawString(String.valueOf(i + 1), frameX + 14, 38, new Color(255, 255, 255, 180));
+      }
     }
   }
-
 
   private void drawSubWindow(int x, int y, int width, int height, Color c) {
     g2D.setColor(c);
@@ -126,7 +143,6 @@ public class UI {
     arcHeight = 28;
     g2D.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
   }
-
 
   public void drawTitleScreen() {
     //TITLE NAME
@@ -149,11 +165,11 @@ public class UI {
     // MENU
     g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 48F));
 
-    y += GamePanel.tileSize *2.5;
+    y += GamePanel.tileSize * 2.5;
 
-    String[] texts = new String[] {"NEW GAME", "LOAD GAME", "QUIT"};
+    String[] texts = new String[]{"NEW GAME", "LOAD GAME", "QUIT"};
 
-    for( int i = 0; i < texts.length; i++) {
+    for (int i = 0; i < texts.length; i++) {
       x = findCenterOfTextString(texts[i]);
       y += GamePanel.tileSize;
       //SHADOW NEW GAME
@@ -188,11 +204,11 @@ public class UI {
       //PAUSED
       drawString(text, x, y, Color.white);
 
-      String[] texts = new String[] {"Resume","Controls","Settings","Quit"};
+      String[] texts = new String[]{"Resume", "Controls", "Settings", "Quit"};
       y += GamePanel.tileSize * 1.5;
       g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
 
-      for(int i=0 ;i<texts.length; i++) {
+      for (int i = 0; i < texts.length; i++) {
         x = findCenterOfTextString(texts[i]);
         y += GamePanel.tileSize / 1.5;
         // SHADOW RESUME
@@ -352,49 +368,73 @@ public class UI {
       int height = GamePanel.tileSize * 4;
       drawSubWindow(x, y, width, height);
 
-      g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
+      g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 18F));
       x += GamePanel.tileSize;
       y += GamePanel.tileSize;
 
-      for (String line : currentDialogue.split("\n")) {
-        g2D.drawString(line, x, y);
-        y += 32;
+//      if (dialogueArray[arrayIndex] != null) {
+      if (GamePanel.ui.currentDialogue == null) {
+        if (!GamePanel.player.haveTalkedToOnceAlready) {
+          for (String chunk : dialogueArray[arrayIndex].split("\n")) {
+            g2D.drawString(chunk, x, y);
+            y += 20;
+          }
+        }
+        if (keyDialogueComplete) {
+          g2D.drawString(responsesArray[1], x, y);
+        } else if (GamePanel.player.haveTalkedToOnceAlready) {
+          g2D.drawString(responsesArray[2], x, y);
+        }
+      } else {
+        for (String line : currentDialogue.split("\n")) {
+          g2D.drawString(line, x, y);
+        }
       }
+
 
     } else if (dialogueScreenState == 1) {
       // WINDOW1
-      int x1 = GamePanel.tileSize * 2;
-      int y1 = GamePanel.tileSize / 2;
-      int width1 = GamePanel.screenWidth - (2 * x1);
-      int height1 = GamePanel.tileSize * 4;
-      drawSubWindow(x1, y1, width1, height1);
+//      arrayIndex = 0;
 
-      g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
-      x1 += GamePanel.tileSize;
-      y1 += GamePanel.tileSize;
+        int x1 = GamePanel.tileSize * 2;
+        int y1 = GamePanel.tileSize / 2;
+        int width1 = GamePanel.screenWidth - (2 * x1);
+        int height1 = GamePanel.tileSize * 4;
+        drawSubWindow(x1, y1, width1, height1);
 
-      for (String line : currentDialogue.split("\n")) {
-        g2D.drawString(line, x1, y1);
-        y1 += 32;
+        g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
+        x1 += GamePanel.tileSize;
+        y1 += GamePanel.tileSize;
+      if (GamePanel.ui.currentDialogue == null) {
+        for (String chunk : responsesArray[0].split("\n")) {
+          g2D.drawString(chunk, x1, y1);
+          y1 += 20;
+        }
+      } else {
+        for (String line : currentDialogue.split("\n")) {
+          g2D.drawString(line, x1, y1);
+        }
       }
 
       // WINDOW2
-      int x2 = GamePanel.tileSize * 11;
-      int y2 = (int) (GamePanel.tileSize * 4.5);
-      int width2 = GamePanel.tileSize * 3;
-      int height2 = GamePanel.tileSize * 3;
-      drawSubWindow(x2, y2, width2, height2);
+      if (GamePanel.ui.currentDialogue == null) {
+        int x2 = GamePanel.tileSize * 11;
+        int y2 = (int) (GamePanel.tileSize * 4.5);
+        int width2 = GamePanel.tileSize * 3;
+        int height2 = GamePanel.tileSize * 3;
+        drawSubWindow(x2, y2, width2, height2);
 
-      x2 += GamePanel.tileSize;
-      y2 += GamePanel.tileSize;
-      g2D.drawString("Yes", x2, y2);
-      if (commandNum == 0) {
-        g2D.drawString(">", x2 - GamePanel.tileSize / 2, y2);
-      }
-      y2 += GamePanel.tileSize;
-      g2D.drawString("No", x2, y2);
-      if (commandNum == 1) {
-        g2D.drawString(">", x2 - GamePanel.tileSize / 2, y2);
+        x2 += GamePanel.tileSize;
+        y2 += GamePanel.tileSize;
+        g2D.drawString("Yes", x2, y2);
+        if (commandNum == 0) {
+          g2D.drawString(">", x2 - GamePanel.tileSize / 2, y2);
+        }
+        y2 += GamePanel.tileSize;
+        g2D.drawString("No", x2, y2);
+        if (commandNum == 1) {
+          g2D.drawString(">", x2 - GamePanel.tileSize / 2, y2);
+        }
       }
     }
   }
@@ -410,13 +450,21 @@ public class UI {
     int arcWidth = 28;
     int arcHeight = 28;
 
-    int x = GamePanel.tileSize * (10+commandNum);
+    int x = GamePanel.tileSize * (10 + commandNum);
     int y = 0;
     String text = String.valueOf(commandNum);
 
-    g2D.drawString(text, x + 14, 38);
-    g2D.setStroke(new BasicStroke(3));
-    g2D.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
+    if ((commandNum - 1) < GamePanel.player.inventory.size()) {
+      if (GamePanel.player.inventory.get(commandNum - 1) != null) {
+        var item = GamePanel.player.inventory.get(commandNum - 1);
+        g2D.drawImage(item.images.get(0), x, 0, null);
+      }
+    } else {
+      g2D.drawString(text, x + 14, 38);
+      g2D.setStroke(new BasicStroke(3));
+      g2D.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
+    }
+
   }
 
   public void drawSubWindow(int x, int y, int width, int height) {
@@ -436,20 +484,22 @@ public class UI {
     //int y = GamePanel.tileSize / 2;
     int y = 0;
 
-    int i =0;
+    int i = 0;
 
-    for(i = 0; i< (GamePanel.player.HP-1)/(heart.images.size()-1); i++) {
+    for (i = 0; i < (GamePanel.player.HP - 1) / (heart.images.size() - 1); i++) {
       g2D.drawImage(heart.images.get(0), x, y, null);
       x += GamePanel.tileSize;
     }
 
-    if(GamePanel.player.HP > 0) {
-      int index = GamePanel.player.HP % (heart.images.size() -1);
+    if (GamePanel.player.HP > 0) {
+      int index = GamePanel.player.HP % (heart.images.size() - 1);
+
       g2D.drawImage(heart.images.get(index), x, y, null);
       x += GamePanel.tileSize;
     }
 
-    for(i = 0; i< (GamePanel.player.MAX_HP - GamePanel.player.HP) / (heart.images.size() -1); i++) {
+    for (i = 0; i < (GamePanel.player.MAX_HP - GamePanel.player.HP) / (heart.images.size() - 1);
+        i++) {
       g2D.drawImage(heart.images.get(4), x, y, null);
       x += GamePanel.tileSize;
     }

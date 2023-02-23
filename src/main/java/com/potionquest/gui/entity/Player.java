@@ -1,16 +1,18 @@
 package com.potionquest.gui.entity;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
-
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
+import com.potionquest.gui.entity.inventoryobjects.inventoryItem;
 import com.potionquest.gui.gamecontrol.*;
+import com.potionquest.gui.entity.inventoryobjects.StarterSword;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
@@ -25,6 +27,12 @@ public class Player extends Entity {
   public final int screenY;
 
   private boolean isAttacking = false;
+
+  public ArrayList<inventoryItem> inventory = new ArrayList<>();
+  public final int inventorySize = 5;
+
+  public boolean haveTalkedToOnceAlready;
+  public int npcIndex;
 
   public Player() {
     MAX_HP = 20;
@@ -49,9 +57,8 @@ public class Player extends Entity {
     setDefaultValues();
     getPlayerImage();
     getPlayerAttackImage();
+    setItems();
   }
-
-
 
   public void setDefaultValues() {
 
@@ -66,6 +73,17 @@ public class Player extends Entity {
 //    worldY = GamePanel.tileSize * 82;
     speed = 4;
     direction = "down";
+    currentWeapon = new StarterSword();
+    attack = getAttack();
+  }
+
+  public void setItems() {
+
+    inventory.add(currentWeapon);
+  }
+
+  public int getAttack() {
+    return attack = currentWeapon.attackValue;
   }
 
   public void getPlayerImage() {
@@ -109,12 +127,12 @@ public class Player extends Entity {
         fightDown[i] = down;
         fightLeft[i] = left;
         fightRight[i] = right;
+
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-
 
   public void update() {
     if(isAttacking) {
@@ -147,6 +165,7 @@ public class Player extends Entity {
         if (!collisionOn && !isAttacking) {
           switch (direction) {
             case "up":
+
               if(worldY - speed >= 0) {
                 worldY -= speed;
               }
@@ -282,11 +301,34 @@ public class Player extends Entity {
       System.out.println(i);
       System.out.println("You are running into NPC!");
       if (keyH.zPressed) {
-        GamePanel.gameState = GamePanel.dialogueState;
-        GamePanel.npc[i].talk();
+        if (GamePanel.npc[i].name.equals("Old Hermit") && GamePanel.player.currentWeapon.name.equals(
+            "Sword of a Thousand Truths")) {
+          GamePanel.npc[i].npcKeyDialogueComplete = true;
+        } else if (GamePanel.npc[i].name.equals("Doctor") && GamePanel.player.currentWeapon.name.equals(
+            "Sword of a Thousand Truths")) {
+          //GAME WIN SCREEN SHOULD GO HERE. CHANGE ELSE IF LOGIC FROM CURRENT WEAPON NAME
+          GamePanel.npc[i].npcKeyDialogueComplete = true;
+        } else if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
+          GamePanel.npc[i].npcKeyDialogueComplete = true;
+        } else if (GamePanel.npc[i].name.equals("Potion Seller")
+            && GamePanel.player.currentWeapon.name.equals("Sword of a Thousand Truths")) {
+          GamePanel.npc[i].npcKeyDialogueComplete = true;
+        } else {
+          GamePanel.gameState = GamePanel.dialogueState;
+          haveTalkedToOnceAlready = chatCheck(GamePanel.npc[i]);
+          GamePanel.npc[i].talk();
+        }
       }
     }
     keyH.zPressed = false;
+  }
+
+  public boolean chatCheck(Entity entity) {
+    boolean hasChatted = false;
+    if (!entity.firstChat) {
+      hasChatted = true;
+    }
+    return hasChatted;
   }
 
   public void draw(Graphics2D g2D) {

@@ -57,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
 
   // ENTITIES AND OBJECTS
   public static Entity[] npc = new Entity[10];
+  public static Entity[] items = new Entity[20];
   public static Player player = new Player();
   public static Entity[] monsters = new MonsterPrototype[10];
 
@@ -77,7 +78,9 @@ public class GamePanel extends JPanel implements Runnable {
   private Sound sound = new Sound();
   private static long gameTime = 0;
 
+
   public static Map<String, Monster> monsterLibrary;
+
 
   public GamePanel() {
 
@@ -98,6 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
   //place setUpGame method here where NPC/objects/monsters are placed
   public void setUpWorld() {
 
+    aPlacer.setObjects();
     aPlacer.setNPC();
     aPlacer.setMonster();
     aPlacer.setItem();
@@ -124,7 +128,7 @@ public class GamePanel extends JPanel implements Runnable {
     long timer = 0;
     int drawCount = 0;
 
-    sound.playSound();
+//    sound.playSound();
 
     while (gameThread != null) {
 
@@ -167,6 +171,13 @@ public class GamePanel extends JPanel implements Runnable {
       // PLAYER
       player.update();
 
+      //OBJECTS
+      for (int i = 0; i < items.length; i++) {
+        if (items[i] != null) {
+          items[i].update();
+        }
+      }
+
       // NPC
       for (int i = 0; i < npc.length; i++) {
         if (npc[i] != null) {
@@ -176,7 +187,7 @@ public class GamePanel extends JPanel implements Runnable {
 
       for (int i = 0; i< monsters.length; i++) {
         if(monsters[i] != null) {
-            monsters[i].update();
+          monsters[i].update();
         }
       }
 
@@ -203,6 +214,13 @@ public class GamePanel extends JPanel implements Runnable {
       tileMLayer1.draw(g2D);
       tileMLayer2.draw(g2D);
       tileMLayer3.draw(g2D);
+
+      // OBJECTS
+      for (int i = 0; i < items.length; i++) {
+        if (items[i] != null) {
+          items[i].draw(g2D);
+        }
+      }
 
       // NPC
       for (int i = 0; i < npc.length; i++) {

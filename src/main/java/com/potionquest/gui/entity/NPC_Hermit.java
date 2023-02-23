@@ -1,15 +1,21 @@
 package com.potionquest.gui.entity;
 
+import com.potionquest.game.Characters;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 import com.potionquest.gui.gamecontrol.*;
 
 public class NPC_Hermit extends Entity {
 
-  public NPC_Hermit() {
-    direction = "down";
+  Characters hermit = getCharacter();
+
+  public NPC_Hermit() throws IOException {
+    direction = "left";
     speed = 1;
+    name = "Old Hermit";
 
     super.entityType = 1;
 
@@ -22,6 +28,7 @@ public class NPC_Hermit extends Entity {
     solidArea.height = 60;
 
     getNPCImage();
+    setDialogue();
   }
 
   public void getNPCImage() {
@@ -57,10 +64,28 @@ public class NPC_Hermit extends Entity {
     }
   }
 
+  public Characters getCharacter() throws IOException {
+    Map<String, Characters> charactersMap = Characters.characterJsonParser();
+    return charactersMap.get("Hermit");
+  }
+
+  public void setDialogue() throws IOException {
+
+    for (int i = 0; i < hermit.getDialogue().size(); i++) {
+      this.dialogues[i] = hermit.getDialogue().get(Integer.toString(i + 1));
+    }
+
+    for (int i = 0; i < hermit.getResponses().size(); i++) {
+      this.responses[i] = hermit.getResponses().get(Integer.toString(i + 1));
+    }
+
+  }
+
   public void setBehavior() {
 
     actionTimeOut++;
-    if (actionTimeOut == 60) {
+
+    if (actionTimeOut == 90) {
       Random random = new Random();
       int i = random.nextInt(100) + 1; //pick random number from 1 to 4
 
@@ -75,6 +100,36 @@ public class NPC_Hermit extends Entity {
       }
 
       actionTimeOut = 0;
+    }
+  }
+
+  public void talk() {
+
+    GamePanel.ui.dialogueArray = this.dialogues.clone();
+    GamePanel.ui.responsesArray = this.responses.clone();
+    GamePanel.ui.currentDialogue = null;
+    if (firstChat) {
+
+      switch (GamePanel.player.direction) {
+        case "up":
+          this.direction = "down";
+          break;
+        case "down":
+          this.direction = "up";
+          break;
+        case "left":
+          this.direction = "right";
+          break;
+        case "right":
+          this.direction = "left";
+          break;
+      }
+
+      firstChat = false;
+
+    } else if (!npcKeyDialogueComplete) {
+      GamePanel.ui.dialogueScreenState = 1;
+      super.talk();
     }
   }
 }
