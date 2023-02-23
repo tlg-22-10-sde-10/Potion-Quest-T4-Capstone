@@ -1,28 +1,27 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
 import com.potionquest.game.Characters;
+import com.potionquest.gui.entity.Entity;
+import com.potionquest.gui.gamecontrol.*;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Random;
-import com.potionquest.gui.gamecontrol.*;
 
-public class NPC_Hermit extends Entity {
+public class NPC_Potion_Seller extends Entity {
 
-  Characters hermit = getCharacter();
+  Characters potionSeller = getCharacter();
 
-  public NPC_Hermit() throws IOException {
-    direction = "left";
-    speed = 1;
-    name = "Old Hermit";
+  public NPC_Potion_Seller() throws IOException {
+    direction = "right";
+    speed = 0;
+    name = "Potion Seller";
 
     solidArea = new Rectangle();
-    solidAreaDefaultX = solidArea.x;
-    solidAreaDefaultY = solidArea.y;
-    solidArea.x = -10;
+    solidArea.x = 0;
     solidArea.y = 0;
-    solidArea.width = 60;
+    solidArea.width = 48;
     solidArea.height = 60;
 
     getNPCImage();
@@ -31,7 +30,7 @@ public class NPC_Hermit extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/hermit60.png");
+    BufferedImage npcImage = imageFetch("/npc/potionseller60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -64,40 +63,17 @@ public class NPC_Hermit extends Entity {
 
   public Characters getCharacter() throws IOException {
     Map<String, Characters> charactersMap = Characters.characterJsonParser();
-    return charactersMap.get("Hermit");
+    return charactersMap.get("Potion Seller");
   }
 
   public void setDialogue() throws IOException {
 
-    for (int i = 0; i < hermit.getDialogue().size(); i++) {
-      this.dialogues[i] = hermit.getDialogue().get(Integer.toString(i + 1));
+    for (int i = 0; i < potionSeller.getDialogue().size(); i++) {
+      this.dialogues[i] = potionSeller.getDialogue().get(Integer.toString(i + 1));
     }
 
-    for (int i = 0; i < hermit.getResponses().size(); i++) {
-      this.responses[i] = hermit.getResponses().get(Integer.toString(i + 1));
-    }
-
-  }
-
-  public void setBehavior() {
-
-    actionTimeOut++;
-
-    if (actionTimeOut == 90) {
-      Random random = new Random();
-      int i = random.nextInt(100) + 1; //pick random number from 1 to 4
-
-      if (i <= 25) {
-        direction = "left";
-      } else if (i > 25 && i <= 50) {
-        direction = "right";
-      } else if (i > 50 && i <= 75) {
-        direction = "right";
-      } else if (i > 75) {
-        direction = "left";
-      }
-
-      actionTimeOut = 0;
+    for (int i = 0; i < potionSeller.getResponses().size(); i++) {
+      this.responses[i] = potionSeller.getResponses().get(Integer.toString(i + 1));
     }
   }
 
@@ -128,6 +104,24 @@ public class NPC_Hermit extends Entity {
     } else if (!npcKeyDialogueComplete) {
       GamePanel.ui.dialogueScreenState = 1;
       super.talk();
+    }
+  }
+
+  @Override
+  public void draw(Graphics2D g2D) {
+
+    BufferedImage image = null;
+
+    int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
+    int screenY = worldY - GamePanel.player.worldY + GamePanel.player.screenY;
+
+    if (worldX + GamePanel.tileSize > GamePanel.player.worldX - GamePanel.player.screenX
+        && worldX - GamePanel.tileSize < GamePanel.player.worldX + GamePanel.player.screenX
+        && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
+        && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
+
+      image = goRight[0];
+      g2D.drawImage(image, screenX, screenY, null);
     }
   }
 }

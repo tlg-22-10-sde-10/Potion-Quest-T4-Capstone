@@ -1,4 +1,4 @@
-package com.potionquest.gui.items;
+package com.potionquest.gui.gamecontrol.playerhp;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class Heart extends SuperObjects {
       BufferedImage image;
 
       try (InputStream is = getClass().getResourceAsStream("/heart.png")) {
-        if(is != null) {
+
           image = ImageIO.read(is);
 
           var heart4 = image.getSubimage( 4 * objectWidth, 0, objectWidth, objectHeight);
@@ -29,9 +29,9 @@ public class Heart extends SuperObjects {
           images.add(heart2);
           images.add(heart3);
           images.add(heart0);
-        }
+
       } catch (IOException e) {
-        e.printStackTrace();
+        throw new RuntimeException(e);
       }
     }
 }

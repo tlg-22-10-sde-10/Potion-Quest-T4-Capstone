@@ -1,31 +1,31 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
 import com.potionquest.game.Characters;
-import com.potionquest.gui.gamecontrol.*;
-import java.awt.Graphics2D;
+import com.potionquest.gui.entity.Entity;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import com.potionquest.gui.gamecontrol.*;
 
-public class NPC_Doctor extends Entity {
+public class NPC_Hermit extends Entity {
 
-  Characters doctor = getCharacter();
+  Characters hermit = getCharacter();
 
-  public NPC_Doctor() throws IOException {
+  public NPC_Hermit() throws IOException {
     direction = "left";
-    speed = 0;
-    name = "Doctor";
+    speed = 1;
+    name = "Old Hermit";
+
+    super.entityType = 1;
 
     solidArea = new Rectangle();
-    solidArea.x = 0;
+    solidAreaDefaultX = solidArea.x;
+    solidAreaDefaultY = solidArea.y;
+    solidArea.x = -10;
     solidArea.y = 0;
-    solidArea.width = 48;
+    solidArea.width = 60;
     solidArea.height = 60;
 
     getNPCImage();
@@ -34,7 +34,7 @@ public class NPC_Doctor extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/doctor60.png");
+    BufferedImage npcImage = imageFetch("/npc/hermit60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -67,41 +67,42 @@ public class NPC_Doctor extends Entity {
 
   public Characters getCharacter() throws IOException {
     Map<String, Characters> charactersMap = Characters.characterJsonParser();
-    return charactersMap.get("Doctor");
+    return charactersMap.get("Hermit");
   }
 
   public void setDialogue() throws IOException {
 
-    for (int i = 0; i < doctor.getDialogue().size(); i++) {
-      this.dialogues[i] = doctor.getDialogue().get(Integer.toString(i + 1));
+    for (int i = 0; i < hermit.getDialogue().size(); i++) {
+      this.dialogues[i] = hermit.getDialogue().get(Integer.toString(i + 1));
     }
 
-    for (int i = 0; i < doctor.getResponses().size(); i++) {
-      this.responses[i] = doctor.getResponses().get(Integer.toString(i + 1));
+    for (int i = 0; i < hermit.getResponses().size(); i++) {
+      this.responses[i] = hermit.getResponses().get(Integer.toString(i + 1));
     }
+
   }
 
   public void setBehavior() {
 
     actionTimeOut++;
 
-    if (actionTimeOut == 60) {
+    if (actionTimeOut == 90) {
       Random random = new Random();
       int i = random.nextInt(100) + 1; //pick random number from 1 to 4
 
-      if (i <= 15) {
-        direction = "up";
-      } else if (i > 15 && i <= 30) {
-        direction = "down";
-      } else if (i > 30 && i <= 45) {
+      if (i <= 25) {
+        direction = "left";
+      } else if (i > 25 && i <= 50) {
         direction = "right";
-      } else if (i > 45) {
+      } else if (i > 50 && i <= 75) {
+        direction = "right";
+      } else if (i > 75) {
         direction = "left";
       }
+
       actionTimeOut = 0;
     }
   }
-
 
   public void talk() {
 
@@ -131,36 +132,5 @@ public class NPC_Doctor extends Entity {
       GamePanel.ui.dialogueScreenState = 1;
       super.talk();
     }
-  }
-
-  @Override
-  public void draw(Graphics2D g2D) {
-
-    BufferedImage image = null;
-
-    int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
-    int screenY = worldY - GamePanel.player.worldY + GamePanel.player.screenY;
-
-    if (worldX + GamePanel.tileSize > GamePanel.player.worldX - GamePanel.player.screenX
-        && worldX - GamePanel.tileSize < GamePanel.player.worldX + GamePanel.player.screenX
-        && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
-        && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
-
-      switch (direction) {
-        case "up":
-          image = goUp[0];
-          break;
-        case "down":
-          image = goDown[0];
-          break;
-        case "left":
-          image = goLeft[0];
-          break;
-        case "right":
-          image = goRight[0];
-          break;
-      }
-    }
-    g2D.drawImage(image, screenX, screenY, null);
   }
 }

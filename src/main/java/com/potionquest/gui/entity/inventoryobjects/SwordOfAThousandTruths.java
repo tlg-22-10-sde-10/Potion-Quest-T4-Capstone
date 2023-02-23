@@ -1,18 +1,17 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import com.potionquest.gui.items.SuperObjects;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class SwordOfAThousandTruths extends inventoryItem {
+public class SwordOfAThousandTruths extends InventoryItem {
 
   public SwordOfAThousandTruths() {
     name = "Sword of a Thousand Truths";
-    objectHeight = 48;
-    objectWidth = 48;
-    attackValue = 5;
+    int objectHeight = 48;
+    int objectWidth = 48;
+    attack = 5;
     collisionOn = false;
 
 
@@ -25,7 +24,7 @@ public class SwordOfAThousandTruths extends inventoryItem {
 
       var sword = image.getSubimage(objectWidth*12, objectHeight*7, objectWidth, objectHeight);
 
-      images.add(sword);
+      portrait = sword;
 
     } catch (IOException e) {
       e.printStackTrace();

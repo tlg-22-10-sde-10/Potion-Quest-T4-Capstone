@@ -1,7 +1,7 @@
 package com.potionquest.gui.gamecontrol;
 
-import com.potionquest.gui.items.Heart;
-import com.potionquest.gui.items.SuperObjects;
+import com.potionquest.gui.gamecontrol.playerhp.Heart;
+import com.potionquest.gui.gamecontrol.playerhp.SuperObjects;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -54,7 +54,8 @@ public class UI {
     } else {
       //if not title state
       drawInventory();
-      //drawPlayerHP();
+      drawPlayerHP();
+      drawCoin();
       // PLAY STATE
       if (GamePanel.gameState == GamePanel.playState) {
         // Play state stuff
@@ -79,6 +80,40 @@ public class UI {
       // INVENTORY STATE
       else if (GamePanel.gameState == GamePanel.inventoryState) {
         drawInventoryScreen();
+        // game over
+      } else if (GamePanel.gameState == GamePanel.gameOverState) {
+        drawGameOverScreen();
+      }
+    }
+  }
+
+  private void drawGameOverScreen() {
+    String[] texts = new String[] {"Retry", "Quit"};
+    int[] yy = new int[] { GamePanel.tileSize * 4, 55};
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 110F));
+
+    String gameOver = "You Die";
+
+    int x = findCenterOfTextString("You Die");
+    int y = GamePanel.tileSize * 5;
+
+    g2D.setColor(new Color(0,0,0,150));
+    g2D.fillRect(0,0, GamePanel.screenWidth, GamePanel.screenHeight);
+
+    g2D.setColor(Color.BLACK);
+    g2D.drawString(gameOver, x, y);
+
+    g2D.setColor(Color.white);
+    g2D.drawString(gameOver, x-4, y-4);
+
+    g2D.setFont(g2D.getFont().deriveFont(50f));
+    for (int i=0; i< texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      y+=yy[i];
+
+      g2D.drawString(texts[i], x, y);
+      if(commandNum == i) {
+        g2D.drawString(">", x - GamePanel.tileSize, y);
       }
     }
   }
@@ -96,7 +131,7 @@ public class UI {
 
       if (i < GamePanel.player.inventory.size()) {
         var item = GamePanel.player.inventory.get(i);
-        g2D.drawImage(item.images.get(0), frameX, 0, null);
+        g2D.drawImage(item.portrait, frameX, 0, null);
       } else {
         drawString(String.valueOf(i + 1), frameX + 14, 38, new Color(255, 255, 255, 180));
       }
@@ -423,14 +458,20 @@ public class UI {
     if ((commandNum - 1) < GamePanel.player.inventory.size()) {
       if (GamePanel.player.inventory.get(commandNum - 1) != null) {
         var item = GamePanel.player.inventory.get(commandNum - 1);
-        g2D.drawImage(item.images.get(0), x, 0, null);
+        g2D.drawImage(item.portrait, x, 0, null);
       }
     } else {
       g2D.drawString(text, x + 14, 38);
       g2D.setStroke(new BasicStroke(3));
       g2D.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
     }
+  }
 
+  public void drawCoin() {
+    int frameX = GamePanel.tileSize * 7;
+    g2D.drawImage(GamePanel.player.coin.portrait, frameX, 4, null);
+
+    drawString("x "+ GamePanel.player.coinInPocket, frameX + 48, 38, new Color(255, 255, 255, 180));
   }
 
   public void drawSubWindow(int x, int y, int width, int height) {
@@ -459,6 +500,7 @@ public class UI {
 
     if (GamePanel.player.HP > 0) {
       int index = GamePanel.player.HP % (heart.images.size() - 1);
+
       g2D.drawImage(heart.images.get(index), x, y, null);
       x += GamePanel.tileSize;
     }

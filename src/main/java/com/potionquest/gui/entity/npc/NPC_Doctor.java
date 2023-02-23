@@ -1,21 +1,27 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
 import com.potionquest.game.Characters;
+import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class NPC_Potion_Seller extends Entity {
+public class NPC_Doctor extends Entity {
 
-  Characters potionSeller = getCharacter();
+  Characters doctor = getCharacter();
 
-  public NPC_Potion_Seller() throws IOException {
-    direction = "right";
+  public NPC_Doctor() throws IOException {
+    direction = "left";
     speed = 0;
-    name = "Potion Seller";
+    name = "Doctor";
 
     solidArea = new Rectangle();
     solidArea.x = 0;
@@ -29,7 +35,7 @@ public class NPC_Potion_Seller extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/potionseller60.png");
+    BufferedImage npcImage = imageFetch("/npc/doctor60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -62,19 +68,41 @@ public class NPC_Potion_Seller extends Entity {
 
   public Characters getCharacter() throws IOException {
     Map<String, Characters> charactersMap = Characters.characterJsonParser();
-    return charactersMap.get("Potion Seller");
+    return charactersMap.get("Doctor");
   }
 
   public void setDialogue() throws IOException {
 
-    for (int i = 0; i < potionSeller.getDialogue().size(); i++) {
-      this.dialogues[i] = potionSeller.getDialogue().get(Integer.toString(i + 1));
+    for (int i = 0; i < doctor.getDialogue().size(); i++) {
+      this.dialogues[i] = doctor.getDialogue().get(Integer.toString(i + 1));
     }
 
-    for (int i = 0; i < potionSeller.getResponses().size(); i++) {
-      this.responses[i] = potionSeller.getResponses().get(Integer.toString(i + 1));
+    for (int i = 0; i < doctor.getResponses().size(); i++) {
+      this.responses[i] = doctor.getResponses().get(Integer.toString(i + 1));
     }
   }
+
+  public void setBehavior() {
+
+    actionTimeOut++;
+
+    if (actionTimeOut == 60) {
+      Random random = new Random();
+      int i = random.nextInt(100) + 1; //pick random number from 1 to 4
+
+      if (i <= 15) {
+        direction = "up";
+      } else if (i > 15 && i <= 30) {
+        direction = "down";
+      } else if (i > 30 && i <= 45) {
+        direction = "right";
+      } else if (i > 45) {
+        direction = "left";
+      }
+      actionTimeOut = 0;
+    }
+  }
+
 
   public void talk() {
 
@@ -119,8 +147,21 @@ public class NPC_Potion_Seller extends Entity {
         && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
         && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
 
-      image = goRight[0];
-      g2D.drawImage(image, screenX, screenY, null);
+      switch (direction) {
+        case "up":
+          image = goUp[0];
+          break;
+        case "down":
+          image = goDown[0];
+          break;
+        case "left":
+          image = goLeft[0];
+          break;
+        case "right":
+          image = goRight[0];
+          break;
+      }
     }
+    g2D.drawImage(image, screenX, screenY, null);
   }
 }

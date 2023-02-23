@@ -1,17 +1,17 @@
-package com.potionquest.gui.entity.inventoryobjects;
+package com.potionquest.gui.gamecontrol.playerhp;
 
-import com.potionquest.gui.entity.Entity;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class inventoryItem extends Entity {
-
+public class SuperObjects {
   public int objectWidth;
   public int objectHeight;
   public int attackValue;
 
+  public int worldX;
+  public int worldY;
+
   public String name;
-  public boolean collisionOn = false;
   public List<BufferedImage> images = new ArrayList<>();
 }

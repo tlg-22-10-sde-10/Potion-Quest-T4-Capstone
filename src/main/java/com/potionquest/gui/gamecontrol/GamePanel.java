@@ -1,18 +1,18 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.game.Monster;
 import com.potionquest.game.Sound;
-import com.potionquest.game.Timer;
 import com.potionquest.gui.entity.*;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.entity.monsters.MonsterPrototype;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-
-//66 18
-import java.awt.event.KeyEvent;
-
+import java.io.IOException;
+import java.util.Map;
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
 
@@ -44,8 +44,6 @@ public class GamePanel extends JPanel implements Runnable {
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
 
-  //public UI ui = new UI(this);
-
   public static UI ui = new UI();
   public static EventHandler eHandler = new EventHandler();
 
@@ -53,7 +51,9 @@ public class GamePanel extends JPanel implements Runnable {
 
   // ENTITIES AND OBJECTS
   public static Entity[] npc = new Entity[10];
-  public static Entity[] items = new Entity[20];
+
+  public static InventoryItem[] items = new InventoryItem[20];
+
   public static Player player = new Player();
   public static Entity[] monsters = new MonsterPrototype[10];
 
@@ -64,10 +64,17 @@ public class GamePanel extends JPanel implements Runnable {
   public static final int playState = 1;
   public static final int dialogueState = 2;
   public static final int inventoryState = 3;
+  
+  public static final int gameOverState = 6;
+  public static final int winState = 7;
 
   //self defined
   private Sound sound = new Sound();
   private static long gameTime = 0;
+
+
+  public static Map<String, Monster> monsterLibrary;
+
 
   public GamePanel() {
 
@@ -77,6 +84,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     this.addKeyListener(keyH);
     this.setFocusable(true);
+
+    try {
+      monsterLibrary = Monster.monsterJsonParser();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   //place setUpGame method here where NPC/objects/monsters are placed
@@ -152,22 +165,22 @@ public class GamePanel extends JPanel implements Runnable {
       player.update();
 
       //OBJECTS
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] != null) {
-          items[i].update();
+      for (InventoryItem item : items) {
+        if (item != null) {
+          item.update();
         }
       }
 
       // NPC
-      for (int i = 0; i < npc.length; i++) {
-        if (npc[i] != null) {
-          npc[i].update();
+      for (Entity entity : npc) {
+        if (entity != null) {
+          entity.update();
         }
       }
 
-      for (int i = 0; i< monsters.length; i++) {
-        if(monsters[i] != null) {
-          monsters[i].update();
+      for (Entity monster : monsters) {
+        if (monster != null) {
+          monster.update();
         }
       }
 
@@ -192,22 +205,22 @@ public class GamePanel extends JPanel implements Runnable {
       tileMLayer3.draw(g2D);
 
       // OBJECTS
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] != null) {
-          items[i].draw(g2D);
+      for (InventoryItem item : items) {
+        if (item != null) {
+          item.draw(g2D);
         }
       }
 
       // NPC
-      for (int i = 0; i < npc.length; i++) {
-        if (npc[i] != null) {
-          npc[i].draw(g2D);
+      for (Entity entity : npc) {
+        if (entity != null) {
+          entity.draw(g2D);
         }
       }
 
-      for (int i = 0; i < monsters.length; i++) {
-        if (monsters[i] != null) {
-          monsters[i].draw(g2D);
+      for (Entity monster : monsters) {
+        if (monster != null) {
+          monster.draw(g2D);
         }
       }
 
@@ -215,13 +228,12 @@ public class GamePanel extends JPanel implements Runnable {
       player.draw(g2D);
       //UI
     }
-    ui.draw(g2D);
 
+    ui.draw(g2D);
     g2D.dispose();
   }
 
   public static long getGameTime() {
     return gameTime;
   }
-
 }

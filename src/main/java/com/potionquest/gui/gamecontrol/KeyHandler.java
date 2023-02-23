@@ -2,6 +2,7 @@ package com.potionquest.gui.gamecontrol;
 
 import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -35,6 +36,10 @@ public class KeyHandler implements KeyListener {
     // INVENTORY STATE
     else if (GamePanel.gameState == GamePanel.inventoryState) {
       inventoryState(code);
+    }
+    //Game over
+    else if(GamePanel.gameState == GamePanel.gameOverState) {
+      gameOverState(code);
     }
   }
 
@@ -217,7 +222,7 @@ public class KeyHandler implements KeyListener {
           case 0:
             System.out.println(GamePanel.player.npcIndex);
             if (GamePanel.player.npcIndex == 0) {
-              if (GamePanel.player.inventorySize == 5) {
+              if (GamePanel.player.INVENTORY_SIZE == 5) {
                 GamePanel.ui.keyDialogueComplete = true;
                 GamePanel.ui.dialogueScreenState = 0;
               }
@@ -267,25 +272,44 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_Z) {
       switch (GamePanel.ui.commandNum) {
         case 1:
-          System.out.println("hello from case 1");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 1");
+
           break;
         case 2:
-          System.out.println("hello from case 2");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 2");
+
           break;
         case 3:
-          System.out.println("hello from case 3");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 3");
+
           break;
         case 4:
-          System.out.println("hello from case 4");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 4");
+
           break;
         case 5:
-          System.out.println("hello from case 5");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item  5");
           break;
+      }
+      GamePanel.gameState = GamePanel.playState;
+    }
+  }
+
+  public void gameOverState(int code) {
+    if(code == KeyEvent.VK_UP) {
+      GamePanel.ui.commandNum--;
+    }
+    if(code == KeyEvent.VK_DOWN) {
+      GamePanel.ui.commandNum++;
+    }
+    if(GamePanel.ui.commandNum < 0) GamePanel.ui.commandNum+=2;
+    if(GamePanel.ui.commandNum > 1) GamePanel.ui.commandNum-=2;
+    if(code == KeyEvent.VK_Z) {
+      if(GamePanel.ui.commandNum == 0) {
+        GamePanel.gameState = GamePanel.titleState;
+      }
+      if(GamePanel.ui.commandNum ==  1) {
+        System.exit(0);
       }
     }
   }

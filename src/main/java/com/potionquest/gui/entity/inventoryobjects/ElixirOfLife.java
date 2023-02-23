@@ -1,17 +1,16 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import com.potionquest.gui.items.SuperObjects;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class ElixirOfLife extends inventoryItem {
+public class ElixirOfLife extends InventoryItem {
 
   public ElixirOfLife() {
     name = "Salve of Life";
-    objectHeight = 48;
-    objectWidth = 48;
+    int objectHeight = 48;
+    int objectWidth = 48;
     collisionOn = false;
 
     BufferedImage image;
@@ -23,7 +22,7 @@ public class ElixirOfLife extends inventoryItem {
 
       var potion = image.getSubimage(objectWidth* 12, objectHeight*4, objectWidth, objectHeight);
 
-      images.add(potion);
+      portrait = potion;
 
     } catch (IOException e) {
       e.printStackTrace();

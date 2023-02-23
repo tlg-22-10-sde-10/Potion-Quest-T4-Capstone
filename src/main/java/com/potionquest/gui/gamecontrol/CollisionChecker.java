@@ -265,4 +265,52 @@ public class CollisionChecker {
 
     return contactPlayer;
   }
+
+  public int checkObject(Entity entity, boolean player) {
+    int index = 999;
+
+    for(int i =0; i< GamePanel.items.length; i++) {
+      if(GamePanel.items[i] != null) {
+        entity.solidArea.x = entity.worldX + entity.solidArea.x;
+        entity.solidArea.y = entity.worldY + entity.solidArea.y;
+
+        GamePanel.items[i].solidArea.x = GamePanel.items[i].solidArea.x + GamePanel.items[i].worldX;
+        GamePanel.items[i].solidArea.y = GamePanel.items[i].solidArea.y + GamePanel.items[i].worldY;
+
+        switch (entity.direction) {
+          case "up":
+            entity.solidArea.y -= entity.speed;
+            break;
+          case "down":
+            entity.solidArea.y += entity.speed;
+            break;
+          case "left":
+            entity.solidArea.x -= entity.speed;
+            break;
+          case "right":
+            entity.solidArea.x += entity.speed;
+            break;
+        }
+
+        if(entity.solidArea.intersects(GamePanel.items[i].solidArea)) {
+          if(entity.solidArea.intersects(GamePanel.items[i].solidArea)) {
+            if(GamePanel.items[i].collisionOn = true) {
+              entity.collisionOn = true;
+            }
+            if(player == true) {
+              index = i;
+            }
+          }
+        }
+
+        entity.solidArea.x = entity.solidAreaDefaultX;
+        entity.solidArea.y = entity.solidAreaDefaultY;
+
+        GamePanel.items[i].solidArea.x = GamePanel.items[i].solidAreaDefaultX;
+        GamePanel.items[i].solidArea.y = GamePanel.items[i].solidAreaDefaultY;
+      }
+    }
+
+    return index;
+  }
 }
