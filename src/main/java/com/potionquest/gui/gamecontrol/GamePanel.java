@@ -2,20 +2,16 @@ package com.potionquest.gui.gamecontrol;
 
 import com.potionquest.game.Monster;
 import com.potionquest.game.Sound;
-import com.potionquest.game.Timer;
 import com.potionquest.gui.entity.*;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.entity.monsters.MonsterPrototype;
-import com.potionquest.gui.items.SuperObjects;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import java.awt.event.KeyEvent;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
@@ -48,8 +44,6 @@ public class GamePanel extends JPanel implements Runnable {
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
 
-  //public UI ui = new UI(this);
-
   public static UI ui = new UI();
   public static EventHandler eHandler = new EventHandler();
 
@@ -57,11 +51,11 @@ public class GamePanel extends JPanel implements Runnable {
 
   // ENTITIES AND OBJECTS
   public static Entity[] npc = new Entity[10];
-  public static Entity[] items = new Entity[20];
+
+  public static InventoryItem[] items = new InventoryItem[20];
+
   public static Player player = new Player();
   public static Entity[] monsters = new MonsterPrototype[10];
-
-  public static List<Entity> items = new ArrayList<>();
 
   // GAME STATE
   public static int gameState;
@@ -104,7 +98,6 @@ public class GamePanel extends JPanel implements Runnable {
     aPlacer.setObjects();
     aPlacer.setNPC();
     aPlacer.setMonster();
-    aPlacer.setItem();
 
     gameState = titleState;
 //    aPlacer.setStuff
@@ -172,27 +165,23 @@ public class GamePanel extends JPanel implements Runnable {
       player.update();
 
       //OBJECTS
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] != null) {
-          items[i].update();
+      for (InventoryItem item : items) {
+        if (item != null) {
+          item.update();
         }
       }
 
       // NPC
-      for (int i = 0; i < npc.length; i++) {
-        if (npc[i] != null) {
-          npc[i].update();
+      for (Entity entity : npc) {
+        if (entity != null) {
+          entity.update();
         }
       }
 
-      for (int i = 0; i< monsters.length; i++) {
-        if(monsters[i] != null) {
-          monsters[i].update();
+      for (Entity monster : monsters) {
+        if (monster != null) {
+          monster.update();
         }
-      }
-
-      for(var item : items) {
-        item.update();
       }
 
     } else if (gameState == pauseState) {
@@ -216,27 +205,23 @@ public class GamePanel extends JPanel implements Runnable {
       tileMLayer3.draw(g2D);
 
       // OBJECTS
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] != null) {
-          items[i].draw(g2D);
+      for (InventoryItem item : items) {
+        if (item != null) {
+          item.draw(g2D);
         }
       }
 
       // NPC
-      for (int i = 0; i < npc.length; i++) {
-        if (npc[i] != null) {
-          npc[i].draw(g2D);
+      for (Entity entity : npc) {
+        if (entity != null) {
+          entity.draw(g2D);
         }
       }
 
-      for (int i = 0; i < monsters.length; i++) {
-        if (monsters[i] != null) {
-          monsters[i].draw(g2D);
+      for (Entity monster : monsters) {
+        if (monster != null) {
+          monster.draw(g2D);
         }
-      }
-
-      for(var item: items) {
-        item.draw(g2D);
       }
 
       //PLAYER

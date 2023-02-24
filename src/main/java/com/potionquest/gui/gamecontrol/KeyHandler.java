@@ -1,7 +1,5 @@
 package com.potionquest.gui.gamecontrol;
 
-import com.potionquest.game.Game;
-
 import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 
@@ -224,7 +222,7 @@ public class KeyHandler implements KeyListener {
           case 0:
             System.out.println(GamePanel.player.npcIndex);
             if (GamePanel.player.npcIndex == 0) {
-              if (GamePanel.player.inventorySize == 5) {
+              if (GamePanel.player.INVENTORY_SIZE == 5) {
                 GamePanel.ui.keyDialogueComplete = true;
                 GamePanel.ui.dialogueScreenState = 0;
               }
@@ -274,26 +272,26 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_Z) {
       switch (GamePanel.ui.commandNum) {
         case 1:
-          System.out.println("hello from case 1");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 1");
+
           break;
         case 2:
-          System.out.println("hello from case 2");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 2");
+
           break;
         case 3:
-          System.out.println("hello from case 3");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 3");
+
           break;
         case 4:
-          System.out.println("hello from case 4");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item 4");
+
           break;
         case 5:
-          System.out.println("hello from case 5");
-          GamePanel.gameState = GamePanel.playState;
+          System.out.println("using item  5");
           break;
       }
+      GamePanel.gameState = GamePanel.playState;
     }
   }
 

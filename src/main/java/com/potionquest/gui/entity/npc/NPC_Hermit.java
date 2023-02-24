@@ -1,6 +1,7 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
 import com.potionquest.game.Characters;
+import com.potionquest.gui.entity.Entity;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

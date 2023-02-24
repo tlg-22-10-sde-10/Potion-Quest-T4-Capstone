@@ -3,7 +3,8 @@ package com.potionquest.gui.entity;
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
-import com.potionquest.gui.entity.inventoryobjects.inventoryItem;
+import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.gamecontrol.*;
 import com.potionquest.gui.entity.inventoryobjects.StarterSword;
 import java.awt.AlphaComposite;
@@ -13,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
@@ -28,8 +30,13 @@ public class Player extends Entity {
 
   private boolean isAttacking = false;
 
-  public ArrayList<inventoryItem> inventory = new ArrayList<>();
-  public final int inventorySize = 5;
+  //inventory
+  public List<InventoryItem> inventory = new ArrayList<>();
+  public static final int INVENTORY_SIZE = 5;
+  public boolean failedToPickUp = false;
+
+  public InventoryItem coin = new GoldCoin();
+  public int coinInPocket = 0;
 
   public boolean haveTalkedToOnceAlready;
   public int npcIndex;
@@ -78,12 +85,11 @@ public class Player extends Entity {
   }
 
   public void setItems() {
-
     inventory.add(currentWeapon);
   }
 
   public int getAttack() {
-    return attack = currentWeapon.attackValue;
+    return attack += currentWeapon.attack;
   }
 
   public void getPlayerImage() {
@@ -91,7 +97,7 @@ public class Player extends Entity {
     try (InputStream inputStream = getClass().getResourceAsStream("/player/characterResized.png")) {
       //noinspection ConstantConditions
       BufferedImage playerImage = ImageIO.read(inputStream);
-      
+
       int imageIndexX = 0;
       
      for (int i = 0; i < 4; i++) {
@@ -151,12 +157,16 @@ public class Player extends Entity {
         GamePanel.collider.checkTile(this);
 
         // CHECK NPC COLLISION
-        int npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
+        npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
         talkNPC(npcIndex);
 
         //CHECK MONSTER COLLISION
         int monsterIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.monsters);
         contactMonster(monsterIndex);
+
+        //check items collision
+        int itemIndex = GamePanel.collider.checkObject(this, true);
+        pickUpObject(itemIndex);
 
         //CHECK EVENT
         GamePanel.eHandler.checkEvent();
@@ -289,9 +299,19 @@ public class Player extends Entity {
   }
 
   public void pickUpObject(int i) {
-
     if (i != 999) {
-
+      if(GamePanel.items[i].name.equals("Gold Coin")) {
+        coinInPocket += GamePanel.items[i].qty;
+        GamePanel.items[i] = null;
+      } else {
+        if(inventory.size() < INVENTORY_SIZE) {
+          inventory.add(GamePanel.items[i]);
+          GamePanel.items[i] = null;
+        } else {
+          failedToPickUp = true;
+          System.out.println("Inventory Full");
+        }
+      }
     }
   }
 
@@ -304,10 +324,15 @@ public class Player extends Entity {
         if (GamePanel.npc[i].name.equals("Old Hermit") && GamePanel.player.currentWeapon.name.equals(
             "Sword of a Thousand Truths")) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
+          //currentWeapon = new SwordOfAThousandTruths();
+          //inventory.set(0, currentWeapon);
         } else if (GamePanel.npc[i].name.equals("Doctor") && GamePanel.player.currentWeapon.name.equals(
             "Sword of a Thousand Truths")) {
           //GAME WIN SCREEN SHOULD GO HERE. CHANGE ELSE IF LOGIC FROM CURRENT WEAPON NAME
+
           GamePanel.npc[i].npcKeyDialogueComplete = true;
+
+
         } else if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
         } else if (GamePanel.npc[i].name.equals("Potion Seller")

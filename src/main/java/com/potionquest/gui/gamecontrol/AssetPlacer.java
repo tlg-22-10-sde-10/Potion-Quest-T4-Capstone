@@ -1,13 +1,11 @@
 package com.potionquest.gui.gamecontrol;
 
 
-import com.potionquest.gui.entity.Entity;
-
-import com.potionquest.gui.entity.NPC_Potion_Seller;
-import com.potionquest.gui.entity.NPC_Alchemist_Brother;
-import com.potionquest.gui.entity.NPC_Doctor;
-import com.potionquest.gui.entity.NPC_Hermit;
-import com.potionquest.gui.entity.NPC_Sister;
+import com.potionquest.gui.entity.npc.NPC_Potion_Seller;
+import com.potionquest.gui.entity.npc.NPC_Alchemist_Brother;
+import com.potionquest.gui.entity.npc.NPC_Doctor;
+import com.potionquest.gui.entity.npc.NPC_Hermit;
+import com.potionquest.gui.entity.npc.NPC_Sister;
 
 import com.potionquest.gui.entity.monsters.MonsterOrc;
 
@@ -19,15 +17,16 @@ import java.io.IOException;
 
 public class AssetPlacer {
 
-  public AssetPlacer() {
-
-  }
+  public AssetPlacer() {}
 
   public void setObjects() {
-
     GamePanel.items[0] = new OrnateTrinket();
     GamePanel.items[0].worldX = GamePanel.tileSize * 21;
     GamePanel.items[0].worldY = GamePanel.tileSize * 39;
+
+    GamePanel.items[1] = new GoldCoin();
+    GamePanel.items[1].worldX = GamePanel.tileSize * 6;
+    GamePanel.items[1].worldY = GamePanel.tileSize * 40;
   }
 
   public void setNPC() {
@@ -86,13 +85,5 @@ public class AssetPlacer {
         break;
       }
     }
-  }
-
-  public void setItem() {
-    Entity coin = new GoldCoin();
-    coin.worldX = GamePanel.tileSize * 6;
-    coin.worldY = GamePanel.tileSize * 40;
-
-    GamePanel.items.add(coin);
   }
 }

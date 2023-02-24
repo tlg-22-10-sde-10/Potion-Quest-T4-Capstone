@@ -1,20 +1,18 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import com.potionquest.gui.items.SuperObjects;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class StarterSword extends inventoryItem {
+public class StarterSword extends InventoryItem {
 
   public StarterSword() {
     name = "Father's Sword";
-    objectHeight = 48;
-    objectWidth = 48;
-    attackValue = 1;
+    int objectHeight = 48;
+    int objectWidth = 48;
+    attack = 1;
     collisionOn = false;
-
 
     BufferedImage image;
 
@@ -25,7 +23,7 @@ public class StarterSword extends inventoryItem {
 
         var sword = image.getSubimage(0, 7 * objectHeight, objectWidth, objectHeight);
 
-        images.add(sword);
+      portrait = sword;
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -1,13 +1,10 @@
 package com.potionquest.gui.entity;
 
 
-import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
-
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.AlphaComposite;
 
-import com.potionquest.gui.entity.inventoryobjects.inventoryItem;
-import com.potionquest.gui.gamecontrol.GamePanel;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 
 
 import java.awt.Graphics2D;
@@ -31,7 +28,7 @@ public class Entity {
   public BufferedImage[] fightLeft = new BufferedImage[4];
   public BufferedImage[] fightRight = new BufferedImage[4];
 
-  public BufferedImage itemPortrait;
+  public BufferedImage portrait;
 
   //SPRITE MOVEMENT FIELDS
   public String name;
@@ -49,7 +46,7 @@ public class Entity {
   public boolean invincible = false;
   public int invincibleCounter = 0;
   public int entityType;
-  public inventoryItem currentWeapon;
+  public InventoryItem currentWeapon;
   public int attack;
 
   //SPRITE DIALOGUE FIELDS
@@ -58,17 +55,16 @@ public class Entity {
   public boolean firstChat = true;
   public boolean npcKeyDialogueComplete = false;
 
+  //Handle collision and attack
   public Rectangle solidArea = new Rectangle();
-
   public Rectangle attackArea = new Rectangle();
-
 
   public int solidAreaDefaultX;
   public int solidAreaDefaultY;
 
   public int HP;
   public int MAX_HP;
-  public int attack;
+  //public int attack;
   public int entityID;
 
   public boolean displayHPBar = false;

@@ -1,8 +1,11 @@
 package com.potionquest.gui.entity.monsters;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+import static com.potionquest.gui.gamecontrol.GamePanel.items;
 
 import com.potionquest.gui.entity.Entity;
+import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -247,6 +250,7 @@ public abstract class MonsterPrototype extends Entity {
         deathAnimationFrameCount++;
         if(deathAnimationFrameCount >= FPS) {
           enemyDie();
+          dropCoin();
         }
       } else {
         if(displayHPBar) {
@@ -301,5 +305,17 @@ public abstract class MonsterPrototype extends Entity {
   protected void enemyDie() {
     deathAnimationFrameCount =0;
     GamePanel.monsters[this.entityID] = null;
+  }
+
+  protected void dropCoin() {
+    InventoryItem coin = new GoldCoin();
+    coin.worldX = worldX;
+    coin.worldY = worldY;
+    for(int i=0; i< items.length; i++) {
+      if(items[i]==null) {
+        items[i] = coin;
+        break;
+      }
+    }
   }
 }

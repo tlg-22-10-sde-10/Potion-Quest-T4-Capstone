@@ -1,6 +1,7 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
 import com.potionquest.game.Characters;
+import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

@@ -1,6 +1,5 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -9,23 +8,30 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.imageio.ImageIO;
 
-public class GoldCoin extends Entity {
+public class GoldCoin extends InventoryItem {
+  private int frameCount = 0;
 
-  private int qty = 0;
-  private int col = 7;
-  private int row = 3;
+  private final BufferedImage[] coins = new BufferedImage[4];
 
   public GoldCoin() {
     Random rd = new Random();
-    setQty(rd.nextInt(4) + 1);
+    qty = rd.nextInt(4) + 1;
 
-    try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
+    name = "Gold Coin";
 
+    collisionOn = true;
+
+    int row = 4;
+
+    try (InputStream is = getClass().getResourceAsStream("/Heart.png")) {
+      assert is != null;
       BufferedImage image = ImageIO.read(is);
 
-      BufferedImage coin = image.getSubimage(GamePanel.tileSize*col, GamePanel.tileSize*row, GamePanel.tileSize, GamePanel.tileSize);
+      for(int i=0; i< coins.length; i++) {
+        coins[i] = image.getSubimage(GamePanel.tileSize*i, GamePanel.tileSize* row, GamePanel.tileSize, GamePanel.tileSize);
+      }
 
-      itemPortrait = coin;
+      portrait = coins[0];
 
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -35,6 +41,11 @@ public class GoldCoin extends Entity {
   public void update() {
     collisionOn = false;
 
+    if(frameCount < 60) {
+      frameCount++;
+    } else {
+      frameCount = 0;
+    }
 //    GamePanel.collider.checkTile(this);
 //    GamePanel.collider.checkTargetsCollision(this);
 //    GamePanel.collider.checkEntity(this, GamePanel.npc);
@@ -45,15 +56,6 @@ public class GoldCoin extends Entity {
     int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
     int screenY = worldY - GamePanel.player.worldY + GamePanel.player.screenY;
 
-    g2D.drawImage(itemPortrait, screenX, screenY,null);
-  }
-
-
-  public int getQty() {
-    return qty;
-  }
-
-  public void setQty(int qty) {
-    this.qty = qty;
+    g2D.drawImage(coins[frameCount/15 % 4], screenX, screenY,null);
   }
 }
