@@ -11,6 +11,7 @@ import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Objects;
 
 public class KeyHandler implements KeyListener {
 
@@ -58,54 +59,38 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
-          GamePanel.ui.commandNum = 2;
+          GamePanel.ui.commandNum = 3;
         }
       }
       if (code == KeyEvent.VK_DOWN) {
         GamePanel.ui.commandNum++;
-        if (GamePanel.ui.commandNum > 2) {
-          GamePanel.ui.commandNum = 0;
-        }
-      }
-      if (code == KeyEvent.VK_Z) {
-        switch (GamePanel.ui.commandNum) {
-        case 0:
-          GamePanel.gameState = GamePanel.playState;
-          break;
-        case 1:
-          //music control
-          GamePanel.gameState = GamePanel.SETTING_STATE;
-          break;
-        case 2:
-          System.exit(0);
-        }
-        GamePanel.ui.commandNum = 0;
-      }
-    } else if (GamePanel.ui.titleScreenState == 1) {
-      if (code == KeyEvent.VK_UP) {
-        GamePanel.ui.commandNum--;
-        if (GamePanel.ui.commandNum < 0) {
-          GamePanel.ui.commandNum = 4;
-        }
-      }
-      if (code == KeyEvent.VK_DOWN) {
-        GamePanel.ui.commandNum++;
-        if (GamePanel.ui.commandNum > 4) {
+        if (GamePanel.ui.commandNum > 3) {
           GamePanel.ui.commandNum = 0;
         }
       }
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
-          case 1:
-          case 2:
-          case 3:
+            GamePanel.gameState = GamePanel.playState;
             break;
-          case 4:
-          default:
-            GamePanel.ui.titleScreenState = 0;
-            GamePanel.ui.commandNum = 0;
+          case 1:
+            //music control
+            GamePanel.ui.titleScreenState = 2;
+            break;
+          case 2:
+            GamePanel.ui.titleScreenState = 1;
+            break;
+          case 3:
+            System.exit(0);
         }
+        GamePanel.ui.commandNum = 0;
+      }
+    } else if (GamePanel.ui.titleScreenState == 2) {
+      settingState(code);
+    } else if (GamePanel.ui.titleScreenState == 1) {
+      if (code == KeyEvent.VK_Z) {
+        GamePanel.ui.titleScreenState = 0;
+        GamePanel.ui.commandNum = 0;
       }
     }
   }
@@ -142,11 +127,11 @@ public class KeyHandler implements KeyListener {
           break;
         case 3:
           GamePanel.ui.commandNum = 0;
-          if(GamePanel.ui.pauseScreenState == 2) {
+          if(GamePanel.ui.pauseScreenState == 3) {
             GamePanel.ui.pauseScreenState = 0;
             GamePanel.gameState = GamePanel.pauseState;
           } else {
-            GamePanel.gameState = GamePanel.titleState;
+            GamePanel.ui.titleScreenState = 0;
           }
           break;
       }
@@ -173,7 +158,6 @@ public class KeyHandler implements KeyListener {
     if(code == KeyEvent.VK_SPACE) {
       spacePressed = true;
     }
-
     if (code == KeyEvent.VK_Z) {
       zPressed = true;
     }
@@ -188,12 +172,12 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
-          GamePanel.ui.commandNum = 3;
+          GamePanel.ui.commandNum = 4;
         }
       }
       if (code == KeyEvent.VK_DOWN) {
         GamePanel.ui.commandNum++;
-        if (GamePanel.ui.commandNum > 3) {
+        if (GamePanel.ui.commandNum > 4) {
           GamePanel.ui.commandNum = 0;
         }
       }
@@ -209,37 +193,25 @@ public class KeyHandler implements KeyListener {
             GamePanel.ui.pauseScreenState = 2;
             break;
           case 3:
+            GamePanel.ui.pauseScreenState = 3;
+            break;
+          case 4:
             GamePanel.gameState = GamePanel.titleState;
             break;
         }
         GamePanel.ui.commandNum = 0;
       }
-    }
-    if (GamePanel.ui.pauseScreenState == 1) {
-//      if (code == KeyEvent.VK_UP) {
-//        GamePanel.ui.commandNum--;
-//        if (GamePanel.ui.commandNum < 0) {
-//          GamePanel.ui.commandNum = 1;
-//        }
-//      }
-//      if (code == KeyEvent.VK_DOWN) {
-//        GamePanel.ui.commandNum++;
-//        if (GamePanel.ui.commandNum > 1) {
-//          GamePanel.ui.commandNum = 0;
-//        }
-//      }
+    } else if(GamePanel.ui.pauseScreenState == 1)  {
       if (code == KeyEvent.VK_Z) {
-        switch (GamePanel.ui.commandNum) {
-          case 0:
-            GamePanel.ui.commandNum = 1;
-            break;
-          case 1:
-            GamePanel.ui.pauseScreenState = 0;
-            break;
-        }
+        GamePanel.ui.pauseScreenState = 0;
+        GamePanel.ui.commandNum = 0;
       }
-    }
-    if (GamePanel.ui.pauseScreenState == 2) {
+    } else if (GamePanel.ui.pauseScreenState == 2) {
+      if (code == KeyEvent.VK_Z) {
+        GamePanel.ui.pauseScreenState = 0;
+        GamePanel.ui.commandNum = 0;
+      }
+    } else if (GamePanel.ui.pauseScreenState == 3) {
       settingState(code);
     }
   }
@@ -274,6 +246,7 @@ public class KeyHandler implements KeyListener {
               for (InventoryItem item : GamePanel.player.inventory) {
                 if (item.name.equals("Elixir of Life")) {
                   GamePanel.gameState = winState;
+                  break;
                 }
               }
             }
@@ -333,26 +306,41 @@ public class KeyHandler implements KeyListener {
       }
     }
     if (code == KeyEvent.VK_Z) {
-      switch (GamePanel.ui.commandNum) {
-        case 1:
-          System.out.println("using item 1");
-
-          break;
-        case 2:
-          System.out.println("using item 2");
-
-          break;
-        case 3:
-          System.out.println("using item 3");
-
-          break;
-        case 4:
-          System.out.println("using item 4");
-
-          break;
-        case 5:
-          System.out.println("using item  5");
-          break;
+      InventoryItem item = null;
+      if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
+        item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);
+      }
+      if(item == null) {
+        GamePanel.player.inventoryFrameCount = 0;
+        UI.statement = "Empty Slot!";
+      } else if (Objects.equals(item.name, "Delicious Mushroom")) {
+        if(GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {
+          UI.statement = "You Are Too Full to Eat That!";
+          GamePanel.player.inventoryFrameCount = 0;
+        } else {
+          GamePanel.player.setHP(GamePanel.player.getHP() + 4);
+          GamePanel.player.inventory.remove(item);
+        }
+      } else {
+        UI.statement = "Cannot Use the Item!";
+        GamePanel.player.inventoryFrameCount = 0;
+      }
+      GamePanel.gameState = GamePanel.playState;
+    } else if (code == KeyEvent.VK_SPACE) {
+      InventoryItem item = null;
+      if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
+        item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);
+      }
+      if(item != null && !item.keyItem) {
+        GamePanel.player.inventory.remove(item);
+      } else {
+        GamePanel.player.inventoryFrameCount = 0;
+      }
+      if(item == null) {
+        UI.statement = "Empty Slot!";
+      }
+      if(item.keyItem) {
+        UI.statement = "You Cannot Throw That Away!";
       }
       GamePanel.gameState = GamePanel.playState;
     }

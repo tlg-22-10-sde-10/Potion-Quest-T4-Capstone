@@ -13,7 +13,7 @@ public class SwordOfAThousandTruths extends InventoryItem {
     int objectWidth = 48;
     attack = 5;
     collisionOn = false;
-
+    keyItem = true;
 
     BufferedImage image;
 

@@ -38,6 +38,8 @@ public class Player extends Entity {
   public static final int INVENTORY_SIZE = 5;
   public boolean failedToPickUp = false;
 
+  public int inventoryFrameCount = 0;
+
   public InventoryItem coin = new GoldCoin();
   public int coinInPocket = 0;
 
@@ -79,8 +81,8 @@ public class Player extends Entity {
 //    worldX = GamePanel.tileSize * 48;
 //    worldY = GamePanel.tileSize * 70;
     // near hermit
-//    worldX = GamePanel.tileSize * 21;
-//    worldY = GamePanel.tileSize * 82;
+//    worldX = GamePanel.tileSize * 77;
+//    worldY = GamePanel.tileSize * 77;
     speed = 4;
     direction = "down";
     currentWeapon = new StarterSword();
@@ -178,7 +180,6 @@ public class Player extends Entity {
         if (!collisionOn && !isAttacking) {
           switch (direction) {
             case "up":
-
               if(worldY - speed >= 0) {
                 worldY -= speed;
               }
@@ -223,6 +224,13 @@ public class Player extends Entity {
 
       if(HP > MAX_HP) {
         HP = MAX_HP;
+      }
+
+      inventoryFrameCount++;
+
+      if(inventoryFrameCount >= FPS * 4 ) {
+        inventoryFrameCount = 0;
+        UI.statement = "";
       }
     }
   }
@@ -307,8 +315,8 @@ public class Player extends Entity {
           inventory.add(GamePanel.items[i]);
           GamePanel.items[i] = null;
         } else {
-          failedToPickUp = true;
-          System.out.println("Inventory Full");
+          UI.statement = "Inventory full";
+          inventoryFrameCount = 0;
         }
       }
     }

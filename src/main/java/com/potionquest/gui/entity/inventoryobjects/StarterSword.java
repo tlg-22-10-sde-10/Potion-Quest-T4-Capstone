@@ -13,7 +13,7 @@ public class StarterSword extends InventoryItem {
     int objectWidth = 48;
     attack = 1;
     collisionOn = false;
-
+    keyItem = true;
     BufferedImage image;
 
     try (InputStream is = getClass().getResourceAsStream("/sword.png")) {

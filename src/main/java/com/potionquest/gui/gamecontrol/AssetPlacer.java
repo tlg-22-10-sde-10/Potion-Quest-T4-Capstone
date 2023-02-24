@@ -28,6 +28,26 @@ public class AssetPlacer {
     GamePanel.items[1] = new GoldCoin();
     GamePanel.items[1].worldX = GamePanel.tileSize * 6;
     GamePanel.items[1].worldY = GamePanel.tileSize * 40;
+
+    GamePanel.items[2] = new OrnateTrinket();
+    GamePanel.items[2].worldX = GamePanel.tileSize * 19;
+    GamePanel.items[2].worldY = GamePanel.tileSize * 39;
+
+    GamePanel.items[3] = new OrnateTrinket();
+    GamePanel.items[3].worldX = GamePanel.tileSize * 20;
+    GamePanel.items[3].worldY = GamePanel.tileSize * 39;
+
+    GamePanel.items[4] = new OrnateTrinket();
+    GamePanel.items[4].worldX = GamePanel.tileSize * 20;
+    GamePanel.items[4].worldY = GamePanel.tileSize * 39;
+
+    GamePanel.items[5] = new OrnateTrinket();
+    GamePanel.items[5].worldX = GamePanel.tileSize * 18;
+    GamePanel.items[5].worldY = GamePanel.tileSize * 39;
+
+    GamePanel.items[6] = new OrnateTrinket();
+    GamePanel.items[6].worldX = GamePanel.tileSize * 17;
+    GamePanel.items[6].worldY = GamePanel.tileSize * 39;
   }
 
   public void setNPC() {
@@ -71,25 +91,46 @@ public class AssetPlacer {
 
   public void setMonster() {
     MonsterPrototype orc1 = new MonsterOrc();
-    orc1.worldX = GamePanel.tileSize * 12;
-    orc1.worldY = GamePanel.tileSize * 40;
+    orc1.worldX = GamePanel.tileSize * 7;
+    orc1.worldY = GamePanel.tileSize * 7;
 
     MonsterPrototype orc2 = new MonsterOrc();
-    orc2.worldX = GamePanel.tileSize * 16;
-    orc2.worldY = GamePanel.tileSize * 40;
+    orc2.worldX = GamePanel.tileSize * 25;
+    orc2.worldY = GamePanel.tileSize * 22;
+
+    MonsterPrototype orc3 = new MonsterOrc();
+    orc3.worldX = GamePanel.tileSize * 41;
+    orc3.worldY = GamePanel.tileSize * 24;
 
     MonsterPrototype skeleton1 = new MonsterSkeleton();
-    skeleton1.worldX = GamePanel.tileSize * 17;
-    skeleton1.worldY = GamePanel.tileSize * 40;
+    skeleton1.worldX = GamePanel.tileSize * 63;
+    skeleton1.worldY = GamePanel.tileSize * 88;
 
     MonsterPrototype skeleton2 = new MonsterSkeleton();
-    skeleton2.worldX = GamePanel.tileSize * 18;
-    skeleton2.worldY = GamePanel.tileSize * 40;
+    skeleton2.worldX = GamePanel.tileSize * 76;
+    skeleton2.worldY = GamePanel.tileSize * 74;
 
     setMonster(orc1);
     setMonster(orc2);
+    setMonster(orc3);
     setMonster(skeleton1);
     setMonster(skeleton2);
+
+    MonsterPrototype orc4 = new MonsterOrc();
+    orc4.worldX = GamePanel.tileSize * 13;
+    orc4.worldY = GamePanel.tileSize * 76;
+
+    MonsterPrototype orc5 = new MonsterOrc();
+    orc5.worldX = GamePanel.tileSize * 32;
+    orc5.worldY = GamePanel.tileSize * 83;
+
+    MonsterPrototype skeleton3 = new MonsterSkeleton();
+    skeleton3.worldX = GamePanel.tileSize * 34;
+    skeleton3.worldY = GamePanel.tileSize * 73;
+
+    setMonster(orc4);
+    setMonster(orc5);
+    setMonster(skeleton3);
   }
 
   public void setMonster(MonsterPrototype monster) {
