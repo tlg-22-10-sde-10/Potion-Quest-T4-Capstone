@@ -28,8 +28,8 @@ public class KeyHandler implements KeyListener {
     // TITLE STATE
     if (GamePanel.gameState == GamePanel.titleState) {
       titleState(code);
-    // setting mode
-    }else if (GamePanel.gameState == GamePanel.SETTING_STATE) {
+      // setting mode
+    } else if (GamePanel.gameState == GamePanel.SETTING_STATE) {
       settingState(code);
     }
     // PLAY STATE
@@ -49,7 +49,7 @@ public class KeyHandler implements KeyListener {
       inventoryState(code);
     }
     //Game over
-    else if(GamePanel.gameState == GamePanel.gameOverState) {
+    else if (GamePanel.gameState == GamePanel.gameOverState) {
       gameOverState(code);
     }
   }
@@ -111,17 +111,17 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_Z) {
       switch (GamePanel.ui.commandNum) {
         case 0:
-          if(GamePanel.sound.getClip()!= null) {
+          if (GamePanel.sound.getClip() != null) {
             GamePanel.sound.turnUpVolume();
           }
           break;
         case 1:
-          if(GamePanel.sound.getClip()!= null) {
+          if (GamePanel.sound.getClip() != null) {
             GamePanel.sound.turnDownVolume();
           }
           break;
         case 2:
-          if(GamePanel.sound.getClip()!= null) {
+          if (GamePanel.sound.getClip() != null) {
             GamePanel.sound.muteToggle();
           }
           break;
@@ -155,7 +155,7 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_ENTER) {
       GamePanel.gameState = GamePanel.pauseState;
     }
-    if(code == KeyEvent.VK_SPACE) {
+    if (code == KeyEvent.VK_SPACE) {
       spacePressed = true;
     }
     if (code == KeyEvent.VK_Z) {
@@ -220,7 +220,8 @@ public class KeyHandler implements KeyListener {
     if (GamePanel.ui.dialogueScreenState == 0) {
       if (code == KeyEvent.VK_Z) {
         GamePanel.ui.arrayIndex++;
-        if (GamePanel.ui.dialogueArray[GamePanel.ui.arrayIndex] == null || GamePanel.player.haveTalkedToOnceAlready) {
+        if (GamePanel.ui.dialogueArray[GamePanel.ui.arrayIndex] == null
+            || GamePanel.player.haveTalkedToOnceAlready) {
           GamePanel.gameState = GamePanel.playState;
           GamePanel.ui.arrayIndex = 0;
         }
@@ -251,12 +252,19 @@ public class KeyHandler implements KeyListener {
               }
             }
             if (GamePanel.player.npcIndex == 2) {
-              if (GamePanel.player.currentWeapon.name.equals("Father's Sword")) {
-                GamePanel.ui.keyDialogueComplete = true;
-                GamePanel.player.inventory.remove(GamePanel.player.currentWeapon);
-                GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
-                GamePanel.player.inventory.add(GamePanel.player.currentWeapon);
-                GamePanel.ui.dialogueScreenState = 0;
+              if (GamePanel.player.coinInPocket >= 5 && GamePanel.player.currentWeapon.name.equals(
+                  "Father's Sword")) {
+                if (GamePanel.player.inventory.size() < Player.INVENTORY_SIZE) {
+                  GamePanel.ui.keyDialogueComplete = true;
+                  GamePanel.player.inventory.remove(GamePanel.player.currentWeapon);
+                  GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
+                  GamePanel.player.inventory.add(GamePanel.player.currentWeapon);
+                  GamePanel.player.coinInPocket -= 5;
+                  GamePanel.ui.dialogueScreenState = 0;
+                } else {
+                  GamePanel.ui.dialogueScreenState = 0;
+                  GamePanel.ui.currentDialogue = "Your inventory is full!";
+                }
               }
             }
             if (GamePanel.player.npcIndex == 3) {
@@ -273,10 +281,24 @@ public class KeyHandler implements KeyListener {
               }
             }
             if (GamePanel.player.npcIndex == 4) {
-              if (GamePanel.player.inventory.contains(GamePanel.player.currentWeapon)) {
-                GamePanel.ui.keyDialogueComplete = true;
-                GamePanel.player.inventory.add(new ElixirOfLife());
-                GamePanel.ui.dialogueScreenState = 0;
+              if (GamePanel.player.inventory.size() < Player.INVENTORY_SIZE) {
+                for (InventoryItem item : GamePanel.player.inventory) {
+                  if (item.name.equals("Ornate Trinket")) {
+                    GamePanel.ui.keyDialogueComplete = true;
+                    GamePanel.player.inventory.remove(item);
+                    GamePanel.player.inventory.add(new ElixirOfLife());
+                    GamePanel.ui.dialogueScreenState = 0;
+                  }
+                }
+                if (GamePanel.player.coinInPocket >= 10 && !GamePanel.ui.keyDialogueComplete) {
+                  GamePanel.ui.keyDialogueComplete = true;
+                  GamePanel.player.coinInPocket -= 10;
+                  GamePanel.player.inventory.add(new ElixirOfLife());
+                  GamePanel.ui.dialogueScreenState = 0;
+                } else {
+                  GamePanel.ui.dialogueScreenState = 0;
+                  GamePanel.ui.currentDialogue = "Your inventory is full!";
+                }
               }
             }
 
@@ -286,6 +308,7 @@ public class KeyHandler implements KeyListener {
           case 1:
             System.out.println("hello from case 1");
             GamePanel.ui.dialogueScreenState = 0;
+            GamePanel.ui.keyDialogueComplete = false;
             break;
         }
       }
@@ -347,19 +370,23 @@ public class KeyHandler implements KeyListener {
   }
 
   public void gameOverState(int code) {
-    if(code == KeyEvent.VK_UP) {
+    if (code == KeyEvent.VK_UP) {
       GamePanel.ui.commandNum--;
     }
-    if(code == KeyEvent.VK_DOWN) {
+    if (code == KeyEvent.VK_DOWN) {
       GamePanel.ui.commandNum++;
     }
-    if(GamePanel.ui.commandNum < 0) GamePanel.ui.commandNum+=2;
-    if(GamePanel.ui.commandNum > 1) GamePanel.ui.commandNum-=2;
-    if(code == KeyEvent.VK_Z) {
-      if(GamePanel.ui.commandNum == 0) {
+    if (GamePanel.ui.commandNum < 0) {
+      GamePanel.ui.commandNum += 2;
+    }
+    if (GamePanel.ui.commandNum > 1) {
+      GamePanel.ui.commandNum -= 2;
+    }
+    if (code == KeyEvent.VK_Z) {
+      if (GamePanel.ui.commandNum == 0) {
         GamePanel.gameState = GamePanel.titleState;
       }
-      if(GamePanel.ui.commandNum ==  1) {
+      if (GamePanel.ui.commandNum == 1) {
         System.exit(0);
       }
     }
@@ -382,7 +409,7 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_RIGHT) {
       rightPressed = false;
     }
-    if(code == KeyEvent.VK_SPACE) {
+    if (code == KeyEvent.VK_SPACE) {
       spacePressed = false;
     }
   }

@@ -22,9 +22,7 @@ public class SwordOfAThousandTruths extends InventoryItem {
       //noinspection ConstantConditions
       image = ImageIO.read(is);
 
-      var sword = image.getSubimage(objectWidth*12, objectHeight*7, objectWidth, objectHeight);
-
-      portrait = sword;
+      portrait = image.getSubimage(objectWidth*12, objectHeight*7, objectWidth, objectHeight);
 
     } catch (IOException e) {
       e.printStackTrace();

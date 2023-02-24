@@ -5,15 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class StarterSword extends InventoryItem {
+public class BootsOfSpeed extends InventoryItem {
 
-  public StarterSword() {
-    name = "Father's Sword";
+  public BootsOfSpeed() {
+    name = "Boots of Speed";
     int objectHeight = 48;
     int objectWidth = 48;
-    attack = 1;
     collisionOn = false;
-    keyItem = true;
+    speed = 0;
+    direction = "down";
+
     BufferedImage image;
 
     try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
@@ -21,7 +22,7 @@ public class StarterSword extends InventoryItem {
       //noinspection ConstantConditions
       image = ImageIO.read(is);
 
-      portrait = image.getSubimage(0, 7 * objectHeight, objectWidth, objectHeight);
+      portrait = image.getSubimage(objectWidth * 8, objectHeight * 10, objectWidth, objectHeight);
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -104,7 +104,7 @@ public class UI {
 
     int x;
     int y = GamePanel.tileSize * 5;
-
+    
     String gameOver;
     g2D.setColor(Color.BLACK);
     if(GamePanel.gameTime >= GamePanel.gameTimeLimit) {
@@ -342,8 +342,8 @@ public class UI {
           g2D.drawString(">", x - GamePanel.tileSize / 2, y);
         }
       }
-    } else if(pauseScreenState == 1) {
 
+    } else if(pauseScreenState == 1) {
       int x1 = 0;
       int y1 = 0;
       int width = GamePanel.screenWidth;
@@ -409,8 +409,6 @@ public class UI {
 
     } else if (dialogueScreenState == 1) {
       // WINDOW1
-//      arrayIndex = 0;
-
       int x1 = GamePanel.tileSize * 2;
       int y1 = GamePanel.tileSize / 2;
       int width1 = GamePanel.screenWidth - (2 * x1);
