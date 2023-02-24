@@ -1,8 +1,11 @@
 package com.potionquest.gui.entity;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+import static com.potionquest.gui.gamecontrol.GamePanel.items;
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
+import static com.potionquest.gui.gamecontrol.GamePanel.winState;
 
+import com.potionquest.gui.entity.inventoryobjects.AttunedGemstone;
 import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
 import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.gamecontrol.*;
@@ -324,21 +327,35 @@ public class Player extends Entity {
         if (GamePanel.npc[i].name.equals("Old Hermit") && GamePanel.player.currentWeapon.name.equals(
             "Sword of a Thousand Truths")) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
-          //currentWeapon = new SwordOfAThousandTruths();
-          //inventory.set(0, currentWeapon);
-        } else if (GamePanel.npc[i].name.equals("Doctor") && GamePanel.player.currentWeapon.name.equals(
-            "Sword of a Thousand Truths")) {
+        }
+//        if (GamePanel.npc[i].name.equals("Doctor")) {
+//          for (InventoryItem item : GamePanel.player.inventory) {
+//            if (item.name.equals("Elixir of Life")) {
+//              GamePanel.gameState = winState;
+//            }
+//          }
           //GAME WIN SCREEN SHOULD GO HERE. CHANGE ELSE IF LOGIC FROM CURRENT WEAPON NAME
-
+//        }
+        if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
-
-
-        } else if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
-          GamePanel.npc[i].npcKeyDialogueComplete = true;
-        } else if (GamePanel.npc[i].name.equals("Potion Seller")
-            && GamePanel.player.currentWeapon.name.equals("Sword of a Thousand Truths")) {
-          GamePanel.npc[i].npcKeyDialogueComplete = true;
-        } else {
+        }
+        if (GamePanel.npc[i].name.equals("Potion Seller")) {
+          for (InventoryItem item : GamePanel.player.inventory) {
+            if (item.name.equals("Elixir of Life")) {
+              GamePanel.npc[i].npcKeyDialogueComplete = true;
+              GamePanel.ui.keyDialogueComplete = false;
+            }
+          }
+        }
+        if (GamePanel.npc[i].name.equals("Potion Seller's Brother")) {
+          for (InventoryItem item : GamePanel.player.inventory) {
+            if (item.name.equals("Attuned Gemstone")) {
+              GamePanel.npc[i].npcKeyDialogueComplete = true;
+              GamePanel.ui.keyDialogueComplete = false;
+            }
+          }
+        }
+        if (!GamePanel.npc[i].npcKeyDialogueComplete) {
           GamePanel.gameState = GamePanel.dialogueState;
           haveTalkedToOnceAlready = chatCheck(GamePanel.npc[i]);
           GamePanel.npc[i].talk();
