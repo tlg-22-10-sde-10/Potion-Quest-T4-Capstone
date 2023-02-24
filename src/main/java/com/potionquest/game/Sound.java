@@ -58,7 +58,7 @@ public class Sound {
         int volume = 0;
         if(getClip() != null) {
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume = (int) volumeControl.getMinimum();
+            volume = (int) volumeControl.getMaximum();
         }
         return volume;
     }

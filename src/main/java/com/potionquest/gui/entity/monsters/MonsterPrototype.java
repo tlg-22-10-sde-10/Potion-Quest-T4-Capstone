@@ -163,7 +163,7 @@ public abstract class MonsterPrototype extends Entity {
           }
           break;
         case "down":
-          if(worldY + speed <= GamePanel.maxWorldRow * GamePanel.tileSize) {
+          if(worldY + speed + monsterSizeY <= (GamePanel.maxWorldRow - 1) * GamePanel.tileSize) {
             worldY += speed;
           }
           break;
@@ -173,7 +173,7 @@ public abstract class MonsterPrototype extends Entity {
           }
           break;
         case "right":
-          if(worldX + speed <= GamePanel.maxWorldCol * GamePanel.tileSize) {
+          if(worldX + speed + monsterSizeX <= (GamePanel.maxWorldCol - 1) * GamePanel.tileSize) {
             worldX += speed;
           }
           break;

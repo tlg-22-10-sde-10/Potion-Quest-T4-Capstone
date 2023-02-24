@@ -13,8 +13,6 @@ import java.awt.Graphics2D;
 
 import java.io.IOException;
 import java.util.Map;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.FloatControl.Type;
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
 
@@ -73,7 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
   //self defined
   public static Sound sound = new Sound();
   public static long gameTime = 0;
-  public static final int gameTimeLimit = 120;
+  public static final int gameTimeLimit = 300;
 
   public static Map<String, Monster> monsterLibrary;
 

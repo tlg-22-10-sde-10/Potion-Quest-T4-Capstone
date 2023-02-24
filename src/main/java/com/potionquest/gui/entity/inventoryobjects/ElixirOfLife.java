@@ -13,6 +13,8 @@ public class ElixirOfLife extends InventoryItem {
     int objectWidth = 48;
     collisionOn = false;
 
+    keyItem = true;
+
     BufferedImage image;
 
     try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
