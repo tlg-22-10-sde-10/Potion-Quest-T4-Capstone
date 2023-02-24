@@ -21,9 +21,7 @@ public class StarterSword extends InventoryItem {
       //noinspection ConstantConditions
       image = ImageIO.read(is);
 
-        var sword = image.getSubimage(0, 7 * objectHeight, objectWidth, objectHeight);
-
-      portrait = sword;
+      portrait = image.getSubimage(0, 7 * objectHeight, objectWidth, objectHeight);
 
     } catch (IOException e) {
       e.printStackTrace();

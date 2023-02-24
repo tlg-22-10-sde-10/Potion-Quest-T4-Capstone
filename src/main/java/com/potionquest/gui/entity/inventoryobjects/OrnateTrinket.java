@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 
 public class OrnateTrinket extends InventoryItem {
 
-
   public OrnateTrinket() {
     name = "Ornate Trinket";
     int objectHeight = 48;
@@ -23,9 +22,7 @@ public class OrnateTrinket extends InventoryItem {
       //noinspection ConstantConditions
       image = ImageIO.read(is);
 
-      var trinket = image.getSubimage(objectWidth * 11, objectHeight, objectWidth, objectHeight);
-
-      portrait = trinket;
+      portrait = image.getSubimage(objectWidth * 11, objectHeight, objectWidth, objectHeight);
 
     } catch (IOException e) {
       e.printStackTrace();

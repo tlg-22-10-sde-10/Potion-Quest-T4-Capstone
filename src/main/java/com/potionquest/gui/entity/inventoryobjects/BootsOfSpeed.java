@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class SwordOfAThousandTruths extends InventoryItem {
+public class BootsOfSpeed extends InventoryItem {
 
-  public SwordOfAThousandTruths() {
-    name = "Sword of a Thousand Truths";
+  public BootsOfSpeed() {
+    name = "Boots of Speed";
     int objectHeight = 48;
     int objectWidth = 48;
-    attack = 5;
     collisionOn = false;
-
+    speed = 0;
+    direction = "down";
 
     BufferedImage image;
 
@@ -22,7 +22,7 @@ public class SwordOfAThousandTruths extends InventoryItem {
       //noinspection ConstantConditions
       image = ImageIO.read(is);
 
-      portrait = image.getSubimage(objectWidth*12, objectHeight*7, objectWidth, objectHeight);
+      portrait = image.getSubimage(objectWidth * 8, objectHeight * 10, objectWidth, objectHeight);
 
     } catch (IOException e) {
       e.printStackTrace();
