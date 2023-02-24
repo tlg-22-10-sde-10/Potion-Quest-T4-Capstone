@@ -1,6 +1,9 @@
 package com.potionquest.gui.entity;
 
+
 import com.potionquest.gui.gamecontrol.GamePanel;
+import java.awt.AlphaComposite;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -9,10 +12,9 @@ import javax.imageio.ImageIO;
 
 public class Entity {
 
-  //  public int sizeX, sizeY;
-  //  public int scaleFactor;
   public int worldX, worldY;
 
+  //SPRITE FRAME ARRAYS
   public BufferedImage[] goUp = new BufferedImage[4];
   public BufferedImage[] goDown = new BufferedImage[4];
   public BufferedImage[] goLeft = new BufferedImage[4];
@@ -23,6 +25,11 @@ public class Entity {
   public BufferedImage[] fightLeft = new BufferedImage[4];
   public BufferedImage[] fightRight = new BufferedImage[4];
 
+  public BufferedImage portrait;
+
+  //SPRITE MOVEMENT FIELDS
+  public String name;
+
   public String direction;
   public int speed;
   public boolean collisionOn = false;
@@ -30,32 +37,40 @@ public class Entity {
   public int spriteCounter = 0;
   public int spriteNum = 1;
 
+  //SPRITE ATTACK FIELDS
   public int spriteCounterAttack = 0;
   public int spriteNumAttack = 1;
-
   public boolean invincible = false;
   public int invincibleCounter = 0;
   public int entityType;
+  public InventoryItem currentWeapon;
+  public int attack;
 
+  //SPRITE DIALOGUE FIELDS
+  public String[] responses = new String[10];
   public String[] dialogues = new String[20];
-  public int dialogueIndex = 0;
   public boolean firstChat = true;
-//  public boolean keyCharacter = false;
+  public boolean npcKeyDialogueComplete = false;
 
+  //Handle collision and attack
   public Rectangle solidArea = new Rectangle();
-//  public int solidAreaDefaultX = -20;
+  public Rectangle attackArea = new Rectangle();
+
   public int solidAreaDefaultX;
-//  public int solidAreaDefaultY = -80;
   public int solidAreaDefaultY;
 
   public int HP;
   public int MAX_HP;
+  //public int attack;
+  public int entityID;
+
+  public boolean displayHPBar = false;
+  protected int displayHPFrameCount = 0;
 
   public BufferedImage imageFetch(String filePath) {
 
     BufferedImage image = null;
     try (InputStream inputStream = getClass().getResourceAsStream(filePath)) {
-
       //noinspection ConstantConditions
       image = ImageIO.read(inputStream);
 
@@ -68,13 +83,11 @@ public class Entity {
   public void setBehavior() {
   }
 
-  public void talk() {
+  protected void handleDamageReaction() {
 
-    if (dialogues[dialogueIndex] == null) {
-      dialogueIndex = 0;
-    }
-    GamePanel.ui.currentDialogue = dialogues[dialogueIndex];
-    dialogueIndex++;
+  }
+
+  public void talk() {
 
     switch (GamePanel.player.direction) {
       case "up":
@@ -93,7 +106,6 @@ public class Entity {
   }
 
   public void update() {
-
     setBehavior();
 
     collisionOn = false;
@@ -102,14 +114,6 @@ public class Entity {
     GamePanel.collider.checkTargetsCollision(this);
     GamePanel.collider.checkEntity(this, GamePanel.npc);
     GamePanel.collider.checkEntity(this, GamePanel.monsters);
-    boolean contactPlayer = GamePanel.collider.checkTargetsCollision(this);
-
-    if(this.entityType == 2 && contactPlayer) {
-      if(!GamePanel.player.invincible) {
-        GamePanel.player.setHP(GamePanel.player.getHP() - 1);
-        GamePanel.player.invincible = true;
-      }
-    }
 
     // IF COLLISION IS FALSE, ENTITY CAN MOVE
     if (!collisionOn) {
@@ -132,16 +136,16 @@ public class Entity {
     spriteCounter++;
 
     if (spriteCounter >= 12) {
-      if (spriteNum >= goUp.length) {
+      if (spriteNum >= goUp.length - 1) {
         spriteNum = 1;
+      } else {
+        spriteNum++;
       }
-      spriteNum++;
       spriteCounter = 0;
     }
   }
 
   public void draw(Graphics2D g2D) {
-
     BufferedImage image = null;
 
     int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
@@ -166,7 +170,13 @@ public class Entity {
           image = goRight[spriteNum - 1];
           break;
       }
-      g2D.drawImage(image, screenX, screenY, null);
+
+      if (this.invincible) {
+        g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+      }
+
+      g2D.drawImage(image, screenX, screenY,null);
+      g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
   }
 }

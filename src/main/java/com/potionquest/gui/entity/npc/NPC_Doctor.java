@@ -1,22 +1,27 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
 import com.potionquest.game.Characters;
+import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class NPC_Doctor extends Entity {
 
-  public boolean keyCharacter = true;
   Characters doctor = getCharacter();
 
   public NPC_Doctor() throws IOException {
     direction = "left";
     speed = 0;
+    name = "Doctor";
 
     solidArea = new Rectangle();
     solidArea.x = 0;
@@ -68,10 +73,13 @@ public class NPC_Doctor extends Entity {
 
   public void setDialogue() throws IOException {
 
-    for (int i = 0; i < doctor.getResponses().size(); i++) {
-      dialogues[i] = doctor.getResponses().get(Integer.toString(i+1));
+    for (int i = 0; i < doctor.getDialogue().size(); i++) {
+      this.dialogues[i] = doctor.getDialogue().get(Integer.toString(i + 1));
     }
 
+    for (int i = 0; i < doctor.getResponses().size(); i++) {
+      this.responses[i] = doctor.getResponses().get(Integer.toString(i + 1));
+    }
   }
 
   public void setBehavior() {
@@ -98,34 +106,31 @@ public class NPC_Doctor extends Entity {
 
   public void talk() {
 
+    GamePanel.ui.dialogueArray = this.dialogues.clone();
+    GamePanel.ui.responsesArray = this.responses.clone();
+    GamePanel.ui.currentDialogue = null;
     if (firstChat) {
-      try {
-        Characters doctor = getCharacter();
-        GamePanel.ui.currentDialogue = doctor.getDialogue();
 
-        switch (GamePanel.player.direction) {
-          case "up":
-            this.direction = "down";
-            break;
-          case "down":
-            this.direction = "up";
-            break;
-          case "left":
-            this.direction = "right";
-            break;
-          case "right":
-            this.direction = "left";
-            break;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
+      switch (GamePanel.player.direction) {
+        case "up":
+          this.direction = "down";
+          break;
+        case "down":
+          this.direction = "up";
+          break;
+        case "left":
+          this.direction = "right";
+          break;
+        case "right":
+          this.direction = "left";
+          break;
       }
+
       firstChat = false;
 
-    } else {
+    } else if (!npcKeyDialogueComplete) {
       GamePanel.ui.dialogueScreenState = 1;
       super.talk();
-
     }
   }
 

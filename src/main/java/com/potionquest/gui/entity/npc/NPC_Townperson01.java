@@ -1,28 +1,22 @@
-package com.potionquest.gui.entity;
+package com.potionquest.gui.entity.npc;
 
+import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-public class NPC_Alchemist extends Entity {
+public class NPC_Townperson01 extends Entity {
 
-  public NPC_Alchemist() {
-    direction = "right";
+  public NPC_Townperson01() {
+    direction = "left";
     speed = 0;
-
-    solidArea = new Rectangle();
-    solidArea.x = 0;
-    solidArea.y = 0;
-    solidArea.width = 48;
-    solidArea.height = 60;
 
     getNPCImage();
   }
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/alchemist60.png");
+    BufferedImage npcImage = imageFetch("/npc/townperson60.png");
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -66,8 +60,9 @@ public class NPC_Alchemist extends Entity {
         && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
         && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
 
-      image = goRight[0];
+      image = goLeft[0];
       g2D.drawImage(image, screenX, screenY, null);
     }
   }
+
 }

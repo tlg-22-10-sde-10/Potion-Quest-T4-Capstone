@@ -1,34 +1,31 @@
 package com.potionquest.gui.entity.monsters;
 
+import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+import static com.potionquest.gui.gamecontrol.GamePanel.items;
+
 import com.potionquest.gui.entity.Entity;
+import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.gamecontrol.GamePanel;
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 import javax.imageio.ImageIO;
 
-public class MonsterPrototype extends Entity {
-  private final String name;
+public abstract class MonsterPrototype extends Entity {
+  protected String name;
+  protected int monsterSizeX;
+  protected int monsterSizeY;
 
-  private final int monsterSizeX;
-  private final int monsterSizeY;
+  protected int deathAnimationFrameCount = 0;
 
-  public MonsterPrototype() {
-    this.name = "vampire";
-    super.MAX_HP = 10;
-    super.HP = super.MAX_HP;
-
-    monsterSizeX = 24;
-    monsterSizeY = 32;
-
-    super.speed = 1;
-
-    setDefaultStatus();
-
-    getImage();
-  }
+  public MonsterPrototype() {}
 
   public MonsterPrototype(String name, int maxLife, int monsterSizeX, int monsterSizeY,  int speed) {
     this.name = name;
@@ -38,23 +35,19 @@ public class MonsterPrototype extends Entity {
     this.monsterSizeX = monsterSizeX;
     this.monsterSizeY = monsterSizeY;
     super.speed = speed;
-
-    setDefaultStatus();
-
-    getImage();
   }
 
   public String getName() {
     return name;
   }
 
-  private void setDefaultStatus() {
+  protected void setDefaultStatus() {
     super.entityType = 2;
 
-    super.solidArea.x = 8;
-    super.solidArea.y = 12;
-    super.solidArea.width = 32;
-    super.solidArea.height = 36;
+    super.solidArea.x = 0;
+    super.solidArea.y = 0;
+    super.solidArea.width = 48;
+    super.solidArea.height = 48;
 
     super.solidAreaDefaultX = solidArea.x;
     super.solidAreaDefaultY = solidArea.y;
@@ -62,34 +55,84 @@ public class MonsterPrototype extends Entity {
     super.direction = "down";
   }
 
-  public void getImage() {
-    try(InputStream inputStream = getClass().getResourceAsStream("/24x32/vampire-f-001.png")) {
-      if(inputStream!=null) {
-        BufferedImage image = ImageIO.read(inputStream);
+  public void getImage(String path, int x, int y, int row) {
+    try(InputStream inputStream = getClass().getResourceAsStream(path)) {
+      assert inputStream != null;
+      BufferedImage image = ImageIO.read(inputStream);
 
-        for(int i = 0; i< goUp.length; i++) {
-          int periodic = (i%2) * (int) Math.pow(-1, (i+1)/2.0) + 1;
+      AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+      tx.translate(-monsterSizeX, 0);
+      AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
-          var up =  image.getSubimage(periodic * 24,0, monsterSizeX, monsterSizeY);
-          var right = image.getSubimage(periodic * 24,32, monsterSizeX, monsterSizeY);
-          var down = image.getSubimage(periodic * 24,64, monsterSizeX, monsterSizeY);
-          var left = image.getSubimage(periodic * 24,96, monsterSizeX, monsterSizeY);
+      var up0 =  image.getSubimage(x*1 ,row * y, x, y);
+      var right0 = image.getSubimage( x*2,row * y, x, y);
+      var down0 = image.getSubimage(0,row * y, x, y);
+      var left0 =  op.filter(right0, null);
 
-          goUp[i] = up;
-          goRight[i] = right;
-          goDown[i] = down;
-          goLeft[i] = left;
-        }
-      }
+      goUp[0] = up0;
+      goRight[0] = right0;
+      goDown[0] = down0;
+      goLeft[0] = left0;
+
+      var up1 =  image.getSubimage(x*6 ,row * y, x, y);
+      var right1 = image.getSubimage( x*8,row * y, x, y);
+      var down1 = image.getSubimage(x*4,row * y, x, y);
+      var left1 = op.filter(right1, null);
+
+      goUp[1] = up1;
+      goRight[1] = right1;
+      goDown[1] = down1;
+      goLeft[1] = left1;
+
+      var up2 =  image.getSubimage(x*7 ,row * y, x, y);
+      var right2 = image.getSubimage( x*9,row * y, x, y);
+      var down2 = image.getSubimage(x*5,row * y, x, y);
+      var left2 = op.filter(right2, null);
+
+      goUp[2] = up2;
+      goRight[2] = right2;
+      goDown[2] = down2;
+      goLeft[2] = left2;
+
+      var up3 =  image.getSubimage(x*1 ,row * y, x, y);
+      var right3 = image.getSubimage( x*2,row * y, x, y);
+      var down3 = image.getSubimage(0,row * y, x, y);
+      var left3 = op.filter(right3, null);
+
+      goUp[3] = up3;
+      goRight[3] = right3;
+      goDown[3] = down3;
+      goLeft[3] = left3;
+
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 
-  public void setAction() {
+  public void update() {
+    if(HP>0) {
+      handleEnemyBehaviour();
+      // IF COLLISION IS FALSE, PLAYER CAN MOVE
+      handleMonsterCollision();
+
+      handleMonsterWalkAnimation();
+
+      handleMonsterTouchPlayer();
+
+      handleMonsterBeingHit();
+
+      handleMonsterHeal();
+    }
+  }
+
+  protected void handleDamageReaction() {
+
+  }
+
+  protected void handleEnemyBehaviour() {
     actionTimeOut++;
 
-    if(actionTimeOut == 60) {
+    if(actionTimeOut == FPS) {
       Random random = new Random();
       int i = random.nextInt(100) + 1;
 
@@ -102,20 +145,16 @@ public class MonsterPrototype extends Entity {
       } else {
         direction = "right";
       }
-
       actionTimeOut = 0;
     }
   }
 
-  public void update() {
-    setAction();
-
+  protected void handleMonsterCollision() {
     collisionOn = false;
     GamePanel.collider.checkTile(this);
     // add object collision detect here later
     GamePanel.collider.checkTargetsCollision(this);
 
-    // IF COLLISION IS FALSE, PLAYER CAN MOVE
     if (!collisionOn) {
       switch (direction) {
         case "up":
@@ -124,7 +163,7 @@ public class MonsterPrototype extends Entity {
           }
           break;
         case "down":
-          if(worldY + speed <= GamePanel.maxWorldRow * GamePanel.tileSize) {
+          if(worldY + speed + monsterSizeY <= (GamePanel.maxWorldRow - 1) * GamePanel.tileSize) {
             worldY += speed;
           }
           break;
@@ -134,25 +173,53 @@ public class MonsterPrototype extends Entity {
           }
           break;
         case "right":
-          if(worldX + speed <= GamePanel.maxWorldCol * GamePanel.tileSize) {
+          if(worldX + speed + monsterSizeX <= (GamePanel.maxWorldCol - 1) * GamePanel.tileSize) {
             worldX += speed;
           }
           break;
       }
     }
+  }
 
+  protected void handleMonsterWalkAnimation() {
     spriteCounter++;
     if (spriteCounter >= 12) {
       if (spriteNum >= goUp.length) {
         spriteNum = 1;
+      } else {
+        spriteNum++;
       }
-      spriteNum++;
       spriteCounter = 0;
     }
   }
 
-  public void draw(Graphics2D g2D) {
+  protected void handleMonsterTouchPlayer() {
+    boolean contactPlayer = GamePanel.collider.checkTargetsCollision(this);
+    if (this.entityType == 2 && contactPlayer) {
+      if (!GamePanel.player.invincible) {
+        GamePanel.player.setHP(GamePanel.player.getHP() - 1);
+        GamePanel.player.invincible = true;
+      }
+    }
+  }
 
+  protected void handleMonsterBeingHit() {
+    if (this.invincible) {
+      invincibleCounter++;
+      if (invincibleCounter >= FPS/2) {
+        this.invincible = false;
+        invincibleCounter = 0;
+      }
+    }
+  }
+
+  protected void handleMonsterHeal() {
+    if(HP > MAX_HP) {
+      HP = MAX_HP;
+    }
+  }
+
+  public void draw(Graphics2D g2D) {
     BufferedImage image = null;
 
     int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
@@ -177,10 +244,78 @@ public class MonsterPrototype extends Entity {
           image = goRight[spriteNum - 1];
           break;
       }
-    }
 
-    g2D.drawImage(image, screenX, screenY, monsterSizeX*2, monsterSizeY*2,null);
+      if(HP <= 0) {
+        //drawDeathAnimation(g2D);
+        deathAnimationFrameCount++;
+        if(deathAnimationFrameCount >= FPS) {
+          enemyDie();
+          dropCoin();
+        }
+      } else {
+        if(displayHPBar) {
+          drawMonsterHPBar(g2D, screenX, screenY);
+          if(displayHPFrameCount++ > FPS * 8){
+            displayHPFrameCount=0;
+            displayHPBar = false;
+          }
+        }
+      }
+
+      g2D.drawImage(image, screenX, screenY, null);
+    }
   }
 
+  protected void drawAnimation(Graphics2D g2D, float f) {
+    g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, f));
+  }
 
+  protected void drawDeathAnimation(Graphics2D g2D){
+    deathAnimationFrameCount++;
+    if((deathAnimationFrameCount/10)%2==0){
+      drawAnimation(g2D, 0f);
+    } else {
+      drawAnimation(g2D, 1f);
+    }
+  }
+
+  protected void drawMonsterHPBar(Graphics2D g2D, int screenX, int screenY) {
+    //set background
+    g2D.setColor(new Color(45,45,45));
+    g2D.fillRect(screenX-2, screenY-17, GamePanel.tileSize + 4, 14);
+
+    Color healthy = new Color(30,210,30);
+    Color wounded = new Color(210,150,30);
+    Color danger = new Color(210, 30, 30);
+
+    Color hpBar;
+
+    if(HP * 3 > 2 * MAX_HP) {
+      hpBar = healthy;
+    } else if ( HP *3 > MAX_HP) {
+      hpBar = wounded;
+    } else {
+      hpBar = danger;
+    }
+
+    g2D.setColor(hpBar);
+    g2D.fillRect(screenX, screenY-15, GamePanel.tileSize * HP/MAX_HP, 10);
+  }
+
+  protected void enemyDie() {
+    deathAnimationFrameCount =0;
+    GamePanel.monsters[this.entityID] = null;
+  }
+
+  protected void dropCoin() {
+    InventoryItem coin = new GoldCoin();
+    coin.worldX = worldX;
+    coin.worldY = worldY;
+    for(int i=0; i< items.length; i++) {
+      if(items[i]==null) {
+        items[i] = coin;
+        break;
+      }
+    }
+  }
 }
