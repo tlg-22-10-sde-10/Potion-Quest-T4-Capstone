@@ -221,10 +221,6 @@ public class Player extends Entity {
       if(HP > MAX_HP) {
         HP = MAX_HP;
       }
-
-      if(HP<=0) {
-        GamePanel.gameState = GamePanel.gameOverState;
-      }
     }
   }
 

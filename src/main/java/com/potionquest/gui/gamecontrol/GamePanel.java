@@ -13,6 +13,8 @@ import java.awt.Graphics2D;
 
 import java.io.IOException;
 import java.util.Map;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.FloatControl.Type;
 import javax.swing.JPanel;
 import com.potionquest.gui.tile.*;
 
@@ -29,8 +31,6 @@ public class GamePanel extends JPanel implements Runnable {
   //WORLD SETTINGS - change these to change world map dimensions
   public static final int maxWorldCol = 90;
   public static final int maxWorldRow = 90;
-//  public final int worldWidth = tileSize * maxWorldCol;
-//  public final int worldHeight = tileSize * maxWorldRow;
 
   //FPS
   public static final double FPS = 60;
@@ -60,6 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
   // GAME STATE
   public static int gameState;
   public static final int titleState = -1;
+  public static final int SETTING_STATE = -2;
+
   public static final int pauseState = 0;
   public static final int playState = 1;
   public static final int dialogueState = 2;
@@ -69,9 +71,9 @@ public class GamePanel extends JPanel implements Runnable {
   public static final int winState = 7;
 
   //self defined
-  private Sound sound = new Sound();
-  private static long gameTime = 0;
-
+  public static Sound sound = new Sound();
+  public static long gameTime = 0;
+  public static final int gameTimeLimit = 120;
 
   public static Map<String, Monster> monsterLibrary;
 
@@ -121,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
     long timer = 0;
     int drawCount = 0;
 
-//    sound.playSound();
+    sound.playSound();
 
     while (gameThread != null) {
 
@@ -142,11 +144,6 @@ public class GamePanel extends JPanel implements Runnable {
         //System.out.println("FPS: " + drawCount);
         if(gameState == playState) gameTime++;
 
-//        System.out.println(gameTime);
-//        if(gameTime > 15) {
-//          System.out.println("game over");
-//        }
-
         drawCount = 0;
         timer = 0;
       }
@@ -163,6 +160,9 @@ public class GamePanel extends JPanel implements Runnable {
       }
       // PLAYER
       player.update();
+      if(player.HP<=0 || gameTime >= gameTimeLimit) {
+        GamePanel.gameState = GamePanel.gameOverState;
+      }
 
       //OBJECTS
       for (InventoryItem item : items) {
@@ -198,7 +198,7 @@ public class GamePanel extends JPanel implements Runnable {
     Graphics2D g2D = (Graphics2D) g;
 
     //TITLE SCREEN
-    if (gameState != titleState) {
+    if (gameState != titleState && gameState != SETTING_STATE) {
       // TILES
       tileMLayer1.draw(g2D);
       tileMLayer2.draw(g2D);

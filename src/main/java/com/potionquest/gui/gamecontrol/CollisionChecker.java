@@ -16,7 +16,7 @@ public class CollisionChecker {
     int entityTopRow = entityTopWorldY / GamePanel.tileSize;
     int entityBottomRow = entityBottomWorldY / GamePanel.tileSize;
 
-    int tileNum1L1=0, tileNum2L1=0, tileNum1L2=0, tileNum2L2=0, tileNum1L3=0, tileNum2L3=0;
+    int tileNum1L1, tileNum2L1, tileNum1L2, tileNum2L2, tileNum1L3, tileNum2L3;
 
     switch (entity.direction) {
       case "up":
@@ -294,10 +294,10 @@ public class CollisionChecker {
 
         if(entity.solidArea.intersects(GamePanel.items[i].solidArea)) {
           if(entity.solidArea.intersects(GamePanel.items[i].solidArea)) {
-            if(GamePanel.items[i].collisionOn = true) {
+            if(GamePanel.items[i].collisionOn) {
               entity.collisionOn = true;
             }
-            if(player == true) {
+            if(player) {
               index = i;
             }
           }
