@@ -1,6 +1,8 @@
 package com.potionquest.gui.gamecontrol;
 
 
+import com.potionquest.gui.entity.inventoryobjects.BootsOfSpeed;
+import com.potionquest.gui.entity.inventoryobjects.DeliciousMushroom;
 import com.potionquest.gui.entity.monsters.MonsterSkeleton;
 
 import com.potionquest.gui.entity.npc.NPC_Potion_Seller;
@@ -28,6 +30,18 @@ public class AssetPlacer {
     GamePanel.items[1] = new GoldCoin();
     GamePanel.items[1].worldX = GamePanel.tileSize * 6;
     GamePanel.items[1].worldY = GamePanel.tileSize * 40;
+
+    GamePanel.items[2] = new BootsOfSpeed();
+    GamePanel.items[2].worldX = GamePanel.tileSize * 24;
+    GamePanel.items[2].worldY = GamePanel.tileSize * 3;
+
+    GamePanel.items[3] = new DeliciousMushroom();
+    GamePanel.items[3].worldX = GamePanel.tileSize * 7;
+    GamePanel.items[3].worldY = GamePanel.tileSize * 5;
+
+    GamePanel.items[4] = new DeliciousMushroom();
+    GamePanel.items[4].worldX = GamePanel.tileSize * 37;
+    GamePanel.items[4].worldY = GamePanel.tileSize * 25;
   }
 
   public void setNPC() {

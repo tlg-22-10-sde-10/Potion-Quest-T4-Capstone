@@ -90,11 +90,10 @@ private void drawGameOverScreen() {
     int x = findCenterOfTextString("You Die");
     int y = GamePanel.tileSize * 5;
 
-    // SHADOW TEXT
-    drawString(text, x + 5, y + 5, new Color(70, 120, 80));
-    //MAIN COLOR
-    drawString(text, x, y, Color.white);
- 
+//    // SHADOW TEXT
+//    drawString(text, x + 5, y + 5, new Color(70, 120, 80));
+//    //MAIN COLOR
+//    drawString(text, x, y, Color.white);
 
 
     String gameOver;
@@ -285,7 +284,7 @@ private void drawGameOverScreen() {
     int y1 = GamePanel.tileSize * 2;
     int width = GamePanel.screenWidth - 2 * x1;
     int height = GamePanel.tileSize * 8;
-    drawSubWindow(x1, y1, width, height);
+    drawSubWindowForDialogue(x1, y1, width, height);
 
     String text = "Settings Volume";
     int x = findCenterOfTextString(text);
@@ -383,7 +382,7 @@ private void drawGameOverScreen() {
         }
       }
     } else if (pauseScreenState == 1) {
-    
+
       // SUB WINDOW
       int x1 = 0;
       int y1 = 0;
@@ -477,8 +476,6 @@ private void drawGameOverScreen() {
 
     } else if (dialogueScreenState == 1) {
       // WINDOW1
-//      arrayIndex = 0;
-
       int x1 = GamePanel.tileSize * 2;
       int y1 = GamePanel.tileSize / 2;
       int width1 = GamePanel.screenWidth - (2 * x1);
@@ -570,37 +567,6 @@ private void drawGameOverScreen() {
     }
   }
 
-  private void drawGameOverScreen() {
-    String[] texts = new String[] {"Retry", "Quit"};
-    int[] yy = new int[] { GamePanel.tileSize * 4, 55};
-    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 110F));
-
-    String gameOver = "You Die";
-
-    int x = findCenterOfTextString("You Died.");
-    int y = GamePanel.tileSize * 5;
-
-    g2D.setColor(new Color(0,0,0,150));
-    g2D.fillRect(0,0, GamePanel.screenWidth, GamePanel.screenHeight);
-
-    g2D.setColor(Color.BLACK);
-    g2D.drawString(gameOver, x, y);
-
-    g2D.setColor(Color.white);
-    g2D.drawString(gameOver, x-4, y-4);
-
-    g2D.setFont(g2D.getFont().deriveFont(50f));
-    for (int i=0; i< texts.length; i++) {
-      x = findCenterOfTextString(texts[i]);
-      y+=yy[i];
-
-      g2D.drawString(texts[i], x, y);
-      if(commandNum == i) {
-        g2D.drawString(">", x - GamePanel.tileSize, y);
-      }
-    }
-  }
-
   private void drawTime() {
     int frameX = GamePanel.tileSize * 57 / 8;
     int frameY = GamePanel.tileSize * 7 / 4;
@@ -659,8 +625,8 @@ private void drawGameOverScreen() {
 
   private void drawSubWindowForDrawInventory(int x, int y, int width, int height, Color c) {
     g2D.setColor(c);
-    arcWidth = 28;
-    arcHeight = 28;
+    int arcWidth = 28;
+    int arcHeight = 28;
     g2D.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
   }
 

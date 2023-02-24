@@ -49,8 +49,8 @@ public class Player extends Entity {
     HP = MAX_HP;
     attack = 4;
 
-    screenX = GamePanel.screenWidth/2 - (playerSizeX/2);
-    screenY = GamePanel.screenHeight/2 - (playerSizeY/2);
+    screenX = GamePanel.screenWidth / 2 - (playerSizeX / 2);
+    screenY = GamePanel.screenHeight / 2 - (playerSizeY / 2);
 
     solidArea = new Rectangle();
     solidArea.x = 8;
@@ -102,18 +102,18 @@ public class Player extends Entity {
       BufferedImage playerImage = ImageIO.read(inputStream);
 
       int imageIndexX = 0;
-      
-     for (int i = 0; i < 4; i++) {
+
+      for (int i = 0; i < 4; i++) {
         BufferedImage up = playerImage.getSubimage(imageIndexX, 192, 48, 96);
         BufferedImage down = playerImage.getSubimage(imageIndexX, 0, 48, 96);
-        BufferedImage left= playerImage.getSubimage(imageIndexX, 288, 48, 96);
+        BufferedImage left = playerImage.getSubimage(imageIndexX, 288, 48, 96);
         BufferedImage right = playerImage.getSubimage(imageIndexX, 96, 48, 96);
 
         goUp[i] = up;
         goDown[i] = down;
         goLeft[i] = left;
         goRight[i] = right;
-        
+
         imageIndexX += 48;
       }
     } catch (IOException e) {
@@ -127,10 +127,10 @@ public class Player extends Entity {
       BufferedImage playerImage = ImageIO.read(inputStream);
 
       for (int i = 0; i < 4; i++) {
-        BufferedImage up = playerImage.getSubimage(96*i, 96, 96, 96);
-        BufferedImage down = playerImage.getSubimage(96*i, 0, 96, 96);
-        BufferedImage  right= playerImage.getSubimage(96*i, 192, 96, 96);
-        BufferedImage left = playerImage.getSubimage(96*i, 288, 96, 96);
+        BufferedImage up = playerImage.getSubimage(96 * i, 96, 96, 96);
+        BufferedImage down = playerImage.getSubimage(96 * i, 0, 96, 96);
+        BufferedImage right = playerImage.getSubimage(96 * i, 192, 96, 96);
+        BufferedImage left = playerImage.getSubimage(96 * i, 288, 96, 96);
 
         fightUp[i] = up;
         fightDown[i] = down;
@@ -144,16 +144,26 @@ public class Player extends Entity {
   }
 
   public void update() {
-    if(isAttacking) {
+    boolean bootcheck = false;
+
+    if (isAttacking) {
       attacking();
     } else {
-      if(keyH.spacePressed) {
+      if (keyH.spacePressed) {
         isAttacking = true;
-      } else if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed ) {
-        if (keyH.upPressed) { direction = "up";}
-        if (keyH.downPressed) { direction = "down";}
-        if (keyH.leftPressed) { direction = "left";}
-        if (keyH.rightPressed) {direction = "right";}
+      } else if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+        if (keyH.upPressed) {
+          direction = "up";
+        }
+        if (keyH.downPressed) {
+          direction = "down";
+        }
+        if (keyH.leftPressed) {
+          direction = "left";
+        }
+        if (keyH.rightPressed) {
+          direction = "right";
+        }
 
         //CHECK TILE COLLISION
         collisionOn = false;
@@ -162,6 +172,9 @@ public class Player extends Entity {
         // CHECK NPC COLLISION
         npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
         talkNPC(npcIndex);
+        if (npcIndex != 999) {
+          GamePanel.ui.keyDialogueComplete = false;
+        }
 
         //CHECK MONSTER COLLISION
         int monsterIndex = GamePanel.collider.checkEntity(GamePanel.player, GamePanel.monsters);
@@ -179,22 +192,22 @@ public class Player extends Entity {
           switch (direction) {
             case "up":
 
-              if(worldY - speed >= 0) {
+              if (worldY - speed >= 0) {
                 worldY -= speed;
               }
               break;
             case "down":
-              if(worldY + speed + playerSizeY <= GamePanel.maxWorldRow * GamePanel.tileSize) {
+              if (worldY + speed + playerSizeY <= GamePanel.maxWorldRow * GamePanel.tileSize) {
                 worldY += speed;
               }
               break;
             case "left":
-              if(worldX - speed >= 0) {
+              if (worldX - speed >= 0) {
                 worldX -= speed;
               }
               break;
             case "right":
-              if(worldX + speed + playerSizeX <= GamePanel.maxWorldCol * GamePanel.tileSize) {
+              if (worldX + speed + playerSizeX <= GamePanel.maxWorldCol * GamePanel.tileSize) {
                 worldX += speed;
               }
               break;
@@ -213,36 +226,45 @@ public class Player extends Entity {
         }
       }
 
-      if(invincible) {
+      if (invincible) {
         invincibleCounter++;
-        if(invincibleCounter >= FPS/2) {
+        if (invincibleCounter >= FPS / 2) {
           invincible = false;
           invincibleCounter = 0;
         }
       }
 
-      if(HP > MAX_HP) {
+      if (HP > MAX_HP) {
         HP = MAX_HP;
+      }
+    }
+
+    for (InventoryItem item : GamePanel.player.inventory) {
+      if (item.name.equals("Boots of Speed")) {
+        GamePanel.player.speed = 6;
+        break;
+      } else {
+        GamePanel.player.speed = 4;
       }
     }
   }
 
   private void attacking() {
     spriteCounterAttack++;
-    if(spriteCounterAttack <= 8) {
+    if (spriteCounterAttack <= 8) {
       spriteNumAttack = 1;
-    } else if(spriteCounterAttack <=16) {
+    } else if (spriteCounterAttack <= 16) {
 
       spriteNumAttack = 2;
       hitMonster();
 
-    } else if(spriteCounterAttack <= 20){
+    } else if (spriteCounterAttack <= 20) {
 
       spriteNumAttack = 3;
       hitMonster();
 
-    } else if(spriteCounterAttack <= 24) {
-      spriteNumAttack =4;
+    } else if (spriteCounterAttack <= 24) {
+      spriteNumAttack = 4;
     } else {
       spriteNumAttack = 1;
       spriteCounterAttack = 0;
@@ -257,10 +279,18 @@ public class Player extends Entity {
     int solidAreaHeight = solidArea.height;
 
     switch (direction) {
-      case "up" : worldY -= attackArea.height; break;
-      case "down" : worldY += attackArea.height; break;
-      case "left" : worldX -= attackArea.width; break;
-      case "right": worldX += attackArea.width; break;
+      case "up":
+        worldY -= attackArea.height;
+        break;
+      case "down":
+        worldY += attackArea.height;
+        break;
+      case "left":
+        worldX -= attackArea.width;
+        break;
+      case "right":
+        worldX += attackArea.width;
+        break;
     }
 
     solidArea.width = attackArea.width;
@@ -276,7 +306,7 @@ public class Player extends Entity {
   }
 
   private void damageMonster(int monsterIndex) {
-    if(monsterIndex != 999 && !GamePanel.monsters[monsterIndex].invincible) {
+    if (monsterIndex != 999 && !GamePanel.monsters[monsterIndex].invincible) {
       GamePanel.monsters[monsterIndex].invincible = true;
       GamePanel.monsters[monsterIndex].handleDamageReaction();
       GamePanel.monsters[monsterIndex].speed = 8;
@@ -288,8 +318,8 @@ public class Player extends Entity {
 
   private void contactMonster(int monsterIndex) {
     if (monsterIndex != 999 && GamePanel.monsters[monsterIndex].HP > 0) {
-      if(!invincible) {
-        if(HP > 0) {
+      if (!invincible) {
+        if (HP > 0) {
           HP -= 1;
         }
         invincible = true;
@@ -299,11 +329,11 @@ public class Player extends Entity {
 
   public void pickUpObject(int i) {
     if (i != 999) {
-      if(GamePanel.items[i].name.equals("Gold Coin")) {
+      if (GamePanel.items[i].name.equals("Gold Coin")) {
         coinInPocket += GamePanel.items[i].qty;
         GamePanel.items[i] = null;
       } else {
-        if(inventory.size() < INVENTORY_SIZE) {
+        if (inventory.size() < INVENTORY_SIZE) {
           inventory.add(GamePanel.items[i]);
           GamePanel.items[i] = null;
         } else {
@@ -320,7 +350,8 @@ public class Player extends Entity {
       System.out.println(i);
       System.out.println("You are running into NPC!");
       if (keyH.zPressed) {
-        if (GamePanel.npc[i].name.equals("Old Hermit") && GamePanel.player.currentWeapon.name.equals(
+        if (GamePanel.npc[i].name.equals("Old Hermit")
+            && GamePanel.player.currentWeapon.name.equals(
             "Sword of a Thousand Truths")) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
         }
@@ -330,7 +361,7 @@ public class Player extends Entity {
 //              GamePanel.gameState = winState;
 //            }
 //          }
-          //GAME WIN SCREEN SHOULD GO HERE. CHANGE ELSE IF LOGIC FROM CURRENT WEAPON NAME
+        //GAME WIN SCREEN SHOULD GO HERE. CHANGE ELSE IF LOGIC FROM CURRENT WEAPON NAME
 //        }
         if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
@@ -339,7 +370,6 @@ public class Player extends Entity {
           for (InventoryItem item : GamePanel.player.inventory) {
             if (item.name.equals("Elixir of Life")) {
               GamePanel.npc[i].npcKeyDialogueComplete = true;
-              GamePanel.ui.keyDialogueComplete = false;
             }
           }
         }
@@ -347,7 +377,6 @@ public class Player extends Entity {
           for (InventoryItem item : GamePanel.player.inventory) {
             if (item.name.equals("Attuned Gemstone")) {
               GamePanel.npc[i].npcKeyDialogueComplete = true;
-              GamePanel.ui.keyDialogueComplete = false;
             }
           }
         }
@@ -377,50 +406,50 @@ public class Player extends Entity {
 
     switch (direction) {
       case "up":
-        if(isAttacking) {
+        if (isAttacking) {
           xAmends -= GamePanel.tileSize / 2;
-          image = fightUp[spriteNumAttack-1];
+          image = fightUp[spriteNumAttack - 1];
         } else {
-          image = goUp[spriteNum-1];
+          image = goUp[spriteNum - 1];
         }
         break;
       case "down":
-        if(isAttacking) {
+        if (isAttacking) {
           xAmends -= GamePanel.tileSize / 3 * 2;
           yAmends += GamePanel.tileSize / 3;
-          image = fightDown[spriteNumAttack-1];
+          image = fightDown[spriteNumAttack - 1];
         } else {
-          image = goDown[spriteNum-1];
+          image = goDown[spriteNum - 1];
         }
         break;
       case "left":
-        if(isAttacking) {
-          xAmends -= GamePanel.tileSize /4 * 3;
+        if (isAttacking) {
+          xAmends -= GamePanel.tileSize / 4 * 3;
           yAmends += GamePanel.tileSize / 3;
-          image = fightLeft[spriteNumAttack-1];
+          image = fightLeft[spriteNumAttack - 1];
         } else {
-          image = goLeft[spriteNum-1];
+          image = goLeft[spriteNum - 1];
         }
         break;
       case "right":
-        if(isAttacking) {
+        if (isAttacking) {
           xAmends -= GamePanel.tileSize / 4;
-          yAmends += GamePanel.tileSize / 6 ;
-          image = fightRight[spriteNumAttack-1];
+          yAmends += GamePanel.tileSize / 6;
+          image = fightRight[spriteNumAttack - 1];
         } else {
-          image = goRight[spriteNum-1];
+          image = goRight[spriteNum - 1];
         }
         break;
     }
 
-    if(invincible) {
+    if (invincible) {
       g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
     }
 
-    if(isAttacking) {
-      g2D.drawImage(image, screenX + xAmends, screenY + yAmends,null);
+    if (isAttacking) {
+      g2D.drawImage(image, screenX + xAmends, screenY + yAmends, null);
     } else {
-      g2D.drawImage(image, screenX, screenY,null);
+      g2D.drawImage(image, screenX, screenY, null);
     }
 
     g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
