@@ -32,5 +32,14 @@
     },
     "health": 10,
     "id": 4
+  },
+  {
+    "name": "skeleton",
+    "stats": {
+      "strength": 10,
+      "defense": 5
+    },
+    "health": 16,
+    "id": 5
   }
 ]

@@ -27,8 +27,12 @@ public class KeyHandler implements KeyListener {
     // TITLE STATE
     if (GamePanel.gameState == GamePanel.titleState) {
       titleState(code);
-      // PLAY STATE
-    } else if (GamePanel.gameState == GamePanel.playState) {
+    // setting mode
+    }else if (GamePanel.gameState == GamePanel.SETTING_STATE) {
+      settingState(code);
+    }
+    // PLAY STATE
+    else if (GamePanel.gameState == GamePanel.playState) {
       playState(code);
     }
     // PAUSE STATE
@@ -65,14 +69,15 @@ public class KeyHandler implements KeyListener {
       }
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
-          case 0:
-            GamePanel.gameState = GamePanel.playState;
-            break;
-          case 1:
-            GamePanel.ui.titleScreenState = 1;
-            break;
-          case 2:
-            System.exit(0);
+        case 0:
+          GamePanel.gameState = GamePanel.playState;
+          break;
+        case 1:
+          //music control
+          GamePanel.gameState = GamePanel.SETTING_STATE;
+          break;
+        case 2:
+          System.exit(0);
         }
         GamePanel.ui.commandNum = 0;
       }
@@ -105,6 +110,49 @@ public class KeyHandler implements KeyListener {
     }
   }
 
+  public void settingState(int code) {
+    if (code == KeyEvent.VK_UP) {
+      GamePanel.ui.commandNum--;
+      if (GamePanel.ui.commandNum < 0) {
+        GamePanel.ui.commandNum = 3;
+      }
+    }
+    if (code == KeyEvent.VK_DOWN) {
+      GamePanel.ui.commandNum++;
+      if (GamePanel.ui.commandNum > 3) {
+        GamePanel.ui.commandNum = 0;
+      }
+    }
+    if (code == KeyEvent.VK_Z) {
+      switch (GamePanel.ui.commandNum) {
+        case 0:
+          if(GamePanel.sound.getClip()!= null) {
+            GamePanel.sound.turnUpVolume();
+          }
+          break;
+        case 1:
+          if(GamePanel.sound.getClip()!= null) {
+            GamePanel.sound.turnDownVolume();
+          }
+          break;
+        case 2:
+          if(GamePanel.sound.getClip()!= null) {
+            GamePanel.sound.muteToggle();
+          }
+          break;
+        case 3:
+          GamePanel.ui.commandNum = 0;
+          if(GamePanel.ui.pauseScreenState == 2) {
+            GamePanel.ui.pauseScreenState = 0;
+            GamePanel.gameState = GamePanel.pauseState;
+          } else {
+            GamePanel.gameState = GamePanel.titleState;
+          }
+          break;
+      }
+    }
+  }
+
   public void playState(int code) {
     // PLAY STATE
     if (code == KeyEvent.VK_UP) {
@@ -122,9 +170,6 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_ENTER) {
       GamePanel.gameState = GamePanel.pauseState;
     }
-//      if (code == KeyEvent.VK_ENTER) {
-//        GamePanel.gameState = GamePanel.optionsState;
-//      }
     if(code == KeyEvent.VK_SPACE) {
       spacePressed = true;
     }
@@ -158,11 +203,9 @@ public class KeyHandler implements KeyListener {
             GamePanel.gameState = GamePanel.playState;
             break;
           case 1:
-            GamePanel.ui.commandNum = 0;
             GamePanel.ui.pauseScreenState = 1;
             break;
           case 2:
-            GamePanel.ui.commandNum = 0;
             GamePanel.ui.pauseScreenState = 2;
             break;
           case 3:
@@ -173,18 +216,18 @@ public class KeyHandler implements KeyListener {
       }
     }
     if (GamePanel.ui.pauseScreenState == 1) {
-      if (code == KeyEvent.VK_UP) {
-        GamePanel.ui.commandNum--;
-        if (GamePanel.ui.commandNum < 0) {
-          GamePanel.ui.commandNum = 1;
-        }
-      }
-      if (code == KeyEvent.VK_DOWN) {
-        GamePanel.ui.commandNum++;
-        if (GamePanel.ui.commandNum > 1) {
-          GamePanel.ui.commandNum = 0;
-        }
-      }
+//      if (code == KeyEvent.VK_UP) {
+//        GamePanel.ui.commandNum--;
+//        if (GamePanel.ui.commandNum < 0) {
+//          GamePanel.ui.commandNum = 1;
+//        }
+//      }
+//      if (code == KeyEvent.VK_DOWN) {
+//        GamePanel.ui.commandNum++;
+//        if (GamePanel.ui.commandNum > 1) {
+//          GamePanel.ui.commandNum = 0;
+//        }
+//      }
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
@@ -197,35 +240,7 @@ public class KeyHandler implements KeyListener {
       }
     }
     if (GamePanel.ui.pauseScreenState == 2) {
-      if (code == KeyEvent.VK_UP) {
-        GamePanel.ui.commandNum--;
-        if (GamePanel.ui.commandNum < 0) {
-          GamePanel.ui.commandNum = 3;
-        }
-      }
-      if (code == KeyEvent.VK_DOWN) {
-        GamePanel.ui.commandNum++;
-        if (GamePanel.ui.commandNum > 3) {
-          GamePanel.ui.commandNum = 0;
-        }
-      }
-      if (code == KeyEvent.VK_Z) {
-        switch (GamePanel.ui.commandNum) {
-          case 0:
-
-            break;
-          case 1:
-
-            break;
-          case 2:
-
-            break;
-          case 3:
-            GamePanel.ui.commandNum = 0;
-            GamePanel.ui.pauseScreenState = 0;
-            break;
-        }
-      }
+      settingState(code);
     }
   }
 

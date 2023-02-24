@@ -1,5 +1,8 @@
 package com.potionquest.gui.gamecontrol;
 
+
+import com.potionquest.gui.entity.monsters.MonsterSkeleton;
+
 import com.potionquest.gui.entity.npc.NPC_Potion_Seller;
 import com.potionquest.gui.entity.npc.NPC_Potion_Sellers_Brother;
 import com.potionquest.gui.entity.npc.NPC_Doctor;
@@ -75,8 +78,18 @@ public class AssetPlacer {
     orc2.worldX = GamePanel.tileSize * 16;
     orc2.worldY = GamePanel.tileSize * 40;
 
+    MonsterPrototype skeleton1 = new MonsterSkeleton();
+    skeleton1.worldX = GamePanel.tileSize * 17;
+    skeleton1.worldY = GamePanel.tileSize * 40;
+
+    MonsterPrototype skeleton2 = new MonsterSkeleton();
+    skeleton2.worldX = GamePanel.tileSize * 18;
+    skeleton2.worldY = GamePanel.tileSize * 40;
+
     setMonster(orc1);
     setMonster(orc2);
+    setMonster(skeleton1);
+    setMonster(skeleton2);
   }
 
   public void setMonster(MonsterPrototype monster) {
