@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
-public class ElixirOfLife extends InventoryItem {
+public class AttunedGemstone extends InventoryItem {
 
-  public ElixirOfLife() {
-    name = "Elixir of Life";
+  public AttunedGemstone() {
+    name = "Attuned Gemstone";
     int objectHeight = 48;
     int objectWidth = 48;
     collisionOn = false;
@@ -20,7 +20,7 @@ public class ElixirOfLife extends InventoryItem {
       //noinspection ConstantConditions
       image = ImageIO.read(is);
 
-      portrait = image.getSubimage(objectWidth* 12, objectHeight*4, objectWidth, objectHeight);
+      portrait = image.getSubimage(objectWidth* 4, objectHeight*3, objectWidth, objectHeight);
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -15,7 +15,8 @@ public class GoldCoin extends InventoryItem {
 
   public GoldCoin() {
     Random rd = new Random();
-    qty = rd.nextInt(4) + 1;
+//    qty = rd.nextInt(4) + 1;
+    qty = rd.nextInt(4) + 20;
 
     name = "Gold Coin";
 
@@ -58,4 +59,5 @@ public class GoldCoin extends InventoryItem {
 
     g2D.drawImage(coins[frameCount/15 % 4], screenX, screenY,null);
   }
+
 }

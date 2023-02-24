@@ -1,5 +1,7 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.gui.entity.inventoryobjects.AttunedGemstone;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import java.awt.Rectangle;
 
 public class EventHandler {
@@ -21,10 +23,18 @@ public class EventHandler {
   public void checkEvent() {
 
     if (hit(51, 69, "right")) {
-      teleport1(GamePanel.playState);
+      for (InventoryItem item : GamePanel.player.inventory) {
+        if (item.name.equals("Attuned Gemstone")) {
+          teleport1(GamePanel.playState);
+        }
+      }
     }
     if (hit(59, 69, "left")) {
-      teleport2((GamePanel.playState));
+      for (InventoryItem item : GamePanel.player.inventory) {
+        if (item.name.equals("Attuned Gemstone")) {
+          teleport2((GamePanel.playState));
+        }
+      }
     }
   }
 
@@ -56,6 +66,7 @@ public class EventHandler {
 
     GamePanel.gameState = gameState;
     GamePanel.ui.currentDialogue = "Teleport!";
+    GamePanel.ui.dialogueScreenState = 0;
     GamePanel.player.worldX = GamePanel.tileSize * 59;
     GamePanel.player.worldY = GamePanel.tileSize * 69;
   }
@@ -64,6 +75,7 @@ public class EventHandler {
 
     GamePanel.gameState = gameState;
     GamePanel.ui.currentDialogue = "Teleport!";
+    GamePanel.ui.dialogueScreenState = 0;
     GamePanel.player.worldX = GamePanel.tileSize * 51;
     GamePanel.player.worldY = GamePanel.tileSize * 69;
   }

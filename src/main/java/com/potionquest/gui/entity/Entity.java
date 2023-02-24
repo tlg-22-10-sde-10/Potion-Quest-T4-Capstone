@@ -3,10 +3,7 @@ package com.potionquest.gui.entity;
 
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.AlphaComposite;
-
 import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
-
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
