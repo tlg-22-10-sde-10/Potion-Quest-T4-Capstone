@@ -28,13 +28,25 @@
   {
     "name": "Potion Seller",
     "dialogue": {
-      "1": "Welcome, I am the Potion Seller, and I know what it is you seek... For my creations are the strongest potions",
-      "2": "But I warn you - nothing in life is free, and my goods and services must carry a cost.",
-      "3": "Bring me a shrub- er, ahem. \n\nIf you possess the trinket I seek, or will part with 10 gold coins, you shall have the potion you seek"},
+      "1": "Welcome, I am the Potion Seller, and I know what it is \nyou seek... For my creations are the strongest potions \nknown to man.",
+      "2": "But I warn you - nothing in life is free, and my goods and \nservices must carry a cost.",
+      "3": "Bring me a shrub- er, ahem. Let me try that again. \n\nIf you possess the trinket I seek, or will part \nwith 10 gold coins, you shall have the potion you need."},
     "responses": {
-      "1": "Do you want one of my potions? \n\nThe trinket.. or 10 gold coins, your choice.",
-      "2": "Splendid! Take care, child. My potions will surely kill all but those with utmost need.",
+      "1": "Do you want one of my potions? \n\nIt will cost the trinket.. or 10 gold coins, your choice.",
+      "2": "Splendid! Take care, child. My potions will surely kill \nall but those with the utmost need.",
       "3": "Come again if you change your mind."
+    }
+  },
+  {
+    "name": "Potion Seller's Brother",
+    "dialogue": {
+      "1": "\"The bridge is out! The bridge is out!\" they exclaim, \nand to that I say \"Who needs bridges!?\"",
+      "2": "Behold! I am the Potion Seller's brother - Notion Seller! \nAnd I am here to sell you the notion that you don't need \na bridge to cross a river!",
+      "3": "That's right, for only 3 gold coins you can have the power \nof teleportation! \n\nFor I have set up invisible runes on the \nblown out bridge remnants that, when someone holding an \nattuned gemstone steps on, will teleport you safely across!"},
+    "responses": {
+      "1": "What do you say? \n\nDo you want to buy an attuned gemstone??",
+      "2": "Perfect! Another happy customer - here you go!",
+      "3": "No? Come find me when you no longer wish to attune \nyour face to the river's rapids."
     }
   }
 ]

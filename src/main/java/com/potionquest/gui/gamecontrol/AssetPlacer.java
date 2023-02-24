@@ -2,12 +2,12 @@ package com.potionquest.gui.gamecontrol;
 
 
 import com.potionquest.gui.entity.monsters.MonsterSkeleton;
+
 import com.potionquest.gui.entity.npc.NPC_Potion_Seller;
-import com.potionquest.gui.entity.npc.NPC_Alchemist_Brother;
+import com.potionquest.gui.entity.npc.NPC_Potion_Sellers_Brother;
 import com.potionquest.gui.entity.npc.NPC_Doctor;
 import com.potionquest.gui.entity.npc.NPC_Hermit;
 import com.potionquest.gui.entity.npc.NPC_Sister;
-
 import com.potionquest.gui.entity.monsters.MonsterOrc;
 
 import com.potionquest.gui.entity.inventoryobjects.OrnateTrinket;
@@ -52,7 +52,11 @@ public class AssetPlacer {
     GamePanel.npc[2].worldX = GamePanel.tileSize * 23;
     GamePanel.npc[2].worldY = GamePanel.tileSize * 78;
 
-    GamePanel.npc[3] = new NPC_Alchemist_Brother();
+    try {
+      GamePanel.npc[3] = new NPC_Potion_Sellers_Brother();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     GamePanel.npc[3].worldX = GamePanel.tileSize * 49;
     GamePanel.npc[3].worldY = GamePanel.tileSize * 72;
 

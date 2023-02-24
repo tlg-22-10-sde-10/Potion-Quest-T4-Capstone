@@ -1,6 +1,12 @@
 package com.potionquest.gui.gamecontrol;
 
+import static com.potionquest.gui.gamecontrol.GamePanel.winState;
+
+import com.potionquest.gui.entity.Player;
+import com.potionquest.gui.entity.inventoryobjects.AttunedGemstone;
 import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
+import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
+import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 
 import java.awt.event.KeyEvent;
@@ -48,20 +54,21 @@ public class KeyHandler implements KeyListener {
   }
 
   public void titleState(int code) {
-    if (code == KeyEvent.VK_UP) {
-      GamePanel.ui.commandNum--;
-      if (GamePanel.ui.commandNum < 0) {
-        GamePanel.ui.commandNum = 2;
+    if (GamePanel.ui.titleScreenState == 0) {
+      if (code == KeyEvent.VK_UP) {
+        GamePanel.ui.commandNum--;
+        if (GamePanel.ui.commandNum < 0) {
+          GamePanel.ui.commandNum = 2;
+        }
       }
-    }
-    if (code == KeyEvent.VK_DOWN) {
-      GamePanel.ui.commandNum++;
-      if (GamePanel.ui.commandNum > 2) {
-        GamePanel.ui.commandNum = 0;
+      if (code == KeyEvent.VK_DOWN) {
+        GamePanel.ui.commandNum++;
+        if (GamePanel.ui.commandNum > 2) {
+          GamePanel.ui.commandNum = 0;
+        }
       }
-    }
-    if (code == KeyEvent.VK_ENTER) {
-      switch (GamePanel.ui.commandNum) {
+      if (code == KeyEvent.VK_Z) {
+        switch (GamePanel.ui.commandNum) {
         case 0:
           GamePanel.gameState = GamePanel.playState;
           break;
@@ -71,8 +78,35 @@ public class KeyHandler implements KeyListener {
           break;
         case 2:
           System.exit(0);
+        }
+        GamePanel.ui.commandNum = 0;
       }
-      GamePanel.ui.commandNum = 0;
+    } else if (GamePanel.ui.titleScreenState == 1) {
+      if (code == KeyEvent.VK_UP) {
+        GamePanel.ui.commandNum--;
+        if (GamePanel.ui.commandNum < 0) {
+          GamePanel.ui.commandNum = 4;
+        }
+      }
+      if (code == KeyEvent.VK_DOWN) {
+        GamePanel.ui.commandNum++;
+        if (GamePanel.ui.commandNum > 4) {
+          GamePanel.ui.commandNum = 0;
+        }
+      }
+      if (code == KeyEvent.VK_Z) {
+        switch (GamePanel.ui.commandNum) {
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+            break;
+          case 4:
+          default:
+            GamePanel.ui.titleScreenState = 0;
+            GamePanel.ui.commandNum = 0;
+        }
+      }
     }
   }
 
@@ -220,7 +254,7 @@ public class KeyHandler implements KeyListener {
         }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
-      System.out.println("you are here");
+      System.out.println("Diaglogue screen state = " + GamePanel.ui.dialogueScreenState);
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
@@ -236,11 +270,11 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
-            System.out.println(GamePanel.player.npcIndex);
             if (GamePanel.player.npcIndex == 0) {
-              if (GamePanel.player.INVENTORY_SIZE == 5) {
-                GamePanel.ui.keyDialogueComplete = true;
-                GamePanel.ui.dialogueScreenState = 0;
+              for (InventoryItem item : GamePanel.player.inventory) {
+                if (item.name.equals("Elixir of Life")) {
+                  GamePanel.gameState = winState;
+                }
               }
             }
             if (GamePanel.player.npcIndex == 2) {
@@ -250,6 +284,19 @@ public class KeyHandler implements KeyListener {
                 GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
                 GamePanel.player.inventory.add(GamePanel.player.currentWeapon);
                 GamePanel.ui.dialogueScreenState = 0;
+              }
+            }
+            if (GamePanel.player.npcIndex == 3) {
+              if (GamePanel.player.coinInPocket >= 3) {
+                if (GamePanel.player.inventory.size() < Player.INVENTORY_SIZE) {
+                  GamePanel.ui.keyDialogueComplete = true;
+                  GamePanel.player.coinInPocket -= 3;
+                  GamePanel.player.inventory.add(new AttunedGemstone());
+                  GamePanel.ui.dialogueScreenState = 0;
+                } else {
+                  GamePanel.ui.dialogueScreenState = 0;
+                  GamePanel.ui.currentDialogue = "Your inventory is full!";
+                }
               }
             }
             if (GamePanel.player.npcIndex == 4) {

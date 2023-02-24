@@ -101,7 +101,10 @@ public class GamePanel extends JPanel implements Runnable {
     aPlacer.setNPC();
     aPlacer.setMonster();
 
+//    aPlacer.setItem();
+
     gameState = titleState;
+    GamePanel.ui.titleScreenState = 0;
 //    aPlacer.setStuff
   }
 
