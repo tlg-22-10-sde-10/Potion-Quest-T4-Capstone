@@ -24,7 +24,7 @@ public class GoldCoin extends InventoryItem {
 
     int row = 4;
 
-    try (InputStream is = getClass().getResourceAsStream("/Heart.png")) {
+    try (InputStream is = getClass().getResourceAsStream("/heart.png")) {
       assert is != null;
       BufferedImage image = ImageIO.read(is);
 

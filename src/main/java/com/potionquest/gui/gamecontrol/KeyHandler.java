@@ -227,7 +227,7 @@ public class KeyHandler implements KeyListener {
         }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
-      System.out.println("Diaglogue screen state = " + GamePanel.ui.dialogueScreenState);
+      System.out.println("Dialogue screen state = " + GamePanel.ui.dialogueScreenState);
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
@@ -338,6 +338,9 @@ public class KeyHandler implements KeyListener {
         UI.statement = "Empty Slot!";
       } else if (Objects.equals(item.name, "Delicious Mushroom")) {
         if(GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {
+          //  GamePanel.gameState = GamePanel.dialogueState;
+//          GamePanel.ui.dialogueScreenState = 0;
+//          GamePanel.ui.currentDialogue = "You Are Too Full to Eat That!";
           UI.statement = "You Are Too Full to Eat That!";
           GamePanel.player.inventoryFrameCount = 0;
         } else {
