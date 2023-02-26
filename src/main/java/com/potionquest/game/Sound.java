@@ -29,6 +29,7 @@ public class Sound {
         if(getClip() != null) {
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             volumeControl.setValue(Math.min(volumeControl.getValue()+10.0f, volumeControl.getMaximum()));
+            //System.out.println(volumeControl.getValue() + "vs" + volumeControl.getMaximum());
         }
     }
 
@@ -64,17 +65,15 @@ public class Sound {
     }
 
     public String getVolumePercentage() {
-        float volume = 0;
         int percentage = 0;
         if(getClip() != null) {
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume = volumeControl.getValue();
+            float volume = volumeControl.getValue();
 
-            int range = (int) (volumeControl.getMaximum() - volumeControl.getMinimum());
-            int currentValue = (int) (volume - volumeControl.getMinimum());
+            var range = (int) (volumeControl.getMaximum() - volumeControl.getMinimum());
+            var currentValue = (int) (volume - volumeControl.getMinimum());
 
-            int q = range/10;
-            percentage = currentValue * 10 / q;
+            percentage = currentValue * 100 / range;
         }
         return String.valueOf(percentage);
     }

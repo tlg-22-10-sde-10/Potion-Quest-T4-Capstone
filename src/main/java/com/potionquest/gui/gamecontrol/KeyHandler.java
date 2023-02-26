@@ -5,13 +5,11 @@ import static com.potionquest.gui.gamecontrol.GamePanel.winState;
 import com.potionquest.gui.entity.Player;
 import com.potionquest.gui.entity.inventoryobjects.AttunedGemstone;
 import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
-import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
 import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Objects;
 
 public class KeyHandler implements KeyListener {
 
@@ -28,8 +26,9 @@ public class KeyHandler implements KeyListener {
     // TITLE STATE
     if (GamePanel.gameState == GamePanel.titleState) {
       titleState(code);
-      // setting mode
-    } else if (GamePanel.gameState == GamePanel.SETTING_STATE) {
+    }
+    // setting mode
+    else if (GamePanel.gameState == GamePanel.SETTING_STATE) {
       settingState(code);
     }
     // PLAY STATE
@@ -71,6 +70,7 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
+            //GamePanel.gameInstanceInitialization();
             GamePanel.gameState = GamePanel.playState;
             break;
           case 1:
@@ -160,6 +160,19 @@ public class KeyHandler implements KeyListener {
     }
     if (code == KeyEvent.VK_Z) {
       zPressed = true;
+      if(GamePanel.player.worldX < 13*GamePanel.tileSize
+          && GamePanel.player.worldX > 11*GamePanel.tileSize
+          && GamePanel.player.worldY > 60*GamePanel.tileSize
+          && GamePanel.player.worldY < 62*GamePanel.tileSize) {
+        UI.statement = "Go South";
+        GamePanel.player.inventoryFrameCount = 0;
+      } else if (GamePanel.player.worldX < 12*GamePanel.tileSize
+          && GamePanel.player.worldX > 10*GamePanel.tileSize
+          && GamePanel.player.worldY > 26*GamePanel.tileSize
+          && GamePanel.player.worldY < 29*GamePanel.tileSize) {
+        UI.statement = "Go North";
+        GamePanel.player.inventoryFrameCount = 0;
+      }
     }
     if (code == KeyEvent.VK_B) {
       GamePanel.ui.commandNum = 1;
@@ -174,14 +187,12 @@ public class KeyHandler implements KeyListener {
         if (GamePanel.ui.commandNum < 0) {
           GamePanel.ui.commandNum = 4;
         }
-      }
-      if (code == KeyEvent.VK_DOWN) {
+      } else if (code == KeyEvent.VK_DOWN) {
         GamePanel.ui.commandNum++;
         if (GamePanel.ui.commandNum > 4) {
           GamePanel.ui.commandNum = 0;
         }
-      }
-      if (code == KeyEvent.VK_Z) {
+      } else if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
             GamePanel.gameState = GamePanel.playState;
@@ -196,10 +207,14 @@ public class KeyHandler implements KeyListener {
             GamePanel.ui.pauseScreenState = 3;
             break;
           case 4:
+            GamePanel.gameInstanceInitialization();
             GamePanel.gameState = GamePanel.titleState;
             break;
         }
         GamePanel.ui.commandNum = 0;
+      } else if (code == KeyEvent.VK_ENTER) {
+        GamePanel.ui.commandNum = 0;
+        GamePanel.gameState = GamePanel.playState;
       }
     } else if(GamePanel.ui.pauseScreenState == 1)  {
       if (code == KeyEvent.VK_Z) {
@@ -227,7 +242,7 @@ public class KeyHandler implements KeyListener {
         }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
-      System.out.println("Dialogue screen state = " + GamePanel.ui.dialogueScreenState);
+      //System.out.println("Dialogue screen state = " + GamePanel.ui.dialogueScreenState);
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
@@ -252,13 +267,15 @@ public class KeyHandler implements KeyListener {
               }
             }
             if (GamePanel.player.npcIndex == 2) {
-              if (GamePanel.player.coinInPocket >= 5 && GamePanel.player.currentWeapon.name.equals(
-                  "Father's Sword")) {
-                if (GamePanel.player.inventory.size() < Player.INVENTORY_SIZE) {
+              if (GamePanel.player.coinInPocket >= 5 &&
+                  GamePanel.player.currentWeapon.name.equals("Father's Sword")) {
+                if (GamePanel.player.inventory.size() <= Player.INVENTORY_SIZE) {
                   GamePanel.ui.keyDialogueComplete = true;
-                  GamePanel.player.inventory.remove(GamePanel.player.currentWeapon);
+
+                  GamePanel.player.forceRemoveItem(GamePanel.player.currentWeapon);
                   GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
-                  GamePanel.player.inventory.add(GamePanel.player.currentWeapon);
+                  GamePanel.player.pickUpObject(GamePanel.player.currentWeapon);
+
                   GamePanel.player.coinInPocket -= 5;
                   GamePanel.ui.dialogueScreenState = 0;
                 } else {
@@ -288,6 +305,7 @@ public class KeyHandler implements KeyListener {
                     GamePanel.player.inventory.remove(item);
                     GamePanel.player.inventory.add(new ElixirOfLife());
                     GamePanel.ui.dialogueScreenState = 0;
+                    break;
                   }
                 }
                 if (GamePanel.player.coinInPocket >= 10 && !GamePanel.ui.keyDialogueComplete) {
@@ -301,12 +319,11 @@ public class KeyHandler implements KeyListener {
                 }
               }
             }
-
-            System.out.println("hello from case 0");
+            //System.out.println("hello from case 0");
             //Add check in inventory for key item here
             break;
           case 1:
-            System.out.println("hello from case 1");
+            //System.out.println("hello from case 1");
             GamePanel.ui.dialogueScreenState = 0;
             GamePanel.ui.keyDialogueComplete = false;
             break;
@@ -333,42 +350,33 @@ public class KeyHandler implements KeyListener {
       if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
         item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);
       }
-      if(item == null) {
+      if(item != null) {
+        GamePanel.player.useItem(item);
+      } else {
+        //GamePanel.gameState = GamePanel.dialogueState;
+//        GamePanel.ui.dialogueScreenState = 0;
+//        GamePanel.ui.currentDialogue = "You Are Too Full to Eat That!";
+
         GamePanel.player.inventoryFrameCount = 0;
         UI.statement = "Empty Slot!";
-      } else if (Objects.equals(item.name, "Delicious Mushroom")) {
-        if(GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {
-          //  GamePanel.gameState = GamePanel.dialogueState;
-//          GamePanel.ui.dialogueScreenState = 0;
-//          GamePanel.ui.currentDialogue = "You Are Too Full to Eat That!";
-          UI.statement = "You Are Too Full to Eat That!";
-          GamePanel.player.inventoryFrameCount = 0;
-        } else {
-          GamePanel.player.setHP(GamePanel.player.getHP() + 4);
-          GamePanel.player.inventory.remove(item);
-        }
-      } else {
-        UI.statement = "Cannot Use the Item!";
-        GamePanel.player.inventoryFrameCount = 0;
       }
       GamePanel.gameState = GamePanel.playState;
+      GamePanel.ui.commandNum = 0;
     } else if (code == KeyEvent.VK_SPACE) {
       InventoryItem item = null;
       if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
         item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);
       }
-      if(item != null && !item.keyItem) {
-        GamePanel.player.inventory.remove(item);
+      if(item != null) {
+        GamePanel.player.dropItem(item);
       } else {
         GamePanel.player.inventoryFrameCount = 0;
-      }
-      if(item == null) {
         UI.statement = "Empty Slot!";
       }
-      if(item.keyItem) {
-        UI.statement = "You Cannot Throw That Away!";
-      }
       GamePanel.gameState = GamePanel.playState;
+    } else if (code == KeyEvent.VK_B) {
+      GamePanel.gameState = GamePanel.playState;
+      GamePanel.ui.commandNum = 0;
     }
   }
 
@@ -388,6 +396,7 @@ public class KeyHandler implements KeyListener {
     if (code == KeyEvent.VK_Z) {
       if (GamePanel.ui.commandNum == 0) {
         GamePanel.gameState = GamePanel.titleState;
+        GamePanel.gameInstanceInitialization();
       }
       if (GamePanel.ui.commandNum == 1) {
         System.exit(0);

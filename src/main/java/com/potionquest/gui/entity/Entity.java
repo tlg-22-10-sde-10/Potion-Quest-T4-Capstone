@@ -3,7 +3,6 @@ package com.potionquest.gui.entity;
 
 import com.potionquest.gui.gamecontrol.GamePanel;
 import java.awt.AlphaComposite;
-import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -31,7 +30,6 @@ public class Entity {
   public String name;
 
   public String direction;
-  public int speed;
   public boolean collisionOn = false;
   public int actionTimeOut = 0;
   public int spriteCounter = 0;
@@ -43,8 +41,6 @@ public class Entity {
   public boolean invincible = false;
   public int invincibleCounter = 0;
   public int entityType;
-  public InventoryItem currentWeapon;
-  public int attack;
 
   //SPRITE DIALOGUE FIELDS
   public String[] responses = new String[10];
@@ -59,10 +55,12 @@ public class Entity {
   public int solidAreaDefaultX;
   public int solidAreaDefaultY;
 
-  public int HP;
-  public int MAX_HP;
-  //public int attack;
   public int entityID;
+
+  public int HP =0;
+  public int MAX_HP =0;
+  public int attack =0;
+  public int speed = 0;
 
   public boolean displayHPBar = false;
   protected int displayHPFrameCount = 0;

@@ -16,7 +16,7 @@ public class NPC_Townperson01 extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/townperson60.png");
+    BufferedImage npcImage = TileSheets.npcTownPersonTileSheet;
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -49,9 +49,6 @@ public class NPC_Townperson01 extends Entity {
 
   @Override
   public void draw(Graphics2D g2D) {
-
-    BufferedImage image = null;
-
     int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
     int screenY = worldY - GamePanel.player.worldY + GamePanel.player.screenY;
 
@@ -60,9 +57,8 @@ public class NPC_Townperson01 extends Entity {
         && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
         && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
 
-      image = goLeft[0];
+      BufferedImage image = goLeft[0];
       g2D.drawImage(image, screenX, screenY, null);
     }
   }
-
 }

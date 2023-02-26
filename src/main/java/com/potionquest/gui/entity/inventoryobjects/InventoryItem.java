@@ -8,11 +8,11 @@ import java.awt.Rectangle;
 public abstract class InventoryItem extends Entity {
   protected int objectWidth;
   protected int objectHeight;
+
   public int qty = 0;
 
   public boolean keyItem = false;
-  //public boolean collisionOn = false;
-  //public List<BufferedImage> images = new ArrayList<>();
+  public boolean collisionOn = false;
 
   public InventoryItem() {
     objectWidth = GamePanel.tileSize;

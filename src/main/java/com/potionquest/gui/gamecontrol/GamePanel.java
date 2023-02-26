@@ -34,26 +34,24 @@ public class GamePanel extends JPanel implements Runnable {
   public static final double FPS = 60;
 
   // SYSTEM
-  public static TileLayer01 tileMLayer1 = new TileLayer01();
-  public static TileLayer02 tileMLayer2 = new TileLayer02();
-  public static TileLayer03 tileMLayer3 = new TileLayer03();
+  public static TileLayer01 tileMLayer1;
+  public static TileLayer02 tileMLayer2;
+  public static TileLayer03 tileMLayer3;
 
   public static KeyHandler keyH = new KeyHandler();
   public static CollisionChecker collider = new CollisionChecker();
   public static AssetPlacer aPlacer = new AssetPlacer();
 
-  public static UI ui = new UI();
+  public static UI ui;
   public static EventHandler eHandler = new EventHandler();
 
   private static Thread gameThread;
 
   // ENTITIES AND OBJECTS
-  public static Entity[] npc = new Entity[10];
-
-  public static InventoryItem[] items = new InventoryItem[20];
-
-  public static Player player = new Player();
-  public static Entity[] monsters = new MonsterPrototype[10];
+  public static Entity[] npc;
+  public static InventoryItem[] items;
+  public static Player player;
+  public static Entity[] monsters;
 
   // GAME STATE
   public static int gameState;
@@ -70,13 +68,14 @@ public class GamePanel extends JPanel implements Runnable {
 
   //self defined
   public static Sound sound = new Sound();
-  public static long gameTime = 0;
+  public static long gameTime;
   public static final int gameTimeLimit = 300;
 
+  //monster library json
   public static Map<String, Monster> monsterLibrary;
 
-
   public GamePanel() {
+    this.setUpWorld();
 
     this.setPreferredSize(new Dimension(screenWidth, screenHeight));
     this.setBackground(Color.BLACK);
@@ -84,45 +83,63 @@ public class GamePanel extends JPanel implements Runnable {
 
     this.addKeyListener(keyH);
     this.setFocusable(true);
-
-    try {
-      monsterLibrary = Monster.monsterJsonParser();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   //place setUpGame method here where NPC/objects/monsters are placed
   public void setUpWorld() {
+    jsonInitialisation();
+
+    TileSheets.gameTileSheetInitialization();
+
+    tileMLayerInitialization();
+
+    ui = new UI();
+
+    gameInstanceInitialization();
+
+    gameState = titleState;
+    GamePanel.ui.titleScreenState = 0;
+  }
+
+  public void jsonInitialisation() {
+    try {
+      monsterLibrary = Monster.monsterJsonParser();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void gameInstanceInitialization() {
+    npc = new Entity[10];
+    items = new InventoryItem[20];
+    player = new Player();
+    monsters = new MonsterPrototype[10];
+
+    gameTime = 0;
 
     aPlacer.setObjects();
     aPlacer.setNPC();
     aPlacer.setMonster();
+  }
 
-//    aPlacer.setItem();
-
-    gameState = titleState;
-    GamePanel.ui.titleScreenState = 0;
-//    aPlacer.setStuff
+  public void tileMLayerInitialization() {
+    tileMLayer1 = new TileLayer01();
+    tileMLayer2 = new TileLayer02();
+    tileMLayer3 = new TileLayer03();
   }
 
   public void startGameThread() {
-
     gameThread = new Thread(this);
-
     gameThread.start();
   }
 
-
   @Override
   public void run() {
-
     double drawInterval = 1000000000/FPS;
     double delta = 0;
     long lastTime = System.nanoTime();
     long currentTime;
     long timer = 0;
-    int drawCount = 0;
 
     sound.playSound();
 
@@ -138,23 +155,17 @@ public class GamePanel extends JPanel implements Runnable {
         update();
         repaint();
         delta--;
-        drawCount++;
       }
 
       if (timer >= 1000000000) {
-        //System.out.println("FPS: " + drawCount);
         if(gameState == playState) gameTime++;
-
-        drawCount = 0;
         timer = 0;
       }
     }
   }
 
   public void update() {
-
     if (gameState == playState) {
-
       //resume the music
       if(sound.getClip() != null && !sound.getClip().isRunning()) {
         sound.getClip().start();
@@ -194,12 +205,11 @@ public class GamePanel extends JPanel implements Runnable {
   }
 
   public void paintComponent(Graphics g) {
-
     super.paintComponent(g);
     Graphics2D g2D = (Graphics2D) g;
 
     //TITLE SCREEN
-    if (gameState != titleState && gameState != SETTING_STATE) {
+    if (gameState != titleState) {
       // TILES
       tileMLayer1.draw(g2D);
       tileMLayer2.draw(g2D);
@@ -227,9 +237,9 @@ public class GamePanel extends JPanel implements Runnable {
 
       //PLAYER
       player.draw(g2D);
-      //UI
     }
 
+    //UI
     ui.draw(g2D);
     g2D.dispose();
   }

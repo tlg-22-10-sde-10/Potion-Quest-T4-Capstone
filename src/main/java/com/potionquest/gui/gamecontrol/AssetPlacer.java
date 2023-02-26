@@ -31,7 +31,6 @@ public class AssetPlacer {
     GamePanel.items[1].worldX = GamePanel.tileSize * 6;
     GamePanel.items[1].worldY = GamePanel.tileSize * 40;
 
-
     GamePanel.items[2] = new OrnateTrinket();
     GamePanel.items[2].worldX = GamePanel.tileSize * 19;
     GamePanel.items[2].worldY = GamePanel.tileSize * 39;
@@ -41,7 +40,7 @@ public class AssetPlacer {
     GamePanel.items[3].worldY = GamePanel.tileSize * 39;
 
     GamePanel.items[4] = new OrnateTrinket();
-    GamePanel.items[4].worldX = GamePanel.tileSize * 20;
+    GamePanel.items[4].worldX = GamePanel.tileSize * 22;
     GamePanel.items[4].worldY = GamePanel.tileSize * 39;
 
     GamePanel.items[5] = new OrnateTrinket();
@@ -63,7 +62,6 @@ public class AssetPlacer {
     GamePanel.items[9] = new DeliciousMushroom();
     GamePanel.items[9].worldX = GamePanel.tileSize * 37;
     GamePanel.items[9].worldY = GamePanel.tileSize * 25;
-
   }
 
   public void setNPC() {

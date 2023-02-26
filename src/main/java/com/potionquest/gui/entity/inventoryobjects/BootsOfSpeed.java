@@ -1,9 +1,6 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
+import com.potionquest.gui.gamecontrol.TileSheets;
 
 public class BootsOfSpeed extends InventoryItem {
 
@@ -11,22 +8,9 @@ public class BootsOfSpeed extends InventoryItem {
     name = "Boots of Speed";
     int objectHeight = 48;
     int objectWidth = 48;
-    collisionOn = false;
-    speed = 0;
-    direction = "down";
 
-    BufferedImage image;
+    speed = 2;
 
-    try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
-
-      //noinspection ConstantConditions
-      image = ImageIO.read(is);
-
-      portrait = image.getSubimage(objectWidth * 8, objectHeight * 10, objectWidth, objectHeight);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    portrait = TileSheets.gameItemsTileSheet.getSubimage(objectWidth * 8, objectHeight * 10, objectWidth, objectHeight);
   }
-
 }
