@@ -12,6 +12,7 @@ public class AttunedGemstone extends InventoryItem {
     int objectHeight = 48;
     int objectWidth = 48;
     collisionOn = false;
+    keyItem = true;
 
     BufferedImage image;
 

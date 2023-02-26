@@ -74,7 +74,7 @@ public class GameClientUtil {
         }
     }
 
-    public static void gameStartMessage() throws InterruptedException, IOException {
+    public static String retrieveMessage(String requestedMessage) throws InterruptedException, IOException {
         Map<String, GameClientUtil> messageMap;
         try (
                 InputStream inputStream = GameClientUtil.class.getClassLoader().getResourceAsStream("messages.json")) {
@@ -88,10 +88,7 @@ public class GameClientUtil {
                     .collect(Collectors.toMap(GameClientUtil::getMessageName, Function.identity()));
 
         }
-        String startMessage = messageMap.get("welcomeMessage").getMessage();
-        System.out.println(ANSI_CYAN + startMessage + ANSI_RESET);
-        System.out.println();
-        Thread.sleep(2000);
+        return messageMap.get(requestedMessage).getMessage();
     }
 
     public static void availableCommands() {

@@ -71,23 +71,29 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
-            GamePanel.gameState = GamePanel.playState;
+            GamePanel.ui.titleScreenState = 1;
+//            GamePanel.gameState = GamePanel.playState;
             break;
           case 1:
             //music control
             GamePanel.ui.titleScreenState = 2;
             break;
           case 2:
-            GamePanel.ui.titleScreenState = 1;
+            GamePanel.ui.titleScreenState = 3;
             break;
           case 3:
             System.exit(0);
         }
         GamePanel.ui.commandNum = 0;
       }
+    } else if (GamePanel.ui.titleScreenState == 1) {
+      if (code == KeyEvent.VK_Z) {
+        GamePanel.gameState = GamePanel.playState;
+        GamePanel.ui.commandNum = 0;
+      }
     } else if (GamePanel.ui.titleScreenState == 2) {
       settingState(code);
-    } else if (GamePanel.ui.titleScreenState == 1) {
+    } else if (GamePanel.ui.titleScreenState == 3) {
       if (code == KeyEvent.VK_Z) {
         GamePanel.ui.titleScreenState = 0;
         GamePanel.ui.commandNum = 0;
@@ -227,7 +233,6 @@ public class KeyHandler implements KeyListener {
         }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
-      System.out.println("Diaglogue screen state = " + GamePanel.ui.dialogueScreenState);
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
@@ -259,6 +264,7 @@ public class KeyHandler implements KeyListener {
                   GamePanel.player.inventory.remove(GamePanel.player.currentWeapon);
                   GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
                   GamePanel.player.inventory.add(GamePanel.player.currentWeapon);
+                  GamePanel.player.getAttack();
                   GamePanel.player.coinInPocket -= 5;
                   GamePanel.ui.dialogueScreenState = 0;
                 } else {
@@ -301,12 +307,10 @@ public class KeyHandler implements KeyListener {
                 }
               }
             }
-
-            System.out.println("hello from case 0");
-            //Add check in inventory for key item here
+//            System.out.println("hello from case 0");
             break;
           case 1:
-            System.out.println("hello from case 1");
+//            System.out.println("hello from case 1");
             GamePanel.ui.dialogueScreenState = 0;
             GamePanel.ui.keyDialogueComplete = false;
             break;
@@ -335,17 +339,19 @@ public class KeyHandler implements KeyListener {
       }
       if(item == null) {
         GamePanel.player.inventoryFrameCount = 0;
-        UI.statement = "Empty Slot!";
+        UI.statement = "This inventory slot is empty.";
       } else if (Objects.equals(item.name, "Delicious Mushroom")) {
         if(GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {
-          UI.statement = "You Are Too Full to Eat That!";
+          UI.statement = "Your health is already full.";
           GamePanel.player.inventoryFrameCount = 0;
         } else {
           GamePanel.player.setHP(GamePanel.player.getHP() + 4);
           GamePanel.player.inventory.remove(item);
+          UI.statement = "Your health is restored.";
+          GamePanel.player.inventoryFrameCount = 0;
         }
       } else {
-        UI.statement = "Cannot Use the Item!";
+        UI.statement = "Cannot use that item.";
         GamePanel.player.inventoryFrameCount = 0;
       }
       GamePanel.gameState = GamePanel.playState;
@@ -360,10 +366,9 @@ public class KeyHandler implements KeyListener {
         GamePanel.player.inventoryFrameCount = 0;
       }
       if(item == null) {
-        UI.statement = "Empty Slot!";
-      }
-      if(item.keyItem) {
-        UI.statement = "You Cannot Throw That Away!";
+        UI.statement = "This inventory slot is empty.";
+      } else if(item.keyItem) {
+        UI.statement = "You might need that!";
       }
       GamePanel.gameState = GamePanel.playState;
     }

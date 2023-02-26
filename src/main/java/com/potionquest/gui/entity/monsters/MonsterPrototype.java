@@ -197,7 +197,7 @@ public abstract class MonsterPrototype extends Entity {
     boolean contactPlayer = GamePanel.collider.checkTargetsCollision(this);
     if (this.entityType == 2 && contactPlayer) {
       if (!GamePanel.player.invincible) {
-        GamePanel.player.setHP(GamePanel.player.getHP() - 1);
+        GamePanel.player.setHP(GamePanel.player.getHP() - this.attack);
         GamePanel.player.invincible = true;
       }
     }

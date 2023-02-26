@@ -20,7 +20,6 @@ public class GameClient {
         Scanner input = new Scanner(System.in);
         GameClient gameClient = new GameClient();
         // Welcome the user to the game
-        GameClientUtil.gameStartMessage();
         GameClientUtil.askPlayerIfTheyWantToStartGame();
         GameClientUtil.startingVillageMessage();
 
