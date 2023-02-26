@@ -174,13 +174,17 @@ public class KeyHandler implements KeyListener {
           && GamePanel.player.worldX > 11 * GamePanel.tileSize
           && GamePanel.player.worldY > 60 * GamePanel.tileSize
           && GamePanel.player.worldY < 62 * GamePanel.tileSize) {
-        UI.statement = "Go South";
+
+        UI.statement = "Mountain route: head South and then East";
+
         GamePanel.player.inventoryFrameCount = 0;
       } else if (GamePanel.player.worldX < 12 * GamePanel.tileSize
           && GamePanel.player.worldX > 10 * GamePanel.tileSize
           && GamePanel.player.worldY > 26 * GamePanel.tileSize
           && GamePanel.player.worldY < 29 * GamePanel.tileSize) {
-        UI.statement = "Go North";
+
+        UI.statement = "Forest route: head North and then East";
+
         GamePanel.player.inventoryFrameCount = 0;
       }
     }
@@ -353,6 +357,11 @@ public class KeyHandler implements KeyListener {
                 }
               }
             }
+            if (!GamePanel.ui.keyDialogueComplete) {
+              GamePanel.ui.currentDialogue = "You don't have the required items!";
+              GamePanel.ui.dialogueScreenState = 0;
+            }
+            break;
           case 1:
             GamePanel.ui.dialogueScreenState = 0;
             GamePanel.ui.keyDialogueComplete = false;
