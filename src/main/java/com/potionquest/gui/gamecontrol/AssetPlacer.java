@@ -31,37 +31,58 @@ public class AssetPlacer {
     GamePanel.items[1].worldX = GamePanel.tileSize * 6;
     GamePanel.items[1].worldY = GamePanel.tileSize * 40;
 
-    GamePanel.items[2] = new OrnateTrinket();
-    GamePanel.items[2].worldX = GamePanel.tileSize * 19;
-    GamePanel.items[2].worldY = GamePanel.tileSize * 39;
+    GamePanel.items[2] = new BootsOfSpeed();
+    GamePanel.items[2].worldX = GamePanel.tileSize * 24;
+    GamePanel.items[2].worldY = GamePanel.tileSize * 3;
 
-    GamePanel.items[3] = new OrnateTrinket();
-    GamePanel.items[3].worldX = GamePanel.tileSize * 20;
-    GamePanel.items[3].worldY = GamePanel.tileSize * 39;
+    GamePanel.items[3] = new DeliciousMushroom();
+    GamePanel.items[3].worldX = GamePanel.tileSize * 7;
+    GamePanel.items[3].worldY = GamePanel.tileSize * 5;
 
-    GamePanel.items[4] = new OrnateTrinket();
-    GamePanel.items[4].worldX = GamePanel.tileSize * 22;
-    GamePanel.items[4].worldY = GamePanel.tileSize * 39;
+    GamePanel.items[4] = new DeliciousMushroom();
+    GamePanel.items[4].worldX = GamePanel.tileSize * 37;
+    GamePanel.items[4].worldY = GamePanel.tileSize * 25;
 
-    GamePanel.items[5] = new OrnateTrinket();
-    GamePanel.items[5].worldX = GamePanel.tileSize * 18;
-    GamePanel.items[5].worldY = GamePanel.tileSize * 39;
+    //easter egg
+    GamePanel.items[5] = new GoldCoin();
+    GamePanel.items[5].worldX = GamePanel.tileSize * 84;
+    GamePanel.items[5].worldY = GamePanel.tileSize * 84;
 
-    GamePanel.items[6] = new OrnateTrinket();
-    GamePanel.items[6].worldX = GamePanel.tileSize * 17;
-    GamePanel.items[6].worldY = GamePanel.tileSize * 39;
+    GamePanel.items[6] = new GoldCoin();
+    GamePanel.items[6].worldX = GamePanel.tileSize * 84;
+    GamePanel.items[6].worldY = GamePanel.tileSize * 85;
 
-    GamePanel.items[7] = new BootsOfSpeed();
-    GamePanel.items[7].worldX = GamePanel.tileSize * 24;
-    GamePanel.items[7].worldY = GamePanel.tileSize * 3;
+    GamePanel.items[7] = new GoldCoin();
+    GamePanel.items[7].worldX = GamePanel.tileSize * 84;
+    GamePanel.items[7].worldY = GamePanel.tileSize * 86;
 
-    GamePanel.items[8] = new DeliciousMushroom();
-    GamePanel.items[8].worldX = GamePanel.tileSize * 7;
-    GamePanel.items[8].worldY = GamePanel.tileSize * 5;
+    GamePanel.items[8] = new GoldCoin();
+    GamePanel.items[8].worldX = GamePanel.tileSize * 85;
+    GamePanel.items[8].worldY = GamePanel.tileSize * 86;
 
-    GamePanel.items[9] = new DeliciousMushroom();
-    GamePanel.items[9].worldX = GamePanel.tileSize * 37;
-    GamePanel.items[9].worldY = GamePanel.tileSize * 25;
+    GamePanel.items[9] = new GoldCoin();
+    GamePanel.items[9].worldX = GamePanel.tileSize * 86;
+    GamePanel.items[9].worldY = GamePanel.tileSize * 86;
+
+    GamePanel.items[10] = new GoldCoin();
+    GamePanel.items[10].worldX = GamePanel.tileSize * 87;
+    GamePanel.items[10].worldY = GamePanel.tileSize * 86;
+
+    GamePanel.items[11] = new GoldCoin();
+    GamePanel.items[11].worldX = GamePanel.tileSize * 86;
+    GamePanel.items[11].worldY = GamePanel.tileSize * 84;
+
+    GamePanel.items[12] = new GoldCoin();
+    GamePanel.items[12].worldX = GamePanel.tileSize * 86;
+    GamePanel.items[12].worldY = GamePanel.tileSize * 85;
+
+    GamePanel.items[13] = new GoldCoin();
+    GamePanel.items[13].worldX = GamePanel.tileSize * 86;
+    GamePanel.items[13].worldY = GamePanel.tileSize * 87;
+
+    GamePanel.items[14] = new GoldCoin();
+    GamePanel.items[14].worldX = GamePanel.tileSize * 86;
+    GamePanel.items[14].worldY = GamePanel.tileSize * 88;
   }
 
   public void setNPC() {

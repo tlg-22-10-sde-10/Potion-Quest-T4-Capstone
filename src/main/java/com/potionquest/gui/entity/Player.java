@@ -1,11 +1,6 @@
 package com.potionquest.gui.entity;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
-
-
-import static com.potionquest.gui.gamecontrol.GamePanel.dialogueState;
-import static com.potionquest.gui.gamecontrol.GamePanel.items;
-
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
 import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
@@ -343,10 +338,11 @@ public class Player extends Entity {
   }
 
   public void dropItem(InventoryItem item) {
+    inventoryFrameCount = 0;
     if(item.keyItem) {
-      UI.statement = "Cannot Throw That Away";
-      inventoryFrameCount = 0;
+      UI.statement = "You might need that!";
     } else {
+      UI.statement = "You have thrown " + item.name + " away!";
       forceRemoveItem(item);
     }
   }
@@ -358,16 +354,17 @@ public class Player extends Entity {
   }
 
   public void useItem(InventoryItem item) {
+    inventoryFrameCount = 0;
     if(item.HP > 0 && HP < MAX_HP) {
       inventory.remove(item);
       GamePanel.player.HP += item.HP;
       GamePanel.player.HP = Math.min(GamePanel.player.HP, MAX_HP);
+      UI.statement = "Your health is restored.";
     } else {
-      inventoryFrameCount = 0;
       if(item.HP <= 0) {
-        UI.statement = "Cannot Use That";
+        UI.statement = "Cannot use that item.";
       } else {
-        UI.statement = "Too Full To Eat That";
+        UI.statement = "Your health is already full.";
       }
     }
   }
