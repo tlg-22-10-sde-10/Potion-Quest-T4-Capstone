@@ -53,6 +53,9 @@ public class UI {
       drawPlayerHP();
       drawCoin();
       drawTime();
+
+      g2D.setColor(Color.white);
+      g2D.setFont(arial_40);
       drawStatement();
       // PLAY STATE
       if (GamePanel.gameState == GamePanel.playState) {
