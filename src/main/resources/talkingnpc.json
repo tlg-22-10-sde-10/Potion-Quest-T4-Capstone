@@ -9,12 +9,12 @@
   },
   {
     "name": "Doctor",
-    "dialogue": {"1": "You must hurry to Langtoft Village to save \nyour sister!",
-      "2": "The forest route lies to the North, the mountainous \nroute to the South. Please hurry!"},
+    "dialogue": {"1": "Doctor: You must hurry to Langtoft Village to save \nyour sister!",
+      "2": "Doctor: The forest route lies to the North, the \nmountainous route to the South. Please hurry!"},
     "responses": {
-      "1": "Have you retrieved the potion for your \nsister?",
+      "1": "Doctor: Have you retrieved the potion for your \nsister?",
       "2": "Woohoo! You win Potion Quest",
-      "3": "Her death will be on your hands..."
+      "3": "Doctor: Her death will be on your hands..."
     }
   },
   {
