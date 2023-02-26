@@ -1,6 +1,11 @@
 package com.potionquest.gui.entity;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+
+
+import static com.potionquest.gui.gamecontrol.GamePanel.dialogueState;
+import static com.potionquest.gui.gamecontrol.GamePanel.items;
+
 import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
 
 import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
@@ -127,6 +132,7 @@ public class Player extends Entity {
   }
 
   public void update() {
+
     if (isAttacking) {
       attacking();
     } else {
@@ -149,6 +155,8 @@ public class Player extends Entity {
         //CHECK TILE COLLISION
         collisionOn = false;
         GamePanel.collider.checkTile(this);
+
+
 
         // CHECK NPC COLLISION
         npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
@@ -299,7 +307,7 @@ public class Player extends Entity {
     if (monsterIndex != 999 && GamePanel.monsters[monsterIndex].HP > 0) {
       if (!invincible) {
         if (HP > 0) {
-          HP -= 1;
+          HP -= GamePanel.monsters[monsterIndex].attack;
         }
         invincible = true;
       }
@@ -367,22 +375,12 @@ public class Player extends Entity {
   public void talkNPC(int i) {
 
     if (i != 999) {
-      System.out.println(i);
-      //System.out.println("You are running into NPC!");
       if (keyH.zPressed) {
         System.out.println(GamePanel.npc[i].name);
         if (GamePanel.npc[i].name.equals("Old Hermit")
             && this.inventory.stream().anyMatch(o -> o.name.equals("Sword of a Thousand Truths"))) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
         }
-//        if (GamePanel.npc[i].name.equals("Doctor")) {
-//          for (InventoryItem item : GamePanel.player.inventory) {
-//            if (item.name.equals("Elixir of Life")) {
-//              GamePanel.gameState = winState;
-//            }
-//          }
-        //GAME WIN SCREEN SHOULD GO HERE. CHANGE ELSE IF LOGIC FROM CURRENT WEAPON NAME
-//        }
         if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
         }
@@ -405,6 +403,7 @@ public class Player extends Entity {
         if (!GamePanel.npc[i].npcKeyDialogueComplete) {
           GamePanel.gameState = GamePanel.dialogueState;
           haveTalkedToOnceAlready = chatCheck(GamePanel.npc[i]);
+          GamePanel.ui.commandNum = 0;
           GamePanel.npc[i].talk();
         }
       }

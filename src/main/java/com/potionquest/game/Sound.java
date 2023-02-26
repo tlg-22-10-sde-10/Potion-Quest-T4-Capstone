@@ -20,7 +20,7 @@ public class Sound {
             getClip().start();
             getClip().loop(Clip.LOOP_CONTINUOUSLY);
             final FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volumeControl.setValue(-10.0f);
+            volumeControl.setValue(-35.0f);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e){
             e.printStackTrace();
         }

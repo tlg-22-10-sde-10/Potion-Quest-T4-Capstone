@@ -68,8 +68,9 @@ public class GamePanel extends JPanel implements Runnable {
 
   //self defined
   public static Sound sound = new Sound();
+
   public static long gameTime;
-  public static final int gameTimeLimit = 300;
+  public static final int gameTimeLimit = 420;
 
   //monster library json
   public static Map<String, Monster> monsterLibrary;

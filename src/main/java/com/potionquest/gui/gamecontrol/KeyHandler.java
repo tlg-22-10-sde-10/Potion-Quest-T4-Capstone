@@ -70,24 +70,31 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
-            //GamePanel.gameInstanceInitialization();
-            GamePanel.gameState = GamePanel.playState;
+
+            GamePanel.ui.titleScreenState = 1;
+//          GamePanel.gameState = GamePanel.playState;
+
             break;
           case 1:
             //music control
             GamePanel.ui.titleScreenState = 2;
             break;
           case 2:
-            GamePanel.ui.titleScreenState = 1;
+            GamePanel.ui.titleScreenState = 3;
             break;
           case 3:
             System.exit(0);
         }
         GamePanel.ui.commandNum = 0;
       }
+    } else if (GamePanel.ui.titleScreenState == 1) {
+      if (code == KeyEvent.VK_Z) {
+        GamePanel.gameState = GamePanel.playState;
+        GamePanel.ui.commandNum = 0;
+      }
     } else if (GamePanel.ui.titleScreenState == 2) {
       settingState(code);
-    } else if (GamePanel.ui.titleScreenState == 1) {
+    } else if (GamePanel.ui.titleScreenState == 3) {
       if (code == KeyEvent.VK_Z) {
         GamePanel.ui.titleScreenState = 0;
         GamePanel.ui.commandNum = 0;
@@ -242,7 +249,7 @@ public class KeyHandler implements KeyListener {
         }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
-      //System.out.println("Dialogue screen state = " + GamePanel.ui.dialogueScreenState);
+
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
@@ -271,11 +278,9 @@ public class KeyHandler implements KeyListener {
                   GamePanel.player.currentWeapon.name.equals("Father's Sword")) {
                 if (GamePanel.player.inventory.size() <= Player.INVENTORY_SIZE) {
                   GamePanel.ui.keyDialogueComplete = true;
-
                   GamePanel.player.forceRemoveItem(GamePanel.player.currentWeapon);
                   GamePanel.player.currentWeapon = new SwordOfAThousandTruths();
                   GamePanel.player.pickUpObject(GamePanel.player.currentWeapon);
-
                   GamePanel.player.coinInPocket -= 5;
                   GamePanel.ui.dialogueScreenState = 0;
                 } else {
@@ -319,11 +324,7 @@ public class KeyHandler implements KeyListener {
                 }
               }
             }
-            //System.out.println("hello from case 0");
-            //Add check in inventory for key item here
-            break;
           case 1:
-            //System.out.println("hello from case 1");
             GamePanel.ui.dialogueScreenState = 0;
             GamePanel.ui.keyDialogueComplete = false;
             break;
@@ -345,39 +346,12 @@ public class KeyHandler implements KeyListener {
         GamePanel.ui.commandNum = 1;
       }
     }
-    if (code == KeyEvent.VK_Z) {
-      InventoryItem item = null;
-      if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
-        item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);
-      }
-      if(item != null) {
-        GamePanel.player.useItem(item);
-      } else {
-        //GamePanel.gameState = GamePanel.dialogueState;
-//        GamePanel.ui.dialogueScreenState = 0;
-//        GamePanel.ui.currentDialogue = "You Are Too Full to Eat That!";
-
-        GamePanel.player.inventoryFrameCount = 0;
-        UI.statement = "Empty Slot!";
-      }
-      GamePanel.gameState = GamePanel.playState;
-      GamePanel.ui.commandNum = 0;
-    } else if (code == KeyEvent.VK_SPACE) {
-      InventoryItem item = null;
-      if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
-        item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);
-      }
-      if(item != null) {
-        GamePanel.player.dropItem(item);
-      } else {
-        GamePanel.player.inventoryFrameCount = 0;
-        UI.statement = "Empty Slot!";
-      }
-      GamePanel.gameState = GamePanel.playState;
-    } else if (code == KeyEvent.VK_B) {
-      GamePanel.gameState = GamePanel.playState;
-      GamePanel.ui.commandNum = 0;
-    }
+    
+    if (code == KeyEvent.VK_Z) {  
+      InventoryItem item = null;  
+      if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {    item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);  }  if(item == null) {    GamePanel.player.inventoryFrameCount = 0;    UI.statement = "This inventory slot is empty.";  } else if (Objects.equals(item.name, "Delicious Mushroom")) {    if(GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {      UI.statement = "Your health is already full.";      GamePanel.player.inventoryFrameCount = 0;    } else {      GamePanel.player.setHP(GamePanel.player.getHP() + 4);      GamePanel.player.inventory.remove(item);      UI.statement = "Your health is restored.";      GamePanel.player.inventoryFrameCount = 0;    }  } else {    UI.statement = "Cannot use that item.";    GamePanel.player.inventoryFrameCount = 0;  }  GamePanel.gameState = GamePanel.playState;} else if (code == KeyEvent.VK_SPACE) {  InventoryItem item = null;  if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {    item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);  }  if(item != null && !item.keyItem) {    GamePanel.player.inventory.remove(item);  } else {    GamePanel.player.inventoryFrameCount = 0;  }  if(item == null) {    UI.statement = "This inventory slot is empty.";  } else if(item.keyItem) {    UI.statement = "You might need that!";  }  GamePanel.gameState = GamePanel.playState;}
+    
+    
   }
 
   public void gameOverState(int code) {
