@@ -6,7 +6,9 @@ import com.potionquest.gui.gamecontrol.playerhp.SuperObjects;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+
 import java.awt.FontFormatException;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,7 +16,6 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class UI {
-
   private Graphics2D g2D;
 
   private Font comicSans;
@@ -35,8 +36,6 @@ public class UI {
   public static String statement = "";
 
   public UI() {
-//    comicSans = new Font("Comic Sans MS", Font.PLAIN, 40);
-
     try (InputStream input = getClass().getResourceAsStream("/font/COMIC.TTF")) {
       //noinspection ConstantConditions
       comicSans = Font.createFont(Font.TRUETYPE_FONT, input);
@@ -417,7 +416,6 @@ public class UI {
       x += GamePanel.tileSize;
       y += GamePanel.tileSize;
 
-//      if (dialogueArray[arrayIndex] != null) {
       if (GamePanel.ui.currentDialogue == null) {
         if (!GamePanel.player.haveTalkedToOnceAlready) {
           for (String chunk : dialogueArray[arrayIndex].split("\n")) {
@@ -553,7 +551,6 @@ public class UI {
   }
 
   private void drawWinScreen() {
-
     drawSubWindowForDrawInventory(0, 0, GamePanel.screenWidth, GamePanel.screenHeight, new Color(0, 0, 0, 200));
     g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 96F));
     String text = "Potion Quest";
@@ -587,6 +584,15 @@ public class UI {
     g2D.drawImage(GamePanel.npc[1].goDown[0], x, y + GamePanel.tileSize / 2, GamePanel.tileSize * 3 /2, GamePanel.tileSize * 2,
         null);
 
+
+    text = "Press Z To Continue...";
+    drawString(text, x + 5, y + 5, new Color(70, 120, 80));
+    //MAIN COLOR
+    drawString(text, x, y, Color.white);
+  }
+
+  private void drawCredits() {
+    
   }
 
 

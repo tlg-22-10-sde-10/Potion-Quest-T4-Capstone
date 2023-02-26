@@ -66,6 +66,9 @@ public class GamePanel extends JPanel implements Runnable {
   public static final int gameOverState = 6;
   public static final int winState = 7;
 
+  public static final int creditState = 8;
+  public static boolean creditStateDisplayed = false;
+
   //self defined
   public static Sound sound = new Sound();
 
@@ -112,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable {
 
   public static void gameInstanceInitialization() {
     npc = new Entity[10];
-    items = new InventoryItem[20];
+    items = new InventoryItem[30];
     player = new Player();
     monsters = new MonsterPrototype[10];
 

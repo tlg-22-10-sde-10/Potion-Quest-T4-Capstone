@@ -7,7 +7,6 @@ import com.potionquest.gui.entity.inventoryobjects.AttunedGemstone;
 import com.potionquest.gui.entity.inventoryobjects.ElixirOfLife;
 import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Objects;
@@ -52,6 +51,12 @@ public class KeyHandler implements KeyListener {
     else if (GamePanel.gameState == GamePanel.gameOverState) {
       gameOverState(code);
     }
+    else if (GamePanel.gameState == GamePanel.winState) {
+      winState(code);
+    }
+    else if (GamePanel.gameState == GamePanel.creditState) {
+      creditState(code);
+    }
   }
 
   public void titleState(int code) {
@@ -71,10 +76,7 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_Z) {
         switch (GamePanel.ui.commandNum) {
           case 0:
-
             GamePanel.ui.titleScreenState = 1;
-//          GamePanel.gameState = GamePanel.playState;
-
             break;
           case 1:
             //music control
@@ -172,13 +174,17 @@ public class KeyHandler implements KeyListener {
           && GamePanel.player.worldX > 11 * GamePanel.tileSize
           && GamePanel.player.worldY > 60 * GamePanel.tileSize
           && GamePanel.player.worldY < 62 * GamePanel.tileSize) {
-        UI.statement = "Mountain route: steep terrain flows South and then East";
+
+        UI.statement = "Mountain route: head South and then East";
+
         GamePanel.player.inventoryFrameCount = 0;
       } else if (GamePanel.player.worldX < 12 * GamePanel.tileSize
           && GamePanel.player.worldX > 10 * GamePanel.tileSize
           && GamePanel.player.worldY > 26 * GamePanel.tileSize
           && GamePanel.player.worldY < 29 * GamePanel.tileSize) {
-        UI.statement = "Forest route: gentle terrain flows North and then East";
+
+        UI.statement = "Forest route: head North and then East";
+
         GamePanel.player.inventoryFrameCount = 0;
       }
     }
@@ -217,6 +223,7 @@ public class KeyHandler implements KeyListener {
           case 4:
             GamePanel.gameInstanceInitialization();
             GamePanel.gameState = GamePanel.titleState;
+            GamePanel.ui.titleScreenState = 0;
             break;
         }
         GamePanel.ui.commandNum = 0;
@@ -236,6 +243,31 @@ public class KeyHandler implements KeyListener {
       }
     } else if (GamePanel.ui.pauseScreenState == 3) {
       settingState(code);
+    }
+  }
+
+  public void winState(int code) {
+    if(GamePanel.gameState == winState) {
+      if(code == KeyEvent.VK_Z) {
+        GamePanel.gameState = GamePanel.creditState;
+      }
+    }
+  }
+
+  private void creditState(int code) {
+    if(GamePanel.creditStateDisplayed) {
+      if(code == KeyEvent.VK_Z
+          || code == KeyEvent.VK_ENTER
+          || code == KeyEvent.VK_SPACE
+          || code == KeyEvent.VK_B
+          || code == KeyEvent.VK_UP
+          || code == KeyEvent.VK_DOWN
+          || code == KeyEvent.VK_LEFT
+          || code == KeyEvent.VK_RIGHT)
+      {
+        GamePanel.gameState = GamePanel.titleState;
+        GamePanel.gameInstanceInitialization();
+      }
     }
   }
 
@@ -318,9 +350,9 @@ public class KeyHandler implements KeyListener {
                   GamePanel.ui.keyDialogueComplete = true;
                   GamePanel.player.coinInPocket -= 10;
                   GamePanel.player.inventory.add(new ElixirOfLife());
-                  GamePanel.ui.dialogueScreenState = 0;
+                  //GamePanel.ui.dialogueScreenState = 0;
                 } else {
-                  GamePanel.ui.dialogueScreenState = 0;
+                  //GamePanel.ui.dialogueScreenState = 0;
                   GamePanel.ui.currentDialogue = "Your inventory is full!";
                 }
               }
@@ -345,15 +377,12 @@ public class KeyHandler implements KeyListener {
       if (GamePanel.ui.commandNum < 1) {
         GamePanel.ui.commandNum = 5;
       }
-    }
-    if (code == KeyEvent.VK_RIGHT) {
+    } else if (code == KeyEvent.VK_RIGHT) {
       GamePanel.ui.commandNum++;
       if (GamePanel.ui.commandNum > 5) {
         GamePanel.ui.commandNum = 1;
       }
-    }
-
-    if (code == KeyEvent.VK_Z) {
+    } else if (code == KeyEvent.VK_Z) {
       InventoryItem item = null;
       if (GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
         item = GamePanel.player.inventory.get(GamePanel.ui.commandNum - 1);
@@ -361,19 +390,9 @@ public class KeyHandler implements KeyListener {
       if (item == null) {
         GamePanel.player.inventoryFrameCount = 0;
         UI.statement = "This inventory slot is empty.";
-      } else if (Objects.equals(item.name, "Delicious Mushroom")) {
-        if (GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {
-          UI.statement = "Your health is already full.";
-          GamePanel.player.inventoryFrameCount = 0;
-        } else {
-          GamePanel.player.setHP(GamePanel.player.getHP() + 4);
-          GamePanel.player.inventory.remove(item);
-          UI.statement = "Your health is restored.";
-          GamePanel.player.inventoryFrameCount = 0;
-        }
+
       } else {
-        UI.statement = "Cannot use that item.";
-        GamePanel.player.inventoryFrameCount = 0;
+        GamePanel.player.useItem(item);
       }
       GamePanel.gameState = GamePanel.playState;
     } else if (code == KeyEvent.VK_SPACE) {
@@ -381,17 +400,17 @@ public class KeyHandler implements KeyListener {
       if (GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
         item = GamePanel.player.inventory.get(GamePanel.ui.commandNum - 1);
       }
-      if (item != null && !item.keyItem) {
-        GamePanel.player.inventory.remove(item);
+      if(item != null) {
+        GamePanel.player.dropItem(item);
       } else {
         GamePanel.player.inventoryFrameCount = 0;
-      }
-      if (item == null) {
         UI.statement = "This inventory slot is empty.";
-      } else if (item.keyItem) {
-        UI.statement = "You might need that!";
       }
+
       GamePanel.gameState = GamePanel.playState;
+    } else if(code == KeyEvent.VK_B) {
+      GamePanel.gameState = GamePanel.playState;
+      GamePanel.ui.commandNum = 0;
     }
   }
 
