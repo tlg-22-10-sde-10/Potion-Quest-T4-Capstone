@@ -19,6 +19,7 @@ public class MonsterSkeleton extends MonsterPrototype {
     super.monsterSizeX = 48;
     super.monsterSizeY = 48;
     super.speed = 1;
+    attack = 2;
 
     defaultSpeed = super.speed;
 

@@ -1,17 +1,10 @@
 [
   {
-    "messageName": "helpMessage",
-    "message": "You have asked for help.\nHere are some suggestions:\nYou can interact with items, by typing grab [item] or look [item].\nYou can move from location to another location by typing go direction.\nExamples: go north or use rope."
-  },
-  {
     "messageName": "welcomeMessage",
-    "message": "Welcome to Potion Quest.\nPotion Quest is a text-based RPG game.\nThis game will allow you to go on an adventure to get the potion to cure your sister!\nDuring the quest you will be faced with many choices and obstacles.\nChoose wisely ........\nYour life and your sister's life DEPENDS on it!\nComplete the quest by traveling to Langtoft Village\nand bringing back the potion to cure your sister's illness.\nYour game will end if your health goes to 0 or you do not complete the quest in 7 minutes.\n\nTo mute and unmute the music, type mute."
+    "message": "Welcome to Potion Quest!\nPotion Quest is a 2D, adventure RPG game.\n\nIn this game you will set out on an adventure \nto retrieve a potion that will cure your sister.\nDuring the quest you will be faced with many choices\n and obstacles.\n\nChoose wisely........\nYour life and your sister's life DEPENDS on it!\n\nYour adventure begins from Whitby Village. \nComplete the quest by traveling to Langtoft Village in the East,\nand bringing back the potion to cure your sister's illness.\nYour game will end if your health goes to 0 \nor you do not complete the quest in 7 minutes.\n\nYou must hand the potion to the Doctor."
   },
   {
-    "messageName": "startGameMessage",
-    "message": "Would you like to start the Potion Quest? Enter '[y]es' or '[n]o' "
-  },
-  {"messageName":"villageStartMessage",
-    "message":"You just finished talking to the village doctor.\nYour sister is deathly ill.\nIt is not be safe to enter the house.\nThe doctor says that you need to get a potion from Langtoft Village.\n \nYou see a trinket. You might want to take this item on your journey.\nTo take the items type get [item].\n \nYou see 2 paths one to the North and one to the South. \nTo travel on a path type go [direction]\n \nPick a path and start your adventure.\n \nHurry, your sister is running out of time!"
+    "messageName": "winGameMessage",
+    "message": "You were able to save your sister in the nick of time! \nThough she will take days to fully recover, her life is no longer in jeopardy! \nYou go back to your regular life, content with what it brings..."
   }
 ]
