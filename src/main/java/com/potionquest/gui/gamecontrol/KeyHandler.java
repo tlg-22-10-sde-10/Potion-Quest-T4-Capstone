@@ -10,6 +10,7 @@ import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Objects;
 
 public class KeyHandler implements KeyListener {
 
@@ -134,7 +135,7 @@ public class KeyHandler implements KeyListener {
           break;
         case 3:
           GamePanel.ui.commandNum = 0;
-          if(GamePanel.ui.pauseScreenState == 3) {
+          if (GamePanel.ui.pauseScreenState == 3) {
             GamePanel.ui.pauseScreenState = 0;
             GamePanel.gameState = GamePanel.pauseState;
           } else {
@@ -167,17 +168,17 @@ public class KeyHandler implements KeyListener {
     }
     if (code == KeyEvent.VK_Z) {
       zPressed = true;
-      if(GamePanel.player.worldX < 13*GamePanel.tileSize
-          && GamePanel.player.worldX > 11*GamePanel.tileSize
-          && GamePanel.player.worldY > 60*GamePanel.tileSize
-          && GamePanel.player.worldY < 62*GamePanel.tileSize) {
-        UI.statement = "Go South";
+      if (GamePanel.player.worldX < 13 * GamePanel.tileSize
+          && GamePanel.player.worldX > 11 * GamePanel.tileSize
+          && GamePanel.player.worldY > 60 * GamePanel.tileSize
+          && GamePanel.player.worldY < 62 * GamePanel.tileSize) {
+        UI.statement = "Mountain route: steep terrain flows South and then East";
         GamePanel.player.inventoryFrameCount = 0;
-      } else if (GamePanel.player.worldX < 12*GamePanel.tileSize
-          && GamePanel.player.worldX > 10*GamePanel.tileSize
-          && GamePanel.player.worldY > 26*GamePanel.tileSize
-          && GamePanel.player.worldY < 29*GamePanel.tileSize) {
-        UI.statement = "Go North";
+      } else if (GamePanel.player.worldX < 12 * GamePanel.tileSize
+          && GamePanel.player.worldX > 10 * GamePanel.tileSize
+          && GamePanel.player.worldY > 26 * GamePanel.tileSize
+          && GamePanel.player.worldY < 29 * GamePanel.tileSize) {
+        UI.statement = "Forest route: gentle terrain flows North and then East";
         GamePanel.player.inventoryFrameCount = 0;
       }
     }
@@ -223,7 +224,7 @@ public class KeyHandler implements KeyListener {
         GamePanel.ui.commandNum = 0;
         GamePanel.gameState = GamePanel.playState;
       }
-    } else if(GamePanel.ui.pauseScreenState == 1)  {
+    } else if (GamePanel.ui.pauseScreenState == 1) {
       if (code == KeyEvent.VK_Z) {
         GamePanel.ui.pauseScreenState = 0;
         GamePanel.ui.commandNum = 0;
@@ -324,6 +325,11 @@ public class KeyHandler implements KeyListener {
                 }
               }
             }
+            if (!GamePanel.ui.keyDialogueComplete) {
+              GamePanel.ui.currentDialogue = "You don't have the required items!";
+              GamePanel.ui.dialogueScreenState = 0;
+            }
+            break;
           case 1:
             GamePanel.ui.dialogueScreenState = 0;
             GamePanel.ui.keyDialogueComplete = false;
@@ -346,12 +352,47 @@ public class KeyHandler implements KeyListener {
         GamePanel.ui.commandNum = 1;
       }
     }
-    
-    if (code == KeyEvent.VK_Z) {  
-      InventoryItem item = null;  
-      if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {    item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);  }  if(item == null) {    GamePanel.player.inventoryFrameCount = 0;    UI.statement = "This inventory slot is empty.";  } else if (Objects.equals(item.name, "Delicious Mushroom")) {    if(GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {      UI.statement = "Your health is already full.";      GamePanel.player.inventoryFrameCount = 0;    } else {      GamePanel.player.setHP(GamePanel.player.getHP() + 4);      GamePanel.player.inventory.remove(item);      UI.statement = "Your health is restored.";      GamePanel.player.inventoryFrameCount = 0;    }  } else {    UI.statement = "Cannot use that item.";    GamePanel.player.inventoryFrameCount = 0;  }  GamePanel.gameState = GamePanel.playState;} else if (code == KeyEvent.VK_SPACE) {  InventoryItem item = null;  if(GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {    item = GamePanel.player.inventory.get(GamePanel.ui.commandNum -1);  }  if(item != null && !item.keyItem) {    GamePanel.player.inventory.remove(item);  } else {    GamePanel.player.inventoryFrameCount = 0;  }  if(item == null) {    UI.statement = "This inventory slot is empty.";  } else if(item.keyItem) {    UI.statement = "You might need that!";  }  GamePanel.gameState = GamePanel.playState;}
-    
-    
+
+    if (code == KeyEvent.VK_Z) {
+      InventoryItem item = null;
+      if (GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
+        item = GamePanel.player.inventory.get(GamePanel.ui.commandNum - 1);
+      }
+      if (item == null) {
+        GamePanel.player.inventoryFrameCount = 0;
+        UI.statement = "This inventory slot is empty.";
+      } else if (Objects.equals(item.name, "Delicious Mushroom")) {
+        if (GamePanel.player.getHP() >= GamePanel.player.MAX_HP) {
+          UI.statement = "Your health is already full.";
+          GamePanel.player.inventoryFrameCount = 0;
+        } else {
+          GamePanel.player.setHP(GamePanel.player.getHP() + 4);
+          GamePanel.player.inventory.remove(item);
+          UI.statement = "Your health is restored.";
+          GamePanel.player.inventoryFrameCount = 0;
+        }
+      } else {
+        UI.statement = "Cannot use that item.";
+        GamePanel.player.inventoryFrameCount = 0;
+      }
+      GamePanel.gameState = GamePanel.playState;
+    } else if (code == KeyEvent.VK_SPACE) {
+      InventoryItem item = null;
+      if (GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
+        item = GamePanel.player.inventory.get(GamePanel.ui.commandNum - 1);
+      }
+      if (item != null && !item.keyItem) {
+        GamePanel.player.inventory.remove(item);
+      } else {
+        GamePanel.player.inventoryFrameCount = 0;
+      }
+      if (item == null) {
+        UI.statement = "This inventory slot is empty.";
+      } else if (item.keyItem) {
+        UI.statement = "You might need that!";
+      }
+      GamePanel.gameState = GamePanel.playState;
+    }
   }
 
   public void gameOverState(int code) {
