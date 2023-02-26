@@ -1,9 +1,6 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
+import com.potionquest.gui.gamecontrol.TileSheets;
 
 public class SwordOfAThousandTruths extends InventoryItem {
 
@@ -11,22 +8,11 @@ public class SwordOfAThousandTruths extends InventoryItem {
     name = "Sword of a Thousand Truths";
     int objectHeight = 48;
     int objectWidth = 48;
-    attack = 5;
-    collisionOn = false;
+
+    attack = 7;
+
     keyItem = true;
 
-    BufferedImage image;
-
-    try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
-
-      //noinspection ConstantConditions
-      image = ImageIO.read(is);
-
-      portrait = image.getSubimage(objectWidth*12, objectHeight*7, objectWidth, objectHeight);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    portrait = TileSheets.gameItemsTileSheet.getSubimage(objectWidth*12, objectHeight*7, objectWidth, objectHeight);
   }
-
 }

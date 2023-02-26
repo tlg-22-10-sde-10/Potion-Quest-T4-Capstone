@@ -1,12 +1,11 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
 import com.potionquest.gui.gamecontrol.GamePanel;
+import com.potionquest.gui.gamecontrol.TileSheets;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
-import javax.imageio.ImageIO;
+
 
 public class GoldCoin extends InventoryItem {
   private int frameCount = 0;
@@ -15,8 +14,7 @@ public class GoldCoin extends InventoryItem {
 
   public GoldCoin() {
     Random rd = new Random();
-//    qty = rd.nextInt(4) + 1;
-    qty = rd.nextInt(4) + 20;
+    qty = rd.nextInt(4) + 1;
 
     name = "Gold Coin";
 
@@ -24,19 +22,11 @@ public class GoldCoin extends InventoryItem {
 
     int row = 4;
 
-    try (InputStream is = getClass().getResourceAsStream("/heart.png")) {
-      assert is != null;
-      BufferedImage image = ImageIO.read(is);
-
-      for(int i=0; i< coins.length; i++) {
-        coins[i] = image.getSubimage(GamePanel.tileSize*i, GamePanel.tileSize* row, GamePanel.tileSize, GamePanel.tileSize);
-      }
-
-      portrait = coins[0];
-
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    for(int i=0; i< coins.length; i++) {
+      coins[i] = TileSheets.heartsTileSheet.getSubimage(GamePanel.tileSize*i, GamePanel.tileSize* row, GamePanel.tileSize, GamePanel.tileSize);
     }
+
+    portrait = coins[0];
   }
 
   public void update() {

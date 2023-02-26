@@ -5,12 +5,8 @@ import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.gamecontrol.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,7 +31,7 @@ public class NPC_Doctor extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/doctor60.png");
+    BufferedImage npcImage = TileSheets.npcDoctorTileSheet;
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -92,11 +88,11 @@ public class NPC_Doctor extends Entity {
 
       if (i <= 15) {
         direction = "up";
-      } else if (i > 15 && i <= 30) {
+      } else if (i <= 30) {
         direction = "down";
-      } else if (i > 30 && i <= 45) {
+      } else if (i <= 45) {
         direction = "right";
-      } else if (i > 45) {
+      } else {
         direction = "left";
       }
       actionTimeOut = 0;

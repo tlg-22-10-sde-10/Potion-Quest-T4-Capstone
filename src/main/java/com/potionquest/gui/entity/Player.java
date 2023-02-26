@@ -1,12 +1,13 @@
 package com.potionquest.gui.entity;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
+
+
 import static com.potionquest.gui.gamecontrol.GamePanel.dialogueState;
 import static com.potionquest.gui.gamecontrol.GamePanel.items;
-import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
-import static com.potionquest.gui.gamecontrol.GamePanel.winState;
 
-import com.potionquest.gui.entity.inventoryobjects.AttunedGemstone;
+import static com.potionquest.gui.gamecontrol.GamePanel.keyH;
+
 import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
 import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.gamecontrol.*;
@@ -15,11 +16,9 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
+
 
 public class Player extends Entity {
 
@@ -37,10 +36,10 @@ public class Player extends Entity {
   //inventory
   public List<InventoryItem> inventory = new ArrayList<>();
   public static final int INVENTORY_SIZE = 5;
-  public boolean failedToPickUp = false;
 
   public int inventoryFrameCount = 0;
 
+  public InventoryItem currentWeapon;
   public InventoryItem coin = new GoldCoin();
   public int coinInPocket = 0;
 
@@ -50,6 +49,7 @@ public class Player extends Entity {
   public Player() {
     MAX_HP = 20;
     HP = MAX_HP;
+
     attack = 4;
 
     screenX = GamePanel.screenWidth / 2 - (playerSizeX / 2);
@@ -70,6 +70,7 @@ public class Player extends Entity {
     setDefaultValues();
     getPlayerImage();
     getPlayerAttackImage();
+
     setItems();
   }
 
@@ -86,63 +87,47 @@ public class Player extends Entity {
 //    worldY = GamePanel.tileSize * 77;
     speed = 4;
     direction = "down";
-    currentWeapon = new StarterSword();
-    attack = getAttack();
   }
 
-  public void setItems() {
+  private void setItems() {
+    this.currentWeapon = new StarterSword();
     inventory.add(currentWeapon);
-  }
-
-  public int getAttack() {
-    return attack += currentWeapon.attack;
+    attack += currentWeapon.attack;
   }
 
   public void getPlayerImage() {
+    BufferedImage playerImage = TileSheets.playerCharacterResizedTileSheet;
 
-    try (InputStream inputStream = getClass().getResourceAsStream("/player/characterResized.png")) {
-      //noinspection ConstantConditions
-      BufferedImage playerImage = ImageIO.read(inputStream);
+    int imageIndexX = 48;
 
-      int imageIndexX = 0;
+    for (int i = 0; i < 4; i++) {
+      BufferedImage up = playerImage.getSubimage(imageIndexX * i, 192, 48, 96);
+      BufferedImage down = playerImage.getSubimage(imageIndexX * i, 0, 48, 96);
+      BufferedImage left = playerImage.getSubimage(imageIndexX * i, 288, 48, 96);
+      BufferedImage right = playerImage.getSubimage(imageIndexX * i, 96, 48, 96);
 
-      for (int i = 0; i < 4; i++) {
-        BufferedImage up = playerImage.getSubimage(imageIndexX, 192, 48, 96);
-        BufferedImage down = playerImage.getSubimage(imageIndexX, 0, 48, 96);
-        BufferedImage left = playerImage.getSubimage(imageIndexX, 288, 48, 96);
-        BufferedImage right = playerImage.getSubimage(imageIndexX, 96, 48, 96);
-
-        goUp[i] = up;
-        goDown[i] = down;
-        goLeft[i] = left;
-        goRight[i] = right;
-
-        imageIndexX += 48;
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+      goUp[i] = up;
+      goDown[i] = down;
+      goLeft[i] = left;
+      goRight[i] = right;
     }
   }
 
   private void getPlayerAttackImage() {
-    try (InputStream inputStream = getClass().getResourceAsStream("/player/fight.png")) {
-      //noinspection ConstantConditions
-      BufferedImage playerImage = ImageIO.read(inputStream);
+    BufferedImage playerImage = TileSheets.playerFightTileSheet;
 
-      for (int i = 0; i < 4; i++) {
-        BufferedImage up = playerImage.getSubimage(96 * i, 96, 96, 96);
-        BufferedImage down = playerImage.getSubimage(96 * i, 0, 96, 96);
-        BufferedImage right = playerImage.getSubimage(96 * i, 192, 96, 96);
-        BufferedImage left = playerImage.getSubimage(96 * i, 288, 96, 96);
+    int imageIndexX = 96;
 
-        fightUp[i] = up;
-        fightDown[i] = down;
-        fightLeft[i] = left;
-        fightRight[i] = right;
+    for (int i = 0; i < 4; i++) {
+      BufferedImage up = playerImage.getSubimage(imageIndexX * i, 96, 96, 96);
+      BufferedImage down = playerImage.getSubimage(imageIndexX * i, 0, 96, 96);
+      BufferedImage right = playerImage.getSubimage(imageIndexX * i, 192, 96, 96);
+      BufferedImage left = playerImage.getSubimage(imageIndexX * i, 288, 96, 96);
 
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+      fightUp[i] = up;
+      fightDown[i] = down;
+      fightLeft[i] = left;
+      fightRight[i] = right;
     }
   }
 
@@ -176,6 +161,7 @@ public class Player extends Entity {
         // CHECK NPC COLLISION
         npcIndex = GamePanel.collider.checkEntity(this, GamePanel.npc);
         talkNPC(npcIndex);
+
         if (npcIndex != 999) {
           GamePanel.ui.keyDialogueComplete = false;
         }
@@ -195,7 +181,6 @@ public class Player extends Entity {
         if (!collisionOn && !isAttacking) {
           switch (direction) {
             case "up":
-
               if(worldY - speed >= 0) {
                 worldY -= speed;
               }
@@ -220,7 +205,7 @@ public class Player extends Entity {
 
         spriteCounter++;
 
-        if (spriteCounter >= 12) {
+        if (spriteCounter >= FPS / 5) {
           if (spriteNum >= goUp.length) {
             spriteNum = 1;
           } else {
@@ -247,15 +232,6 @@ public class Player extends Entity {
       if(inventoryFrameCount >= FPS * 4 ) {
         inventoryFrameCount = 0;
         UI.statement = "";
-      }
-    }
-
-    for (InventoryItem item : GamePanel.player.inventory) {
-      if (item.name.equals("Boots of Speed")) {
-        GamePanel.player.speed = 6;
-        break;
-      } else {
-        GamePanel.player.speed = 4;
       }
     }
   }
@@ -340,17 +316,58 @@ public class Player extends Entity {
 
   public void pickUpObject(int i) {
     if (i != 999) {
-      if (GamePanel.items[i].name.equals("Gold Coin")) {
-        coinInPocket += GamePanel.items[i].qty;
+      if (pickUpObject(GamePanel.items[i])) {
         GamePanel.items[i] = null;
+      }
+    }
+  }
+
+  public boolean pickUpObject(InventoryItem item) {
+    boolean pickUpSuccess = true;
+    if(item.name.equals("Gold Coin")) {
+      coinInPocket += item.qty;
+    } else {
+      if(inventory.size() < INVENTORY_SIZE) {
+        inventory.add(item);
+
+        GamePanel.player.attack += item.attack;
+        GamePanel.player.speed += item.speed;
+
       } else {
-        if (inventory.size() < INVENTORY_SIZE) {
-          inventory.add(GamePanel.items[i]);
-          GamePanel.items[i] = null;
-        } else {
-          UI.statement = "Inventory full";
-          inventoryFrameCount = 0;
-        }
+        UI.statement = "Inventory Full";
+        inventoryFrameCount = 0;
+        pickUpSuccess = false;
+      }
+    }
+    return pickUpSuccess;
+  }
+
+  public void dropItem(InventoryItem item) {
+    if(item.keyItem) {
+      UI.statement = "Cannot Throw That Away";
+      inventoryFrameCount = 0;
+    } else {
+      forceRemoveItem(item);
+    }
+  }
+
+  public void forceRemoveItem(InventoryItem item) {
+    inventory.remove(item);
+    GamePanel.player.speed -= item.speed;
+    GamePanel.player.attack -= item.attack;
+  }
+
+  public void useItem(InventoryItem item) {
+    if(item.HP > 0 && HP < MAX_HP) {
+      inventory.remove(item);
+      GamePanel.player.HP += item.HP;
+      GamePanel.player.HP = Math.min(GamePanel.player.HP, MAX_HP);
+    } else {
+      inventoryFrameCount = 0;
+      if(item.HP <= 0) {
+        UI.statement = "Cannot Use That";
+      } else {
+        UI.statement = "Too Full To Eat That";
       }
     }
   }
@@ -359,9 +376,9 @@ public class Player extends Entity {
 
     if (i != 999) {
       if (keyH.zPressed) {
+        System.out.println(GamePanel.npc[i].name);
         if (GamePanel.npc[i].name.equals("Old Hermit")
-            && GamePanel.player.currentWeapon.name.equals(
-            "Sword of a Thousand Truths")) {
+            && this.inventory.stream().anyMatch(o -> o.name.equals("Sword of a Thousand Truths"))) {
           GamePanel.npc[i].npcKeyDialogueComplete = true;
         }
         if (GamePanel.npc[i].name.equals("Sister") && !GamePanel.npc[i].firstChat) {
@@ -371,6 +388,7 @@ public class Player extends Entity {
           for (InventoryItem item : GamePanel.player.inventory) {
             if (item.name.equals("Elixir of Life")) {
               GamePanel.npc[i].npcKeyDialogueComplete = true;
+              break;
             }
           }
         }
@@ -378,6 +396,7 @@ public class Player extends Entity {
           for (InventoryItem item : GamePanel.player.inventory) {
             if (item.name.equals("Attuned Gemstone")) {
               GamePanel.npc[i].npcKeyDialogueComplete = true;
+              break;
             }
           }
         }
@@ -393,11 +412,7 @@ public class Player extends Entity {
   }
 
   public boolean chatCheck(Entity entity) {
-    boolean hasChatted = false;
-    if (!entity.firstChat) {
-      hasChatted = true;
-    }
-    return hasChatted;
+    return !entity.firstChat;
   }
 
   public void draw(Graphics2D g2D) {

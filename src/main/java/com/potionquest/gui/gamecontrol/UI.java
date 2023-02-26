@@ -241,49 +241,26 @@ public class UI {
     // P1
     drawString(text, x, y, new Color(210, 180, 30));
 
+    String[] texts = new String[] {
+        "Turn Up Volume", "Turn Down Volume",
+        "Volume On/Off", "Back"
+    };
 
-    text = "Turn Up Volume";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize;
-    // SHADOW P1
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // P1
-    drawString(text, x, y, Color.white);
-    if (commandNum == 0) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
-    }
+    for(int i=0; i<texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      if(i == 0 || i == 3) {
+        y += GamePanel.tileSize;
+      } else {
+        y += GamePanel.tileSize * 2 / 3;
+      }
 
-    text = "Turn Down Volume";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize / 1.5;
-    // SHADOW P2
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // P2
-    drawString(text, x, y, Color.white);
-    if (commandNum == 1) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
-    }
-
-    text = "Volume On/Off";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize / 1.5;
-    // SHADOW P3
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // P3
-    drawString(text, x, y, Color.white);
-    if (commandNum == 2) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
-    }
-
-    text = "Back";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize;
-    // SHADOW BACK
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // BACK
-    drawString(text, x, y, Color.white);
-    if (commandNum == 3) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
+      // SHADOW P1
+      drawString(texts[i], x + 3, y + 3, new Color(70, 120, 80));
+      // P1
+      drawString(texts[i], x, y, Color.white);
+      if (commandNum == i) {
+        g2D.drawString(">", x - GamePanel.tileSize / 2, y);
+      }
     }
   }
 

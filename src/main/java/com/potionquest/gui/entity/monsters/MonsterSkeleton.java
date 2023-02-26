@@ -27,7 +27,7 @@ public class MonsterSkeleton extends MonsterPrototype {
 
     int row = 13;
 
-    super.getImage("/CharactersV3.png", super.monsterSizeX, super.monsterSizeY, row-1);
+    super.getImage(super.monsterSizeX, super.monsterSizeY, row-1);
   }
 
   public MonsterSkeleton(int ID) {
