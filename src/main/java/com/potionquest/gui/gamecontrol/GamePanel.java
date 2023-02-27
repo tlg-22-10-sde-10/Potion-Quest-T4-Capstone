@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
 
   public static final int creditState = 8;
   public static boolean creditStateDisplayed = false;
+  public static int creditsFrameCount = 0;
 
   //self defined
   public static Sound sound = new Sound();
@@ -120,6 +121,8 @@ public class GamePanel extends JPanel implements Runnable {
     monsters = new MonsterPrototype[10];
 
     gameTime = 0;
+    creditStateDisplayed = false;
+    creditsFrameCount = 0;
 
     aPlacer.setObjects();
     aPlacer.setNPC();
@@ -213,7 +216,7 @@ public class GamePanel extends JPanel implements Runnable {
     Graphics2D g2D = (Graphics2D) g;
 
     //TITLE SCREEN
-    if (gameState != titleState) {
+    if (gameState != titleState && gameState != creditState) {
       // TILES
       tileMLayer1.draw(g2D);
       tileMLayer2.draw(g2D);

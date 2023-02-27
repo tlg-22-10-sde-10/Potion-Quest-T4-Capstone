@@ -9,7 +9,6 @@ import com.potionquest.gui.entity.inventoryobjects.InventoryItem;
 import com.potionquest.gui.entity.inventoryobjects.SwordOfAThousandTruths;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Objects;
 
 public class KeyHandler implements KeyListener {
 
@@ -50,11 +49,9 @@ public class KeyHandler implements KeyListener {
     //Game over
     else if (GamePanel.gameState == GamePanel.gameOverState) {
       gameOverState(code);
-    }
-    else if (GamePanel.gameState == GamePanel.winState) {
+    } else if (GamePanel.gameState == GamePanel.winState) {
       winState(code);
-    }
-    else if (GamePanel.gameState == GamePanel.creditState) {
+    } else if (GamePanel.gameState == GamePanel.creditState) {
       creditState(code);
     }
   }
@@ -247,25 +244,26 @@ public class KeyHandler implements KeyListener {
   }
 
   public void winState(int code) {
-    if(GamePanel.gameState == winState) {
-      if(code == KeyEvent.VK_Z) {
+    if (GamePanel.gameState == winState) {
+      if (code == KeyEvent.VK_Z) {
         GamePanel.gameState = GamePanel.creditState;
       }
     }
   }
 
   private void creditState(int code) {
-    if(GamePanel.creditStateDisplayed) {
-      if(code == KeyEvent.VK_Z
+    if (GamePanel.creditStateDisplayed) {
+      if (code == KeyEvent.VK_Z
           || code == KeyEvent.VK_ENTER
           || code == KeyEvent.VK_SPACE
           || code == KeyEvent.VK_B
           || code == KeyEvent.VK_UP
           || code == KeyEvent.VK_DOWN
           || code == KeyEvent.VK_LEFT
-          || code == KeyEvent.VK_RIGHT)
-      {
+          || code == KeyEvent.VK_RIGHT) {
+
         GamePanel.gameState = GamePanel.titleState;
+        GamePanel.ui.titleScreenState = 0;
         GamePanel.gameInstanceInitialization();
       }
     }
@@ -282,7 +280,6 @@ public class KeyHandler implements KeyListener {
         }
       }
     } else if (GamePanel.ui.dialogueScreenState == 1) {
-
       if (code == KeyEvent.VK_UP) {
         GamePanel.ui.commandNum--;
         if (GamePanel.ui.commandNum < 0) {
@@ -307,8 +304,8 @@ public class KeyHandler implements KeyListener {
               }
             }
             if (GamePanel.player.npcIndex == 2) {
-              if (GamePanel.player.coinInPocket >= 5 &&
-                  GamePanel.player.currentWeapon.name.equals("Father's Sword")) {
+              if (GamePanel.player.coinInPocket >= 5 && GamePanel.player.currentWeapon.name.equals(
+                  "Father's Sword")) {
                 if (GamePanel.player.inventory.size() <= Player.INVENTORY_SIZE) {
                   GamePanel.ui.keyDialogueComplete = true;
                   GamePanel.player.forceRemoveItem(GamePanel.player.currentWeapon);
@@ -316,9 +313,6 @@ public class KeyHandler implements KeyListener {
                   GamePanel.player.pickUpObject(GamePanel.player.currentWeapon);
                   GamePanel.player.coinInPocket -= 5;
                   GamePanel.ui.dialogueScreenState = 0;
-                } else {
-                  GamePanel.ui.dialogueScreenState = 0;
-                  GamePanel.ui.currentDialogue = "Your inventory is full!";
                 }
               }
             }
@@ -332,6 +326,7 @@ public class KeyHandler implements KeyListener {
                 } else {
                   GamePanel.ui.dialogueScreenState = 0;
                   GamePanel.ui.currentDialogue = "Your inventory is full!";
+                  break;
                 }
               }
             }
@@ -350,11 +345,12 @@ public class KeyHandler implements KeyListener {
                   GamePanel.ui.keyDialogueComplete = true;
                   GamePanel.player.coinInPocket -= 10;
                   GamePanel.player.inventory.add(new ElixirOfLife());
-                  //GamePanel.ui.dialogueScreenState = 0;
-                } else {
-                  //GamePanel.ui.dialogueScreenState = 0;
-                  GamePanel.ui.currentDialogue = "Your inventory is full!";
+                  GamePanel.ui.dialogueScreenState = 0;
                 }
+              } else {
+                GamePanel.ui.dialogueScreenState = 0;
+                GamePanel.ui.currentDialogue = "Your inventory is full!";
+                break;
               }
             }
             if (!GamePanel.ui.keyDialogueComplete) {
@@ -395,20 +391,21 @@ public class KeyHandler implements KeyListener {
         GamePanel.player.useItem(item);
       }
       GamePanel.gameState = GamePanel.playState;
+      GamePanel.ui.commandNum = 0;
     } else if (code == KeyEvent.VK_SPACE) {
       InventoryItem item = null;
       if (GamePanel.player.inventory.size() >= GamePanel.ui.commandNum) {
         item = GamePanel.player.inventory.get(GamePanel.ui.commandNum - 1);
       }
-      if(item != null) {
+      if (item != null) {
         GamePanel.player.dropItem(item);
       } else {
         GamePanel.player.inventoryFrameCount = 0;
         UI.statement = "This inventory slot is empty.";
       }
-
+      GamePanel.ui.commandNum = 0;
       GamePanel.gameState = GamePanel.playState;
-    } else if(code == KeyEvent.VK_B) {
+    } else if (code == KeyEvent.VK_B) {
       GamePanel.gameState = GamePanel.playState;
       GamePanel.ui.commandNum = 0;
     }
