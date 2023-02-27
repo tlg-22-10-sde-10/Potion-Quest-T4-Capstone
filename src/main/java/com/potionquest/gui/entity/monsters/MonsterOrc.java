@@ -14,11 +14,12 @@ public class MonsterOrc extends MonsterPrototype {
 
     super.name = m.getName();
     super.MAX_HP = m.getHealth();
-
     super.HP = super.MAX_HP;
+
     super.monsterSizeX = 48;
     super.monsterSizeY = 48;
     super.speed = 1;
+    attack = 1;
 
     defaultSpeed = super.speed;
 
@@ -26,7 +27,7 @@ public class MonsterOrc extends MonsterPrototype {
 
     int row = 11;
 
-    super.getImage("/CharactersV3.png", super.monsterSizeX, super.monsterSizeY, row-1);
+    super.getImage(super.monsterSizeX, super.monsterSizeY, row-1);
   }
 
   public MonsterOrc(int ID) {

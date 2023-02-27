@@ -30,7 +30,7 @@ public class NPC_Potion_Seller extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/potionseller60.png");
+    BufferedImage npcImage = TileSheets.npcPotionSellerTileSheet;
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -109,9 +109,6 @@ public class NPC_Potion_Seller extends Entity {
 
   @Override
   public void draw(Graphics2D g2D) {
-
-    BufferedImage image = null;
-
     int screenX = worldX - GamePanel.player.worldX + GamePanel.player.screenX;
     int screenY = worldY - GamePanel.player.worldY + GamePanel.player.screenY;
 
@@ -120,7 +117,7 @@ public class NPC_Potion_Seller extends Entity {
         && worldY + GamePanel.tileSize * 2 > GamePanel.player.worldY - GamePanel.player.screenY
         && worldY - GamePanel.tileSize * 2 < GamePanel.player.worldY + GamePanel.player.screenY) {
 
-      image = goRight[0];
+      BufferedImage image = goRight[0];
       g2D.drawImage(image, screenX, screenY, null);
     }
   }

@@ -1,5 +1,6 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
+import com.potionquest.gui.gamecontrol.TileSheets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,22 +12,9 @@ public class ElixirOfLife extends InventoryItem {
     name = "Elixir of Life";
     int objectHeight = 48;
     int objectWidth = 48;
-    collisionOn = false;
 
     keyItem = true;
 
-    BufferedImage image;
-
-    try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
-
-      //noinspection ConstantConditions
-      image = ImageIO.read(is);
-
-      portrait = image.getSubimage(objectWidth* 12, objectHeight*4, objectWidth, objectHeight);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    portrait = TileSheets.gameItemsTileSheet.getSubimage(objectWidth* 12, objectHeight*4, objectWidth, objectHeight);
   }
-
 }

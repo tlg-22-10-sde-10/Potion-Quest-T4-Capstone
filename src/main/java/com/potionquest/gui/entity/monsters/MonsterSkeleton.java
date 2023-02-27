@@ -19,6 +19,7 @@ public class MonsterSkeleton extends MonsterPrototype {
     super.monsterSizeX = 48;
     super.monsterSizeY = 48;
     super.speed = 1;
+    attack = 2;
 
     defaultSpeed = super.speed;
 
@@ -26,7 +27,7 @@ public class MonsterSkeleton extends MonsterPrototype {
 
     int row = 13;
 
-    super.getImage("/CharactersV3.png", super.monsterSizeX, super.monsterSizeY, row-1);
+    super.getImage(super.monsterSizeX, super.monsterSizeY, row-1);
   }
 
   public MonsterSkeleton(int ID) {

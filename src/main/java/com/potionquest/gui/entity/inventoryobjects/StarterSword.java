@@ -1,9 +1,6 @@
 package com.potionquest.gui.entity.inventoryobjects;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
+import com.potionquest.gui.gamecontrol.TileSheets;
 
 public class StarterSword extends InventoryItem {
 
@@ -12,20 +9,8 @@ public class StarterSword extends InventoryItem {
     int objectHeight = 48;
     int objectWidth = 48;
     attack = 1;
-    collisionOn = false;
     keyItem = true;
-    BufferedImage image;
 
-    try (InputStream is = getClass().getResourceAsStream("/sword.png")) {
-
-      //noinspection ConstantConditions
-      image = ImageIO.read(is);
-
-      portrait = image.getSubimage(0, 7 * objectHeight, objectWidth, objectHeight);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    portrait = TileSheets.gameItemsTileSheet.getSubimage(0, 7 * objectHeight, objectWidth, objectHeight);
   }
-
 }

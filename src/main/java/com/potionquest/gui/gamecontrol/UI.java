@@ -1,20 +1,24 @@
 package com.potionquest.gui.gamecontrol;
 
+import com.potionquest.client.GameClientUtil;
 import com.potionquest.gui.gamecontrol.playerhp.Heart;
 import com.potionquest.gui.gamecontrol.playerhp.SuperObjects;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+
+import java.awt.FontFormatException;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class UI {
-
   private Graphics2D g2D;
 
-  private final Font arial_40;
+  private Font comicSans;
 
   private final SuperObjects heart = new Heart();
 
@@ -32,8 +36,12 @@ public class UI {
   public static String statement = "";
 
   public UI() {
-    arial_40 = new Font("Comic Sans MS", Font.PLAIN, 40);
-    //Font arial_80B = new Font("Comic Sans MS", Font.BOLD, 80);
+    try (InputStream input = getClass().getResourceAsStream("/font/COMIC.TTF")) {
+      //noinspection ConstantConditions
+      comicSans = Font.createFont(Font.TRUETYPE_FONT, input);
+    } catch (IOException | FontFormatException e) {
+      e.printStackTrace();
+    }
   }
 
   public void draw(Graphics2D g2D) {
@@ -41,11 +49,14 @@ public class UI {
     g2D.setColor(Color.white);
 
     //after displaying time, set the font back to default
-    g2D.setFont(arial_40);
+    g2D.setFont(comicSans);
+    g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 40F));
 
     // TITLE STATE
     if (GamePanel.gameState == GamePanel.titleState) {
       drawTitleScreen();
+    } else if (GamePanel.gameState == GamePanel.creditState) {
+      drawCredits();
     } else {
       //if not title state
       drawInventory();
@@ -54,7 +65,7 @@ public class UI {
       drawTime();
 
       g2D.setColor(Color.white);
-      g2D.setFont(arial_40);
+      g2D.setFont(comicSans);
       drawStatement();
       // PLAY STATE
       if (GamePanel.gameState == GamePanel.playState) {
@@ -84,8 +95,16 @@ public class UI {
   }
 
   private void drawStatement() {
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
     int x = findCenterOfTextString(statement);
     int y = GamePanel.tileSize * 11;
+    if (!statement.equals("")) {
+      drawSubWindowForDrawInventory(x - 30, (int) (y - GamePanel.tileSize/1.5),
+          (int) g2D.getFontMetrics().getStringBounds(statement, g2D).getWidth()+60, GamePanel.tileSize, new Color(0, 0, 0, 200));
+    }
+    drawString(statement, x + 2, y + 2, new Color(70, 120, 80));
+    g2D.setColor(Color.white);
     g2D.drawString(statement, x, y);
   }
 
@@ -94,9 +113,11 @@ public class UI {
     if (titleScreenState == 0) {
       drawTitleScreen2();
     } else if (titleScreenState == 1) {
-      drawControl();
+      drawIntroduction();
     } else if (titleScreenState == 2) {
       drawSettingScreen();
+    } else if (titleScreenState == 3) {
+      drawControl();
     }
   }
 
@@ -111,12 +132,12 @@ public class UI {
     String gameOver;
     g2D.setColor(Color.BLACK);
     if(GamePanel.gameTime >= GamePanel.gameTimeLimit) {
-      gameOver = "Time Up";
+      gameOver = "Time Is Up";
       x = findCenterOfTextString(gameOver);
       g2D.drawString(gameOver, x, y);
       g2D.setColor(Color.WHITE);
     } else {
-      gameOver = "You Die";
+      gameOver = "You Died";
       x = findCenterOfTextString(gameOver);
       g2D.drawString(gameOver, x, y);
       g2D.setColor(new Color(210,60,30));
@@ -130,7 +151,7 @@ public class UI {
       y+=yy[i];
       // SHADOW TEXT
       drawString(texts[i], x + 5, y + 5, new Color(70, 120, 80));
-    //MAIN COLOR
+      //MAIN COLOR
       drawString(texts[i], x, y, Color.white);
 
       if (commandNum == i) {
@@ -148,7 +169,7 @@ public class UI {
     int y = GamePanel.tileSize * 3;
 
     // SHADOW TEXT
-    drawString(text, x + 5, y + 5, new Color(70, 120, 80));
+    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
     //MAIN COLOR
     drawString(text, x, y, Color.white);
 
@@ -171,12 +192,40 @@ public class UI {
       x = findCenterOfTextString(texts[i]);
       y += GamePanel.tileSize ;
       //SHADOW NEW GAME
-      drawString(texts[i], x + 5, y + 5, new Color(70, 120, 80));
+      drawString(texts[i], x + 3, y + 3, new Color(70, 120, 80));
       //NEW GAME
       drawString(texts[i], x, y, Color.white);
       if (commandNum == i) {
         g2D.drawString(">", x - GamePanel.tileSize, y);
       }
+    }
+  }
+
+  public void drawIntroduction() {
+    try {
+      int x;
+      int y = GamePanel.tileSize;
+      for (String line : GameClientUtil.retrieveMessage("welcomeMessage").split("\n")) {
+        g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 20F));
+        x = findCenterOfTextString(line);
+        y += 24;
+        drawString(line, x+2, y+2, new Color(70, 120, 80));
+        drawString(line, x, y, Color.WHITE);
+      }
+
+      String text = "Press 'Z' to continue";
+      x = findCenterOfTextString(text);
+      y += GamePanel.tileSize * 3 / 2;
+      // SHADOW BACK
+      drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+      // BACK
+      drawString(text, x, y, Color.white);
+
+      if (commandNum == 0) {
+        g2D.drawString(">", x - GamePanel.tileSize / 2, y);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -198,53 +247,30 @@ public class UI {
     x = findCenterOfTextString(text);
     y += GamePanel.tileSize * 3 / 2;
     // SHADOW P1
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
     // P1
     drawString(text, x, y, new Color(210, 180, 30));
 
+    String[] texts = new String[] {
+        "Turn Up Volume", "Turn Down Volume",
+        "Volume On/Off", "Back"
+    };
 
-    text = "Turn Up Volume";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize;
-    // SHADOW P1
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // P1
-    drawString(text, x, y, Color.white);
-    if (commandNum == 0) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
-    }
+    for(int i=0; i<texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      if(i == 0 || i == 3) {
+        y += GamePanel.tileSize;
+      } else {
+        y += GamePanel.tileSize * 2 / 3;
+      }
 
-    text = "Turn Down Volume";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize / 1.5;
-    // SHADOW P2
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // P2
-    drawString(text, x, y, Color.white);
-    if (commandNum == 1) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
-    }
-
-    text = "Volume On/Off";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize / 1.5;
-    // SHADOW P3
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // P3
-    drawString(text, x, y, Color.white);
-    if (commandNum == 2) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
-    }
-
-    text = "Back";
-    x = findCenterOfTextString(text);
-    y += GamePanel.tileSize;
-    // SHADOW BACK
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
-    // BACK
-    drawString(text, x, y, Color.white);
-    if (commandNum == 3) {
-      g2D.drawString(">", x - GamePanel.tileSize / 2, y);
+      // SHADOW P1
+      drawString(texts[i], x + 2, y + 2, new Color(70, 120, 80));
+      // P1
+      drawString(texts[i], x, y, Color.white);
+      if (commandNum == i) {
+        g2D.drawString(">", x - GamePanel.tileSize / 2, y);
+      }
     }
   }
 
@@ -259,13 +285,18 @@ public class UI {
     String text = "Controls Menu";
     int x = findCenterOfTextString(text);
     int y = GamePanel.tileSize * 3 / 2;
-    g2D.drawString(text, x, y);
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    drawString(text, x, y, Color.white);
 
-    g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
+    g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 18F));
 
-    String[] texts = new String[] {"Movement","Talk/Interact", "Open Inventory", "Pause Game/Menu", "Attack/drop item"};
-    int[] xx = new int[] {GamePanel.tileSize * 7 / 2, GamePanel.tileSize * 7 / 2,
-        GamePanel.tileSize * 7 / 2, GamePanel.tileSize * 7 /2, GamePanel.tileSize * 7 /2};
+    String[] texts = new String[] {"Movement","Talk/Select/Use Item","Attack/Drop Item","Open Inventory (To Use/Drop Item)","Pause Game/Menu"};
+    int[] xx = new int[] {
+        GamePanel.tileSize * 7 / 2,
+        GamePanel.tileSize * 7 / 2,
+        GamePanel.tileSize * 7 / 2,
+        GamePanel.tileSize * 7 / 2,
+        GamePanel.tileSize * 7 / 2};
     int[] yy = new int[] {
         GamePanel.tileSize * 6 / 2,
         GamePanel.tileSize * 5 / 4,
@@ -276,23 +307,25 @@ public class UI {
     int[] xAmends = new int[]{
         GamePanel.tileSize * 7,
         GamePanel.tileSize * 8,
+        GamePanel.tileSize * 13 / 2,
         GamePanel.tileSize * 8,
-        GamePanel.tileSize * 15/2,
-        GamePanel.tileSize * 13 / 2
+        GamePanel.tileSize * 15/2
     };
     int[] yAmends = new int[] {
-        GamePanel.tileSize * 4/2, GamePanel.tileSize * 2/3,
-        GamePanel.tileSize * 2/3,GamePanel.tileSize * 2/3,
-        GamePanel.tileSize *  5/8
+        GamePanel.tileSize * 4/2,
+        GamePanel.tileSize * 2/3,
+        GamePanel.tileSize * 2/3,
+        GamePanel.tileSize * 2/3,
+        GamePanel.tileSize * 5/8
     };
     String[] paths = new String[] { "/controlsIcons/arrowsKeys48.png",
-        "/controlsIcons/zKey48.png", "/controlsIcons/bKey48.png",
-        "/controlsIcons/enterKey48.png","/controlsIcons/spaceKey188.png"};
+        "/controlsIcons/zKey48.png","/controlsIcons/spaceKey188.png","/controlsIcons/bKey48.png",
+        "/controlsIcons/enterKey48.png"};
 
     for(int i = 0; i < texts.length; i++) {
       x = xx[i];
       y += yy[i];
-      drawString(texts[i], x + 3, y + 3, new Color(70, 120, 80));
+      drawString(texts[i], x + 2, y + 2, new Color(70, 120, 80));
       drawString(texts[i], x, y, Color.white);
       g2D.drawImage(fetchImage(paths[i]),
           x + xAmends[i], y - yAmends[i], null);
@@ -302,7 +335,7 @@ public class UI {
     x = findCenterOfTextString(text);
     y += GamePanel.tileSize * 3 / 2;
     // SHADOW BACK
-    drawString(text, x + 3, y + 3, new Color(70, 120, 80));
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
     // BACK
     drawString(text, x, y, Color.white);
 
@@ -325,7 +358,7 @@ public class UI {
       int x = findCenterOfTextString(text);
       int y = GamePanel.tileSize * 4;
       //SHADOW PAUSED
-      drawString(text, x + 3, y + 3, new Color(70, 120, 80));
+      drawString(text, x + 2, y + 2, new Color(70, 120, 80));
       //PAUSED
       drawString(text, x, y, Color.white);
 
@@ -337,7 +370,7 @@ public class UI {
         x = findCenterOfTextString(texts[i]);
         y += GamePanel.tileSize * 2/3;
         // SHADOW RESUME
-        drawString(texts[i], x + 3, y + 3, new Color(70, 120, 80));
+        drawString(texts[i], x + 2, y + 2, new Color(70, 120, 80));
         // RESUME
         drawString(texts[i], x, y, Color.white);
 
@@ -358,7 +391,7 @@ public class UI {
       int y = GamePanel.screenHeight - GamePanel.tileSize;
       g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 24F));
       // SHADOW BACK
-      drawString(text, x + 3, y + 3, new Color(70, 120, 80));
+      drawString(text, x + 2, y + 2, new Color(70, 120, 80));
       // BACK
       drawString(text, x, y, Color.white);
       if (commandNum == 0) {
@@ -385,7 +418,6 @@ public class UI {
       x += GamePanel.tileSize;
       y += GamePanel.tileSize;
 
-//      if (dialogueArray[arrayIndex] != null) {
       if (GamePanel.ui.currentDialogue == null) {
         if (!GamePanel.player.haveTalkedToOnceAlready) {
           for (String chunk : dialogueArray[arrayIndex].split("\n")) {
@@ -495,8 +527,11 @@ public class UI {
       if (GamePanel.player.inventory.get(commandNum - 1) != null) {
         var item = GamePanel.player.inventory.get(commandNum - 1);
         g2D.drawImage(item.portrait, x, 0, null);
+        g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 10F));
+        drawString(item.name, x - (((int) g2D.getFontMetrics().getStringBounds(item.name, g2D).getWidth()-GamePanel.tileSize)/2), 56, Color.WHITE);
       }
     } else {
+      g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 40F));
       g2D.drawString(text, x + 14, 38);
       g2D.setStroke(new BasicStroke(3));
       g2D.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
@@ -504,7 +539,7 @@ public class UI {
   }
 
   private void drawTime() {
-    int frameX = GamePanel.tileSize * 57 / 8;
+    int frameX = GamePanel.tileSize * 56 / 8;
     int frameY = GamePanel.tileSize * 7 / 4;
 
     long remainingTime = GamePanel.gameTimeLimit - GamePanel.gameTime;
@@ -512,15 +547,145 @@ public class UI {
     long sec = remainingTime % 60;
     String time = String.format("%02d:%02d", min, sec);
 
-    g2D.setFont(arial_40);
+    g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 40F));
     if(remainingTime < 180) g2D.setColor(new Color(210,60,30));
     g2D.drawString(time, frameX, frameY);
   }
 
   private void drawWinScreen() {
     drawSubWindowForDrawInventory(0, 0, GamePanel.screenWidth, GamePanel.screenHeight, new Color(0, 0, 0, 200));
-    String text = "You win";
-    drawString(text, findCenterOfTextString(text), GamePanel.screenHeight/2, new Color (255,255,255));
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 96F));
+    String text = "Potion Quest";
+
+    int x = findCenterOfTextString(text);
+    int y = GamePanel.tileSize * 3;
+    // SHADOW TEXT
+    drawString(text, x + 5, y + 5, new Color(70, 120, 80));
+    //MAIN COLOR
+    drawString(text, x, y, Color.white);
+
+    try {
+      y += GamePanel.tileSize * 3/2;
+      for (String line : GameClientUtil.retrieveMessage("winGameMessage").split("\n")) {
+        g2D.setFont(g2D.getFont().deriveFont(Font.PLAIN, 20F));
+        x = findCenterOfTextString(line);
+        y += 24;
+        drawString(line, x+3, y+3, new Color(70, 120, 80));
+        drawString(line, x, y, Color.WHITE);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    // PLAYER IMAGE
+    x = GamePanel.screenWidth / 2 - (GamePanel.tileSize * 2) / 2 - GamePanel.tileSize *4 / 4;
+    y += GamePanel.tileSize;
+    g2D.drawImage(GamePanel.player.goDown[0], x, y, GamePanel.tileSize * 3 /2, GamePanel.tileSize * 3,
+        null);
+    x += GamePanel.tileSize * 5 / 2;
+    g2D.drawImage(GamePanel.npc[1].goDown[0], x, y + GamePanel.tileSize / 2, GamePanel.tileSize * 3 /2, GamePanel.tileSize * 2,
+        null);
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+    text = "Press Z To Continue...";
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 4;
+
+    drawString(text, x + 5, y + 5, new Color(70, 120, 80));
+    //MAIN COLOR
+    drawString(text, x, y, Color.white);
+  }
+
+  private int creditsY = GamePanel.tileSize;
+
+  private void drawCredits() {
+    if(GamePanel.creditsFrameCount < GamePanel.FPS * 16) {
+      GamePanel.creditsFrameCount++;
+      if(GamePanel.creditsFrameCount > GamePanel.FPS) {
+        creditsY--;
+      }
+    } else {
+      //GamePanel.creditsFrameCount = 0;
+      GamePanel.creditStateDisplayed = true;
+    }
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    String text = "Team 4 Staff";
+    int x = findCenterOfTextString(text);
+    int y = creditsY;
+
+    y += GamePanel.tileSize * 7 / 2;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    String texts[] = new String[] {"Cameron Davis", "Chongwei Ma", "Ethan Wang"};
+    y += GamePanel.tileSize / 2;
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+
+    for(int i = 0; i < texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      y += GamePanel.tileSize;
+
+      drawString(texts[i], x + 2, y + 2, new Color(70, 120, 80));
+      // BACK
+      drawString(texts[i], x, y, Color.white);
+    }
+
+    text = "Initial Game Concept: Team 1";
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 6;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    String teamsOne[] = new String[] {"Bryce Meadors", "Cynthia Pottin", "Joe Savella"};
+    y += GamePanel.tileSize / 4;
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+
+    for(int i = 0; i < texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      y += GamePanel.tileSize;
+
+      drawString(teamsOne[i], x + 2, y + 2, new Color(70, 120, 80));
+      // BACK
+      drawString(teamsOne[i], x, y, Color.white);
+    }
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    text = "Special Thanks";
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 4;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    text = "RyiSnow's Youtube Channel";
+    x = findCenterOfTextString(text) ;
+    y += GamePanel.tileSize * 2;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+    text = "Press Any Key To Continue...";
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 5;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
   }
 
 

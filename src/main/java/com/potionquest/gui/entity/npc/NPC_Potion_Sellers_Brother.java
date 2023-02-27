@@ -3,6 +3,7 @@ package com.potionquest.gui.entity.npc;
 import com.potionquest.gui.entity.Entity;
 import com.potionquest.game.Characters;
 import com.potionquest.gui.gamecontrol.GamePanel;
+import com.potionquest.gui.gamecontrol.TileSheets;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -30,7 +31,7 @@ public class NPC_Potion_Sellers_Brother extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/potionseller60.png");
+    BufferedImage npcImage = TileSheets.npcPotionSellerTileSheet;
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {

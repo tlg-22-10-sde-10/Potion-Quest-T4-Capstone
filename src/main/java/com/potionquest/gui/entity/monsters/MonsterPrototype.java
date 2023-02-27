@@ -2,6 +2,7 @@ package com.potionquest.gui.entity.monsters;
 
 import static com.potionquest.gui.gamecontrol.GamePanel.FPS;
 import static com.potionquest.gui.gamecontrol.GamePanel.items;
+import static com.potionquest.gui.gamecontrol.TileSheets.*;
 
 import com.potionquest.gui.entity.Entity;
 import com.potionquest.gui.entity.inventoryobjects.GoldCoin;
@@ -13,10 +14,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
-import javax.imageio.ImageIO;
+
 
 public abstract class MonsterPrototype extends Entity {
   protected String name;
@@ -26,16 +25,6 @@ public abstract class MonsterPrototype extends Entity {
   protected int deathAnimationFrameCount = 0;
 
   public MonsterPrototype() {}
-
-  public MonsterPrototype(String name, int maxLife, int monsterSizeX, int monsterSizeY,  int speed) {
-    this.name = name;
-    super.MAX_HP = maxLife;
-    super.HP = maxLife;
-
-    this.monsterSizeX = monsterSizeX;
-    this.monsterSizeY = monsterSizeY;
-    super.speed = speed;
-  }
 
   public String getName() {
     return name;
@@ -55,18 +44,14 @@ public abstract class MonsterPrototype extends Entity {
     super.direction = "down";
   }
 
-  public void getImage(String path, int x, int y, int row) {
-    try(InputStream inputStream = getClass().getResourceAsStream(path)) {
-      assert inputStream != null;
-      BufferedImage image = ImageIO.read(inputStream);
-
+  public void getImage(int x, int y, int row) {
       AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
       tx.translate(-monsterSizeX, 0);
       AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
-      var up0 =  image.getSubimage(x*1 ,row * y, x, y);
-      var right0 = image.getSubimage( x*2,row * y, x, y);
-      var down0 = image.getSubimage(0,row * y, x, y);
+      var up0 =  charactersTileSheet.getSubimage(x*1 ,row * y, x, y);
+      var right0 = charactersTileSheet.getSubimage( x*2,row * y, x, y);
+      var down0 = charactersTileSheet.getSubimage(0,row * y, x, y);
       var left0 =  op.filter(right0, null);
 
       goUp[0] = up0;
@@ -74,9 +59,9 @@ public abstract class MonsterPrototype extends Entity {
       goDown[0] = down0;
       goLeft[0] = left0;
 
-      var up1 =  image.getSubimage(x*6 ,row * y, x, y);
-      var right1 = image.getSubimage( x*8,row * y, x, y);
-      var down1 = image.getSubimage(x*4,row * y, x, y);
+      var up1 =  charactersTileSheet.getSubimage(x*6 ,row * y, x, y);
+      var right1 = charactersTileSheet.getSubimage( x*8,row * y, x, y);
+      var down1 = charactersTileSheet.getSubimage(x*4,row * y, x, y);
       var left1 = op.filter(right1, null);
 
       goUp[1] = up1;
@@ -84,9 +69,9 @@ public abstract class MonsterPrototype extends Entity {
       goDown[1] = down1;
       goLeft[1] = left1;
 
-      var up2 =  image.getSubimage(x*7 ,row * y, x, y);
-      var right2 = image.getSubimage( x*9,row * y, x, y);
-      var down2 = image.getSubimage(x*5,row * y, x, y);
+      var up2 =  charactersTileSheet.getSubimage(x*7 ,row * y, x, y);
+      var right2 = charactersTileSheet.getSubimage( x*9,row * y, x, y);
+      var down2 = charactersTileSheet.getSubimage(x*5,row * y, x, y);
       var left2 = op.filter(right2, null);
 
       goUp[2] = up2;
@@ -94,19 +79,15 @@ public abstract class MonsterPrototype extends Entity {
       goDown[2] = down2;
       goLeft[2] = left2;
 
-      var up3 =  image.getSubimage(x*1 ,row * y, x, y);
-      var right3 = image.getSubimage( x*2,row * y, x, y);
-      var down3 = image.getSubimage(0,row * y, x, y);
+      var up3 =  charactersTileSheet.getSubimage(x*1 ,row * y, x, y);
+      var right3 = charactersTileSheet.getSubimage( x*2,row * y, x, y);
+      var down3 = charactersTileSheet.getSubimage(0,row * y, x, y);
       var left3 = op.filter(right3, null);
 
       goUp[3] = up3;
       goRight[3] = right3;
       goDown[3] = down3;
       goLeft[3] = left3;
-
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public void update() {
@@ -197,7 +178,7 @@ public abstract class MonsterPrototype extends Entity {
     boolean contactPlayer = GamePanel.collider.checkTargetsCollision(this);
     if (this.entityType == 2 && contactPlayer) {
       if (!GamePanel.player.invincible) {
-        GamePanel.player.setHP(GamePanel.player.getHP() - 1);
+        GamePanel.player.setHP(GamePanel.player.getHP() - this.attack);
         GamePanel.player.invincible = true;
       }
     }

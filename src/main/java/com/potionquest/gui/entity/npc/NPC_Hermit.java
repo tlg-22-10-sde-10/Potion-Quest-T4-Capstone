@@ -34,7 +34,7 @@ public class NPC_Hermit extends Entity {
 
   public void getNPCImage() {
 
-    BufferedImage npcImage = imageFetch("/npc/hermit60.png");
+    BufferedImage npcImage = TileSheets.npcHermitTileSheet;
 
     int imageIndexX = 0;
     for (int i = 0; i < 3; i++) {
@@ -92,11 +92,11 @@ public class NPC_Hermit extends Entity {
 
       if (i <= 25) {
         direction = "left";
-      } else if (i > 25 && i <= 50) {
+      } else if (i <= 50) {
         direction = "right";
-      } else if (i > 50 && i <= 75) {
+      } else if (i <= 75) {
         direction = "right";
-      } else if (i > 75) {
+      } else  {
         direction = "left";
       }
 
