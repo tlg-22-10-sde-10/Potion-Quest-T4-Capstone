@@ -55,6 +55,8 @@ public class UI {
     // TITLE STATE
     if (GamePanel.gameState == GamePanel.titleState) {
       drawTitleScreen();
+    } else if (GamePanel.gameState == GamePanel.creditState) {
+      drawCredits();
     } else {
       //if not title state
       drawInventory();
@@ -149,7 +151,7 @@ public class UI {
       y+=yy[i];
       // SHADOW TEXT
       drawString(texts[i], x + 5, y + 5, new Color(70, 120, 80));
-    //MAIN COLOR
+      //MAIN COLOR
       drawString(texts[i], x, y, Color.white);
 
       if (commandNum == i) {
@@ -584,15 +586,106 @@ public class UI {
     g2D.drawImage(GamePanel.npc[1].goDown[0], x, y + GamePanel.tileSize / 2, GamePanel.tileSize * 3 /2, GamePanel.tileSize * 2,
         null);
 
-
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
     text = "Press Z To Continue...";
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 4;
+
     drawString(text, x + 5, y + 5, new Color(70, 120, 80));
     //MAIN COLOR
     drawString(text, x, y, Color.white);
   }
 
+  private int creditsY = GamePanel.tileSize;
+
   private void drawCredits() {
-    
+    if(GamePanel.creditsFrameCount < GamePanel.FPS * 16) {
+      GamePanel.creditsFrameCount++;
+      if(GamePanel.creditsFrameCount > GamePanel.FPS) {
+        creditsY--;
+      }
+    } else {
+      //GamePanel.creditsFrameCount = 0;
+      GamePanel.creditStateDisplayed = true;
+    }
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    String text = "Team 4 Staff";
+    int x = findCenterOfTextString(text);
+    int y = creditsY;
+
+    y += GamePanel.tileSize * 7 / 2;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    String texts[] = new String[] {"Cameron Davis", "Chongwei Ma", "Ethan Wang"};
+    y += GamePanel.tileSize / 2;
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+
+    for(int i = 0; i < texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      y += GamePanel.tileSize;
+
+      drawString(texts[i], x + 2, y + 2, new Color(70, 120, 80));
+      // BACK
+      drawString(texts[i], x, y, Color.white);
+    }
+
+    text = "Initial Game Concept: Team 1";
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 6;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    String teamsOne[] = new String[] {"Bryce Meadors", "Cynthia Pottin", "Joe Savella"};
+    y += GamePanel.tileSize / 4;
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+
+    for(int i = 0; i < texts.length; i++) {
+      x = findCenterOfTextString(texts[i]);
+      y += GamePanel.tileSize;
+
+      drawString(teamsOne[i], x + 2, y + 2, new Color(70, 120, 80));
+      // BACK
+      drawString(teamsOne[i], x, y, Color.white);
+    }
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    text = "Special Thanks";
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 4;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 40F));
+    text = "RyiSnow's Youtube Channel";
+    x = findCenterOfTextString(text) ;
+    y += GamePanel.tileSize * 2;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
+
+    g2D.setFont(g2D.getFont().deriveFont(Font.BOLD, 30F));
+    text = "Press Any Key To Continue...";
+    x = findCenterOfTextString(text);
+    y += GamePanel.tileSize * 5;
+
+    // SHADOW BACK
+    drawString(text, x + 2, y + 2, new Color(70, 120, 80));
+    // BACK
+    drawString(text, x, y, Color.white);
   }
 
 
